@@ -1,0 +1,12 @@
+$themeColor: #f4f2ec;
+$btnColor: #21b5e2;
+
+@mixin flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin borderRadius($radius) {
+  border-radius: $radius;
+}
