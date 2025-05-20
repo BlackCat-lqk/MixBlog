@@ -2,11 +2,15 @@
   <div class="home-data">
     <div class="home-data-detail">
       <div class="total-data">
-        <p>99999</p>
+        <n-statistic tabular-nums>
+          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="99999" />
+        </n-statistic>
         <p>总访问量</p>
       </div>
       <div class="today-data">
-        <p>99</p>
+        <n-statistic tabular-nums>
+          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="99" />
+        </n-statistic>
         <p>今日访问量</p>
       </div>
     </div>
@@ -46,6 +50,11 @@
     flex-direction: column;
     justify-content: space-between;
     margin-right: 30px;
+    :deep(.n-statistic-value__content) {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 48px;
+    }
     & > div {
       flex: 0.44;
       background-image: linear-gradient(
@@ -55,6 +64,13 @@
       );
       @include g.borderRadius(24px);
       padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      p {
+        font-size: 24px;
+        line-height: 48px;
+      }
     }
   }
   .home-data-banner {
