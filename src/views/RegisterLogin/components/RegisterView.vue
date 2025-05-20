@@ -24,6 +24,7 @@
 </template>
 
 <script lang="ts" setup>
+import { registerUser } from '@/http/user'
 import type { FormInst } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { ref, reactive, watch } from 'vue'
@@ -43,6 +44,7 @@ const formValue = reactive({
   password: '',
   code: '',
 })
+
 const rules = {
   userName: {
     required: true,
@@ -66,11 +68,17 @@ const rules = {
   },
 }
 const handleRegister = () => {
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      message.success('注册成功')
+      const res = await registerUser(formValue)
+      console.log(res)
+      if (res.data.code == 200) {
+        message.success('注册成功')
+      } else {
+        message.error('注册失败')
+      }
     } else {
-      message.error('注册失败')
+      message.error('请检查输入合法性')
     }
   })
 }

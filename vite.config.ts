@@ -22,4 +22,12 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000', // 代理目标地址
+        changeOrigin: true,
+      },
+    },
+  },
 })
