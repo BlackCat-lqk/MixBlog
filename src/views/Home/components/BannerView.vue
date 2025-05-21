@@ -13,7 +13,7 @@
         <div></div>
       </div>
       <div class="scroll-down-box">
-        <div class="scroll-down">
+        <div class="scroll-down" @click="scrollDown">
           <n-icon size="40">
             <img src="@/assets/images/AngleDoubleDown.svg" alt="" />
           </n-icon>
@@ -38,7 +38,23 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { defineProps } from 'vue'
+
+const prop = defineProps({
+  targetSection: {
+    type: Object as () => HTMLElement,
+    default: () => null,
+  },
+})
+
+const scrollDown = () => {
+  console.log(prop.targetSection)
+  if (prop.targetSection) {
+    prop.targetSection.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+</script>
 
 <style scoped lang="scss">
 .banner {
