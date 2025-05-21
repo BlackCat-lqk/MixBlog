@@ -62,3 +62,7 @@ npm run test:e2e -- --debug
 ```sh
 npm run lint
 ```
+
+// 配置环境
+node.js: 24.0.2
+npm：11.4.0

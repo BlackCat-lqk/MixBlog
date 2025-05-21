@@ -16,20 +16,10 @@
       </div>
     </div>
     <div class="header-menu-box">
-      <div class="menu-item-box">
-        <div class="menu-item-text active">首页</div>
-      </div>
-      <div class="menu-item-box">
-        <div class="menu-item-text">文章</div>
-      </div>
-      <div class="menu-item-box">
-        <div class="menu-item-text">图库</div>
-      </div>
-      <div class="menu-item-box">
-        <div class="menu-item-text">随机</div>
-      </div>
-      <div class="menu-item-box">
-        <div class="menu-item-text">关于</div>
+      <div class="menu-item-box" v-for="(item, idx) in routerPage" :key="idx">
+        <div :class="state.activeRouter == idx ? 'menu-item-text active' : 'menu-item-text'"
+          @click="jumpPage(item.path, idx)">{{
+            item.title }}</div>
       </div>
     </div>
     <div class="oprate-box">
@@ -39,10 +29,10 @@
             <img src="/src/assets/images/UserAvatarFilled.svg" />
           </n-icon>
         </n-avatar>
-        <span @click="toLogion">去登录</span>
+        <span @click="jumpPage('/register-login')">去登录</span>
       </div>
       <div class="switch-theme-box">
-        <n-switch v-model:value="activeTheme" size="large">
+        <n-switch v-model:value="state.activeTheme" size="large">
           <template #checked-icon>
             <img src="/src/assets/images/LightModeFilled.svg" />
           </template>
@@ -56,20 +46,48 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref } from 'vue'
+import { watch, ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScroll } from '@vueuse/core'
 
 const router = useRouter()
-
 const { y } = useScroll(window)
 const opacity = ref(0)
 const bgColor = ref('transparent')
-const activeTheme = ref(false)
-const toLogion = () => {
-  router.push('/register-login')
-}
+const routerPage = [
+  {
+    path: '/',
+    title: '首页',
+  },
+  {
+    path: '/articles',
+    title: '文章',
+  },
+  {
+    path: '/image-library',
+    title: '图库',
+  },
+  {
+    path: '/random-notes',
+    title: '随记',
+  },
+  {
+    path: '/about',
+    title: '关于',
+  }
+]
 
+const state = reactive({
+  activeTheme: false,
+  activeRouter: 0
+})
+
+const jumpPage = (path: string, idx: number) => {
+  // debugger
+  router.push(path)
+  state.activeRouter = idx
+
+}
 watch(y, (newVal) => {
   const maxOpacityScroll = 200
   if (newVal >= maxOpacityScroll) {
@@ -77,6 +95,13 @@ watch(y, (newVal) => {
     bgColor.value = '#f4f2ec'
   } else {
     bgColor.value = 'transparent'
+  }
+})
+onMounted(() => {
+  const currentPath = router.currentRoute.value.path
+  const index = routerPage.findIndex(item => item.path === currentPath)
+  if (index !== -1) {
+    state.activeRouter = index
   }
 })
 </script>
@@ -93,18 +118,22 @@ watch(y, (newVal) => {
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
+
   .header-logo-search-box {
     z-index: 1;
     @include g.flexCenter;
     height: 100%;
+
     .header-logo-box {
       width: 120px;
       height: 100%;
+
       img {
         width: 100%;
         height: 100%;
       }
     }
+
     .search-box {
       .n-input__state-border {
         border: none;
@@ -112,6 +141,7 @@ watch(y, (newVal) => {
       }
     }
   }
+
   .header-menu-box {
     position: absolute;
     top: 50%;
@@ -120,17 +150,21 @@ watch(y, (newVal) => {
     justify-content: center;
     align-items: center;
     width: 100%;
+
     .menu-item-box {
       margin: 0 20px;
+
       .menu-item-text {
         padding-bottom: 10px;
         cursor: pointer;
       }
+
       .active {
         border-bottom: 2px solid #409eff;
       }
     }
   }
+
   .background-blur {
     position: absolute;
     top: 0;
@@ -142,17 +176,21 @@ watch(y, (newVal) => {
     z-index: -1;
     transition: filter 0.3s ease;
   }
+
   .oprate-box {
     z-index: 1;
     display: flex;
     align-items: center;
     margin-right: 20px;
+
     .user-info-box {
       @include g.flexCenter;
       margin-right: 30px;
-      > span {
+
+      >span {
         margin-left: 10px;
         cursor: pointer;
+
         &:hover {
           color: #409eff;
         }

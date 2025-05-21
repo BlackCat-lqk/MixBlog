@@ -13,7 +13,7 @@
         <div></div>
       </div>
       <div class="scroll-down-box">
-        <div class="scroll-down" @click="scrollDown">
+        <div class="scroll-down" @click="handelScrollDown">
           <n-icon size="40">
             <img src="@/assets/images/AngleDoubleDown.svg" alt="" />
           </n-icon>
@@ -39,20 +39,12 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue'
+import { useScrollStore } from '@/stores/scrollStore'
 
-const prop = defineProps({
-  targetSection: {
-    type: Object as () => HTMLElement,
-    default: () => null,
-  },
-})
-
-const scrollDown = () => {
-  console.log(prop.targetSection)
-  if (prop.targetSection) {
-    prop.targetSection.scrollIntoView({ behavior: 'smooth' })
-  }
+const scrollStore = useScrollStore()
+const handelScrollDown = () => {
+  const nowDate = new Date()
+  scrollStore.scrollTo('scorll' + nowDate)
 }
 </script>
 

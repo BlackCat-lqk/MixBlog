@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <banner-view :target-section="targetSection"></banner-view>
-    <home-data ref="targetSection"></home-data>
+    <banner-view></banner-view>
+    <home-data></home-data>
     <random-notes></random-notes>
     <photography-gallery></photography-gallery>
   </div>
@@ -12,9 +12,6 @@ import BannerView from './components/BannerView.vue'
 import HomeData from './components/HomeData.vue'
 import RandomNotes from './components/RandomNotes.vue'
 import PhotographyGallery from './components/PhotographyGallery.vue'
-import { ref } from 'vue'
-
-const targetSection = ref<HTMLElement | undefined>(undefined)
 </script>
 
 <style scoped lang="scss">

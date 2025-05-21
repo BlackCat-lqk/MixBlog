@@ -1,5 +1,5 @@
 <template>
-  <div class="home-data">
+  <div class="home-data" ref="homeDataRef">
     <div class="home-data-detail">
       <div class="total-data">
         <n-statistic tabular-nums>
@@ -37,12 +37,26 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { ref, watch } from 'vue'
+import { useScrollStore } from '@/stores/scrollStore'
+const scrollStore = useScrollStore()
+const homeDataRef = ref()
+watch(() => scrollStore.targetId, (newValue) => {
+  if(newValue && homeDataRef.value) {
+    homeDataRef.value.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+  }
+})
+</script>
 
 <style scoped lang="scss">
 .home-data {
   height: 400px;
   display: flex;
+  scroll-margin-top: 80px;
   .home-data-detail {
     width: 316px;
     height: 100%;

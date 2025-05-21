@@ -14,6 +14,26 @@ const router = createRouter({
       name: 'register',
       component: () => import('@/views/RegisterLogin/RegisterLogin.vue'),
     },
+    {
+      path: '/articles',
+      name: 'Articles',
+      component: () => import('@/views/Article/ArticleView.vue'),
+    },
+    {
+      path: '/image-library',
+      name: 'ImageLibrary',
+      component: () => import('@/views/ImageLibrary/ImageLibrary.vue'),
+    },
+    {
+      path: '/random-notes',
+      name: 'RandomNotes',
+      component: () => import('@/views/RandomNotes/RandomNotes.vue'),
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: () => import('@/views/About/AboutView.vue'),
+    }
   ],
 })
 
