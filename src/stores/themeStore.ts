@@ -2,12 +2,17 @@ import { defineStore } from 'pinia'
 
 export const useThemeStore = defineStore('theme', {
   state: () => ({
-    currentTheme: 'light' as 'light' | 'dark' | 'system',
+    currentTheme: (localStorage.getItem('selectedTheme') || 'light') as 'light' | 'dark' | 'system',
   }),
   actions: {
     setTheme(theme: 'light' | 'dark' | 'system') {
       this.currentTheme = theme
     },
   },
-  persist: true,
+  persist: {
+    storage: {
+      getItem: (key) => localStorage.getItem(key),
+      setItem: (key, value) => localStorage.setItem(key, value),
+    },
+  },
 })
