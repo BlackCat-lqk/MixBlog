@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/require-default-prop -->
 <template>
   <div class="header-main-box" :style="{ background: bgColor }">
     <div class="background-blur" :style="{ filter: `blur(${opacity}px)` }"></div>
@@ -6,13 +7,26 @@
         <img src="/src/assets/images/logo-transparent.png" alt="" />
       </div>
       <div class="search-box">
-        <n-input placeholder="文章/图库/日记/资源..." clearable size="large">
-          <template #prefix>
-            <n-icon>
-              <img src="/src/assets/images/Search.svg" />
-            </n-icon>
+        <n-popselect v-model:value="state.searchQuery" :options="state.searchOptions" trigger="click">
+          <n-input placeholder="文章/图库/日记/资源..." clearable size="large" v-model:value="state.searchQuery"
+            @keyup.enter="handleGlobalSearch">
+            <template #prefix>
+              <n-icon>
+                <img src="/src/assets/images/Search.svg" />
+              </n-icon>
+            </template>
+          </n-input>
+          <template #header>
+            <div>历史记录</div>
+            <p v-for="(item, idx) in state.searchHistory" :key="idx">{{ item }}</p>
           </template>
-        </n-input>
+          <template #empty>
+            没啥看的，这里是空的
+          </template>
+          <template #action>
+            清除历史记录
+          </template>
+        </n-popselect>
       </div>
     </div>
     <div class="header-menu-box">
@@ -32,11 +46,11 @@
         <span @click="jumpPage('/register-login')">去登录</span>
       </div>
       <div class="switch-theme-box">
-        <n-switch v-model:value="state.activeTheme" size="large">
-          <template #checked-icon>
+        <n-switch v-model:value="state.switchTheme" size="large" @update:value="handleChangeTheme">
+          <template #checked>
             <img src="/src/assets/images/LightModeFilled.svg" />
           </template>
-          <template #unchecked-icon>
+          <template #unchecked>
             <img src="/src/assets/images/NightlightRoundSharp.svg" />
           </template>
         </n-switch>
@@ -49,8 +63,12 @@
 import { watch, ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScroll } from '@vueuse/core'
+import { useThemeStore } from '@/stores/themeStore'
+import { useGlobalSearchStore } from '@/stores/globalSearch'
 
 const router = useRouter()
+const themeStore = useThemeStore()
+const globalSearchStore = useGlobalSearchStore()
 const { y } = useScroll(window)
 const opacity = ref(0)
 const bgColor = ref('transparent')
@@ -78,16 +96,46 @@ const routerPage = [
 ]
 
 const state = reactive({
-  activeTheme: false,
-  activeRouter: 0
+  activeRouter: 0,
+  searchQuery: '',
+  switchTheme: false,
+  searchHistory: [],
+  searchOptions: [{
+    label: 'Drive My Car',
+    value: 'Drive My Car'
+  }]
 })
+const handleChangeTheme = (value: boolean) => {
+  themeStore.setTheme(value ? 'light' : 'dark')
+}
+
+const handleGlobalSearch = () => {
+  if (state.searchQuery) {
+    globalSearchStore.setSearch(state.searchQuery)
+  }
+}
 
 const jumpPage = (path: string, idx: number) => {
-  // debugger
   router.push(path)
   state.activeRouter = idx
 
 }
+
+const activeRouterInit = () => {
+  const currentPath = router.currentRoute.value.path
+  const index = routerPage.findIndex(item => item.path === currentPath)
+  if (index !== -1) {
+    state.activeRouter = index
+  }
+}
+
+// 初始化搜索历史
+const handleSearchHistory = () => {
+  const historyValue = localStorage.getItem('globalSearch')
+  const historyObj = historyValue ? JSON.parse(historyValue) : null
+  state.searchHistory = historyObj?.search ?? []
+}
+
 watch(y, (newVal) => {
   const maxOpacityScroll = 200
   if (newVal >= maxOpacityScroll) {
@@ -98,11 +146,8 @@ watch(y, (newVal) => {
   }
 })
 onMounted(() => {
-  const currentPath = router.currentRoute.value.path
-  const index = routerPage.findIndex(item => item.path === currentPath)
-  if (index !== -1) {
-    state.activeRouter = index
-  }
+  activeRouterInit()
+  handleSearchHistory()
 })
 </script>
 <style scoped lang="scss">

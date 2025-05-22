@@ -1,18 +1,17 @@
 import { defineStore } from 'pinia'
 
+type Theme = 'light' | 'dark'
 export const useThemeStore = defineStore('theme', {
   state: () => ({
-    currentTheme: (localStorage.getItem('selectedTheme') || 'light') as 'light' | 'dark' | 'system',
+    currentTheme: (localStorage.getItem('app-theme') as Theme) || 'light',
   }),
   actions: {
-    setTheme(theme: 'light' | 'dark' | 'system') {
+    setTheme(theme: Theme) {
       this.currentTheme = theme
+      localStorage.setItem('app-theme', theme)
+      // 同步到根DOM中
+      document.documentElement.setAttribute('data-theme', theme)
     },
   },
-  persist: {
-    storage: {
-      getItem: (key) => localStorage.getItem(key),
-      setItem: (key, value) => localStorage.setItem(key, value),
-    },
-  },
+  persist: true,
 })

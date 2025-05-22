@@ -1,5 +1,8 @@
 @use './reset.scss';
 @use './global.scss';
+@use './variables.scss';
+@use './theme/dark.scss';
+@use './theme/light.scss';
 
 body {
   display: flex;
@@ -11,7 +14,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: g.$themeColor;
+  background: var(--bg-color);
 }
 
 main {

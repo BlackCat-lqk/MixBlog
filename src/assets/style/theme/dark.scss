@@ -1,4 +1,6 @@
-:root {
-  --bg-color: #1a1a1a;
-  --text-color: #ffffff;
+@use '../variables.scss' as vars;
+
+:root[data-theme='dark'] {
+  --bg-color: #{vars.$color-bg-dark};
+  --text-color: #{vars.$color-text-dark};
 }

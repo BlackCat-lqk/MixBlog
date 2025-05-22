@@ -1,0 +1,6 @@
+@use '../variables.scss' as vars;
+
+:root[data-theme='light'] {
+  --bg-color: #{vars.$color-bg-light};
+  --text-color: #{vars.$color-text-light};
+}
