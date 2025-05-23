@@ -8,7 +8,7 @@
         <div>
           <h1><n-gradient-text type="info"> 杂糅 </n-gradient-text></h1>
           <p><n-gradient-text type="danger"> 记录生活 </n-gradient-text></p>
-          <p><n-gradient-text type="warning"> 记录工作 </n-gradient-text></p>
+          <p><n-gradient-text type="warning"> 学习充电 </n-gradient-text></p>
         </div>
         <div></div>
       </div>
@@ -108,6 +108,7 @@ const handelScrollDown = () => {
         font-size: 24px;
         line-height: 36px;
         font-weight: normal;
+        color: var(--text-color);
       }
       .address-list {
         display: flex;

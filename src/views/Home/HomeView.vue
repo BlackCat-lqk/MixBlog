@@ -2,6 +2,7 @@
   <div class="home">
     <banner-view></banner-view>
     <home-data></home-data>
+    <article-blog></article-blog>
     <random-notes></random-notes>
     <photography-gallery></photography-gallery>
   </div>
@@ -9,6 +10,7 @@
 
 <script lang="ts" setup>
 import BannerView from './components/BannerView.vue'
+import ArticleBlog from './components/ArticleBlog.vue'
 import HomeData from './components/HomeData.vue'
 import RandomNotes from './components/RandomNotes.vue'
 import PhotographyGallery from './components/PhotographyGallery.vue'

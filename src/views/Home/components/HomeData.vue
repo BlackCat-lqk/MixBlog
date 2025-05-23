@@ -42,14 +42,17 @@ import { ref, watch } from 'vue'
 import { useScrollStore } from '@/stores/scrollStore'
 const scrollStore = useScrollStore()
 const homeDataRef = ref()
-watch(() => scrollStore.targetId, (newValue) => {
-  if(newValue && homeDataRef.value) {
-    homeDataRef.value.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    })
-  }
-})
+watch(
+  () => scrollStore.targetId,
+  (newValue) => {
+    if (newValue && homeDataRef.value) {
+      homeDataRef.value.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  },
+)
 </script>
 
 <style scoped lang="scss">
@@ -68,14 +71,11 @@ watch(() => scrollStore.targetId, (newValue) => {
       font-size: 48px;
       font-weight: 500;
       line-height: 48px;
+      color: var(--text-color);
     }
     & > div {
       flex: 0.44;
-      background-image: linear-gradient(
-        121deg,
-        rgba(186, 255, 16, 0.1) 0%,
-        rgba(255, 37, 243, 0.09) 100%
-      );
+      background-image: var(--box-bg-color);
       @include g.borderRadius(24px);
       padding: 32px 40px;
       display: flex;
@@ -84,6 +84,7 @@ watch(() => scrollStore.targetId, (newValue) => {
       p {
         font-size: 24px;
         line-height: 48px;
+        color: var(--text-color);
       }
     }
   }

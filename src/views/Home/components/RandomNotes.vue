@@ -68,9 +68,10 @@ const isDateDisabled = (timestamp: number) => {
       font-size: 32px;
       line-height: 1.34;
       font-weight: 600;
+      color: var(--text-color);
     }
     p {
-      color: #0b1926b8;
+      color: var(--sub-text-color);
       font-size: 14px;
       padding-left: 20px;
     }

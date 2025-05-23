@@ -4,12 +4,22 @@
     <div class="background-blur" :style="{ filter: `blur(${opacity}px)` }"></div>
     <div class="header-logo-search-box">
       <div class="header-logo-box">
-        <img src="/src/assets/images/logo-transparent.png" alt="" />
+        <img v-if="state.switchTheme" src="/src/assets/images/logo-transparent.png" alt="" />
+        <img v-else src="/src/assets/images/logo-transparent-night.png" alt="" />
       </div>
       <div class="search-box">
-        <n-popselect v-model:value="state.searchQuery" :options="state.searchOptions" trigger="click">
-          <n-input placeholder="文章/图库/日记/资源..." clearable size="large" v-model:value="state.searchQuery"
-            @keyup.enter="handleGlobalSearch">
+        <n-popselect
+          v-model:value="state.searchQuery"
+          :options="state.searchOptions"
+          trigger="click"
+        >
+          <n-input
+            placeholder="文章/图库/日记/资源..."
+            clearable
+            size="large"
+            v-model:value="state.searchQuery"
+            @keyup.enter="handleGlobalSearch"
+          >
             <template #prefix>
               <n-icon>
                 <img src="/src/assets/images/Search.svg" />
@@ -17,23 +27,28 @@
             </template>
           </n-input>
           <template #header>
-            <div>历史记录</div>
+            <div v-if="state.searchHistory.length > 0" class="search-history">历史搜索记录</div>
             <p v-for="(item, idx) in state.searchHistory" :key="idx">{{ item }}</p>
           </template>
           <template #empty>
-            没啥看的，这里是空的
+            <n-empty description="暂无数据">
+              <template #extra> </template>
+            </n-empty>
           </template>
           <template #action>
-            清除历史记录
+            <div><n-button @click="clearHistory">清除历史记录</n-button></div>
           </template>
         </n-popselect>
       </div>
     </div>
     <div class="header-menu-box">
       <div class="menu-item-box" v-for="(item, idx) in routerPage" :key="idx">
-        <div :class="state.activeRouter == idx ? 'menu-item-text active' : 'menu-item-text'"
-          @click="jumpPage(item.path, idx)">{{
-            item.title }}</div>
+        <div
+          :class="state.activeRouter == idx ? 'menu-item-text active' : 'menu-item-text'"
+          @click="jumpPage(item.path, idx)"
+        >
+          {{ item.title }}
+        </div>
       </div>
     </div>
     <div class="oprate-box">
@@ -47,10 +62,10 @@
       </div>
       <div class="switch-theme-box">
         <n-switch v-model:value="state.switchTheme" size="large" @update:value="handleChangeTheme">
-          <template #checked>
+          <template #checked-icon>
             <img src="/src/assets/images/LightModeFilled.svg" />
           </template>
-          <template #unchecked>
+          <template #unchecked-icon>
             <img src="/src/assets/images/NightlightRoundSharp.svg" />
           </template>
         </n-switch>
@@ -60,15 +75,17 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, reactive, onMounted } from 'vue'
+import { watch, ref, reactive, onMounted, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScroll } from '@vueuse/core'
 import { useThemeStore } from '@/stores/themeStore'
 import { useGlobalSearchStore } from '@/stores/globalSearch'
+import { useMessage } from 'naive-ui'
 
 const router = useRouter()
 const themeStore = useThemeStore()
 const globalSearchStore = useGlobalSearchStore()
+const message = useMessage()
 const { y } = useScroll(window)
 const opacity = ref(0)
 const bgColor = ref('transparent')
@@ -92,7 +109,7 @@ const routerPage = [
   {
     path: '/about',
     title: '关于',
-  }
+  },
 ]
 
 const state = reactive({
@@ -100,30 +117,36 @@ const state = reactive({
   searchQuery: '',
   switchTheme: false,
   searchHistory: [],
-  searchOptions: [{
-    label: 'Drive My Car',
-    value: 'Drive My Car'
-  }]
+  searchOptions: [],
 })
 const handleChangeTheme = (value: boolean) => {
   themeStore.setTheme(value ? 'light' : 'dark')
 }
 
-const handleGlobalSearch = () => {
+const handleGlobalSearch = async () => {
   if (state.searchQuery) {
-    globalSearchStore.setSearch(state.searchQuery)
+    await globalSearchStore.setSearch(state.searchQuery)
+    handleSearchHistory()
   }
 }
 
-const jumpPage = (path: string, idx: number) => {
-  router.push(path)
-  state.activeRouter = idx
+// 清空搜索记录
+const clearHistory = () => {
+  state.searchHistory = []
+  localStorage.removeItem('globalSearch')
+  message.success('已清空搜索记录')
+}
 
+const jumpPage = (path: string, idx?: number | undefined) => {
+  router.push(path)
+  if (idx != undefined) {
+    state.activeRouter = idx
+  }
 }
 
 const activeRouterInit = () => {
   const currentPath = router.currentRoute.value.path
-  const index = routerPage.findIndex(item => item.path === currentPath)
+  const index = routerPage.findIndex((item) => item.path === currentPath)
   if (index !== -1) {
     state.activeRouter = index
   }
@@ -136,6 +159,12 @@ const handleSearchHistory = () => {
   state.searchHistory = historyObj?.search ?? []
 }
 
+// 初始化主题开关
+const initTheme = () => {
+  const theme = localStorage.getItem('app-theme')
+  state.switchTheme = theme === 'light'
+}
+
 watch(y, (newVal) => {
   const maxOpacityScroll = 200
   if (newVal >= maxOpacityScroll) {
@@ -144,6 +173,9 @@ watch(y, (newVal) => {
   } else {
     bgColor.value = 'transparent'
   }
+})
+onBeforeMount(() => {
+  initTheme()
 })
 onMounted(() => {
   activeRouterInit()
@@ -202,6 +234,7 @@ onMounted(() => {
       .menu-item-text {
         padding-bottom: 10px;
         cursor: pointer;
+        color: var(--text-color);
       }
 
       .active {
@@ -216,7 +249,7 @@ onMounted(() => {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: white;
+    background-color: var(--bg-color);
     opacity: v-bind('opacity > 0 ? 0.8 : 0');
     z-index: -1;
     transition: filter 0.3s ease;
@@ -232,10 +265,10 @@ onMounted(() => {
       @include g.flexCenter;
       margin-right: 30px;
 
-      >span {
+      > span {
         margin-left: 10px;
         cursor: pointer;
-
+        color: var(--text-color);
         &:hover {
           color: #409eff;
         }
