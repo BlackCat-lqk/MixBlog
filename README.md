@@ -66,3 +66,9 @@ npm run lint
 // 配置环境
 node.js: 24.0.2
 npm：11.4.0
+
+安装 postcss 插件实现 px 自动转 rem
+npm install postcss-pxtorem autoprefixer --save-dev
+
+移动端使用：vant组件库
+使用了动态路由来加载H5

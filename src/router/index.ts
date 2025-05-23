@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MixMain from '@/views/MixMain.vue'
+import { isMobileDevice } from '@/utils/deviceUtils'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,12 +7,14 @@ const router = createRouter({
     {
       path: '/',
       name: 'mixMain',
-      component: MixMain,
+      // component: () => import('@/views/MixMain.vue'),
+      // 根据设备类型动态加载组件
+      component: () => import(`@/views/${isMobileDevice() ? 'MobileMixMain' : 'MixMain' }.vue`),
     },
     {
       path: '/register-login',
       name: 'register',
-      component: () => import('@/views/RegisterLogin/RegisterLogin.vue'),
+      component: () => import(`@/views/RegisterLogin/${isMobileDevice() ? 'MobileRegisterLogin' : 'RegisterLogin' }.vue`),
     },
     {
       path: '/articles',

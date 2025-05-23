@@ -1,5 +1,4 @@
 <template>
-  <n-back-top :left="50" />
   <header>
     <HeaderNav></HeaderNav>
   </header>
