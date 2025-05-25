@@ -3,6 +3,7 @@
 :root[data-theme='light'] {
   --bg-color: #{vars.$color-bg-light};
   --box-bg-color: #{vars.$color-box-light};
+  --box-bg-color1: #{vars.$color-box-light1};
   --text-color: #{vars.$color-text-light};
   --sub-text-color: #{vars.$color-text-sub-light};
 }

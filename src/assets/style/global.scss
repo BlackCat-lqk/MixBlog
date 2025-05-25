@@ -10,3 +10,32 @@ $btnColor: #21b5e2;
 @mixin borderRadius($radius) {
   border-radius: $radius;
 }
+
+@mixin moreBtn($width, $height) {
+  .n-button {
+    width: $width;
+    height: $height;
+    border: 1px solid #000;
+  }
+}
+
+/* 自定义滚动条样式 */
+@mixin scrollbarCustom {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}

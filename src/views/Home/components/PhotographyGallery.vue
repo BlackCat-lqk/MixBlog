@@ -7,29 +7,41 @@
       </div>
       <div class="photo-gallery-switch">
         <n-button tertiary round>
-          <template #icon>
-            <n-icon>
-              <img src="@/assets/images/ArrowLeft.svg" alt="left" />
-            </n-icon>
-          </template>
+          <n-icon>
+            <img src="@/assets/images/ArrowLeft.svg" alt="left" />
+          </n-icon>
         </n-button>
         <n-button tertiary round>
-          <template #icon>
-            <n-icon>
-              <img src="@/assets/images/ArrowRight.svg" alt="left" />
-            </n-icon>
-          </template>
+          <n-icon>
+            <img src="@/assets/images/ArrowRight.svg" alt="left" />
+          </n-icon>
         </n-button>
       </div>
     </div>
     <div class="photo-gallery-centent">
       <div class="photo-gallery-bg"></div>
       <div class="photo-gallery-desc">
-        <h1>作品集1</h1>
-        <div>
-          <p>2024-9-8</p>
+        <div class="photo-gallery-title">
+          <h1>作品集1</h1>
+          <div class="photo-gallery-title-data">
+            <p>2024-9-8</p>
+            <div>
+              <span>
+                <n-icon size="small">
+                  <img src="@/assets/images/CommentOutlined.svg" />
+                </n-icon>
+                12
+              </span>
+              <span>
+                <n-icon size="small">
+                  <img src="@/assets/images/View.svg" />
+                </n-icon>
+                24
+              </span>
+            </div>
+          </div>
         </div>
-        <div>
+        <div class="photo-gallery-desc-p">
           <p>东北的冷真的冰冷刺骨，没有预备多厚的衣物，大腿皮肤都被冷风撕裂好多处。</p>
         </div>
       </div>
@@ -49,22 +61,34 @@
       </div>
     </div>
     <div class="more-box">
-      <n-button tertiary round> 更多 </n-button>
+      <n-button tertiary round @click="morePhotography"> 更多 </n-button>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const morePhotography = () => {
+  router.push('/image-library')
+}
+</script>
 
 <style scoped lang="scss">
 .photo-gallery-box {
   display: flex;
   flex-direction: column;
+  margin: 10vh 0;
   .photo-gallery-switch-box {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 40px;
+    .n-button {
+      width: 94px;
+      height: 48px;
+      margin-left: 10px;
+    }
     .photo-gallery-title {
       display: flex;
       align-items: center;
@@ -84,7 +108,7 @@
     height: 768px;
     width: 100%;
     overflow: hidden;
-    @include g.borderRadius(10px);
+    border-radius: 8px 0 0 8px;
     position: relative;
     background-image: url('@/assets/wallpaper/login-register-item.jpg');
     background-size: cover;
@@ -98,22 +122,51 @@
       height: 100%;
       width: 100%;
       background-image: linear-gradient(90deg, rgba(244, 242, 236, 0) 0%, #f4f2ec 100%);
+      backdrop-filter: blur(1px);
     }
     .photo-gallery-desc {
       position: absolute;
       width: 30%;
-      height: 100%;
-      top: 0;
+      top: 40px;
       right: 0;
       @include g.borderRadius(10px);
-      h1 {
-        font-size: 32px;
-        line-height: 1.34;
-        font-weight: 600;
-        margin: 4px 0px;
+      .photo-gallery-title {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        h1 {
+          font-size: 32px;
+          line-height: 1.34;
+          font-weight: 600;
+          margin: 4px 0px;
+        }
+        p {
+          font-size: 16px;
+          line-height: 32px;
+          text-align: justify;
+        }
+        .photo-gallery-title-data {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          > div {
+            display: flex;
+          }
+          p {
+            font-size: 14px;
+            line-height: 1.54;
+            color: #0b1926;
+          }
+          span {
+            font-size: 14px;
+            line-height: 1.54;
+            color: #0b19267a;
+            margin-left: 15px;
+          }
+        }
       }
-      p {
-        width: 400px;
+      .photo-gallery-desc-p {
+        padding-top: 10px;
         font-size: 16px;
         line-height: 32px;
         text-align: justify;
@@ -145,6 +198,7 @@
   .more-box {
     @include g.flexCenter;
     margin: 40px 0;
+    @include g.moreBtn(94px, 48px);
   }
 }
 </style>

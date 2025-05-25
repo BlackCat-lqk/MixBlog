@@ -3,6 +3,7 @@
 :root[data-theme='dark'] {
   --bg-color: #{vars.$color-bg-dark};
   --box-bg-color: #{vars.$color-box-dark};
+  --box-bg-color1: #{vars.$color-box-dark1};
   --text-color: #{vars.$color-text-dark};
   --sub-text-color: #{vars.$color-text-sub-dark};
 }

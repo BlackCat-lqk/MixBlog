@@ -118,9 +118,16 @@ const state = reactive({
   switchTheme: false,
   searchHistory: [],
   searchOptions: [],
+  headerColorTheme: '',
 })
 const handleChangeTheme = (value: boolean) => {
+  if (value) {
+    state.headerColorTheme = '#fff'
+  } else {
+    state.headerColorTheme = '#000'
+  }
   themeStore.setTheme(value ? 'light' : 'dark')
+  bgColorInit(y.value)
 }
 
 const handleGlobalSearch = async () => {
@@ -163,18 +170,28 @@ const handleSearchHistory = () => {
 const initTheme = () => {
   const theme = localStorage.getItem('app-theme')
   state.switchTheme = theme === 'light'
+  if (state.switchTheme) {
+    state.headerColorTheme = '#fff'
+  } else {
+    state.headerColorTheme = '#000'
+  }
 }
 
-watch(y, (newVal) => {
-  const maxOpacityScroll = 200
-  if (newVal >= maxOpacityScroll) {
-    opacity.value = Math.min(newVal / maxOpacityScroll, 30)
-    bgColor.value = '#f4f2ec'
+const bgColorInit = (value: number) => {
+  const maxOpacityScroll = 100
+  if (value >= maxOpacityScroll) {
+    opacity.value = Math.min(value / maxOpacityScroll, 30)
+    bgColor.value = state.headerColorTheme
   } else {
     bgColor.value = 'transparent'
   }
+}
+
+watch(y, (newVal) => {
+  bgColorInit(newVal)
 })
 onBeforeMount(() => {
+  y.value = 0
   initTheme()
 })
 onMounted(() => {
@@ -216,6 +233,9 @@ onMounted(() => {
         border: none;
         border-radius: 10px;
       }
+      img {
+        cursor: pointer;
+      }
     }
   }
 
@@ -249,8 +269,6 @@ onMounted(() => {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--bg-color);
-    opacity: v-bind('opacity > 0 ? 0.8 : 0');
     z-index: -1;
     transition: filter 0.3s ease;
   }

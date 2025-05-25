@@ -6,7 +6,7 @@
     <div class="banner-left">
       <div>
         <div>
-          <h1><n-gradient-text type="info"> 杂糅 </n-gradient-text></h1>
+          <h1><n-gradient-text type="info"> Mix Blog </n-gradient-text></h1>
           <p><n-gradient-text type="danger"> 记录生活 </n-gradient-text></p>
           <p><n-gradient-text type="warning"> 学习充电 </n-gradient-text></p>
         </div>
@@ -89,10 +89,13 @@ const handelScrollDown = () => {
       }
     }
     h1 {
-      font-size: 98px;
+      font-size: 86px;
       font-weight: 600;
-      letter-spacing: 0.54em;
+      letter-spacing: 0.44em;
       padding-top: 30px;
+      span {
+        display: inline;
+      }
     }
     p {
       padding-top: 20px;
@@ -116,11 +119,18 @@ const handelScrollDown = () => {
         .address-img-box {
           width: 50px;
           height: 50px;
-          background-color: #ccc;
           border-radius: 15px;
           margin-left: 20px;
           @include g.flexCenter;
           cursor: pointer;
+          border: 1px solid #ccc;
+          &:hover {
+            border: 1px solid #5dc0fe;
+          }
+          img {
+            width: 100%;
+            height: 100%;
+          }
         }
       }
     }

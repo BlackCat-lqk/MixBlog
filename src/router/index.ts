@@ -7,14 +7,16 @@ const router = createRouter({
     {
       path: '/',
       name: 'mixMain',
-      // component: () => import('@/views/MixMain.vue'),
       // 根据设备类型动态加载组件
-      component: () => import(`@/views/${isMobileDevice() ? 'MobileMixMain' : 'MixMain' }.vue`),
+      component: () => import(`@/views/${isMobileDevice() ? 'MobileMixMain' : 'MixMain'}.vue`),
     },
     {
       path: '/register-login',
       name: 'register',
-      component: () => import(`@/views/RegisterLogin/${isMobileDevice() ? 'MobileRegisterLogin' : 'RegisterLogin' }.vue`),
+      component: () =>
+        import(
+          `@/views/RegisterLogin/${isMobileDevice() ? 'MobileRegisterLogin' : 'RegisterLogin'}.vue`
+        ),
     },
     {
       path: '/articles',
@@ -35,7 +37,7 @@ const router = createRouter({
       path: '/about',
       name: 'About',
       component: () => import('@/views/About/AboutView.vue'),
-    }
+    },
   ],
 })
 

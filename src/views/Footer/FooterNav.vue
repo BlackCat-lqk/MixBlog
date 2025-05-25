@@ -1,40 +1,79 @@
 <template>
-  <div class="Footer-main-box">
+  <div class="footer-main-box">
     <span>技术支持</span>
+    <n-divider />
     <div class="technical-support" v-for="item in 1" :key="item">
-      <div class="technical-support-item-box">
-        <img src="/src/assets/images/chrome_frameworks_fund.png" />
-      </div>
-      <div class="technical-support-item-box">
-        <img src="/src/assets/images/javascript_certification.png" />
-      </div>
-      <div class="technical-support-item-box">
-        <img src="/src/assets/images/vuemastery.png" />
-      </div>
-      <div class="technical-support-item-box">
-        <img src="/src/assets/images/vuemastery.png" />
-      </div>
-      <div class="technical-support-item-box">
-        <img src="/src/assets/images/vuemastery.png" />
-      </div>
+      <a class="technical-support-item-box" v-for="(item, idx) in supportData" :key="idx">
+        <img :src="item.img" />
+      </a>
     </div>
+    <n-divider />
+    <div>Mix Blog 1.0.0 · Made by LQK</div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const supportData = [
+  {
+    img: '/src/assets/images/footer/javascript_certification.png',
+  },
+  {
+    img: '/src/assets/images/footer/TepyScript.png',
+  },
+  {
+    img: '/src/assets/images/footer/vite.svg',
+  },
+  {
+    img: '/src/assets/images/footer/echarts.png',
+  },
+  {
+    img: '/src/assets/images/footer/vant4.png',
+  },
+  {
+    img: '/src/assets/images/footer/Github.svg',
+  },
+  {
+    img: '/src/assets/images/footer/vue3.svg',
+  },
+  {
+    img: '/src/assets/images/footer/naive.svg',
+  },
+  {
+    img: '/src/assets/images/footer/pinia.svg',
+  },
+  {
+    img: '/src/assets/images/footer/nodeJs.png',
+  },
+  {
+    img: '/src/assets/images/footer/express.svg',
+  },
+  {
+    img: '/src/assets/images/footer/scss.svg',
+  },
+  {
+    img: '/src/assets/images/footer/mongodb.svg',
+  },
+  {
+    img: '/src/assets/images/footer/esLint.svg',
+  },
+  {
+    img: '/src/assets/images/footer/unocss.svg',
+  },
+]
+</script>
 
 <style scoped lang="scss">
-.Footer-main-box {
-  width: 100%;
+.footer-main-box {
   border-top: 1px solid #ccc;
   background-color: rgb(255, 255, 255, 0.5);
   @include g.flexCenter;
   flex-direction: column;
-  padding: 20px 0;
+  padding: 10px 30vw;
+  padding-bottom: 4vh;
   span {
     display: inline-block;
     color: #474646;
-    margin: 10px 0;
+    margin: 20px 0;
     &:nth-child(1) {
       font-size: 16px;
       font-weight: 600;
@@ -42,15 +81,15 @@
     }
   }
   .technical-support {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
     .technical-support-item-box {
-      width: 206px;
       height: 84px;
       background-color: #dfdfdf;
       margin: 0 5px;
       border-radius: 2px;
       padding: 10px;
-      margin-bottom: 10px;
       img {
         width: 100%;
         height: 100%;

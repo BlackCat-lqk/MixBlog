@@ -20,18 +20,10 @@
           <p>记录瞬间</p>
         </div>
       </div>
-      <div class="random-notes-right-box">
-        <n-card title="文章标题">
-          <n-empty description="暂无内容">
-            <template #extra>
-              <n-button size="small"> 去写文章 </n-button>
-            </template>
-          </n-empty>
-        </n-card>
-      </div>
+      <notes-card></notes-card>
     </div>
     <div class="random-notes-more">
-      <n-button tertiary round> 更多 </n-button>
+      <n-button tertiary round @click="moreNotes"> 更多 </n-button>
     </div>
   </div>
 </template>
@@ -40,9 +32,16 @@
 import { addDays, isYesterday } from 'date-fns'
 import { ref } from 'vue'
 import { useMessage } from 'naive-ui'
+import { useRouter } from 'vue-router'
+import NotesCard from '@/components/NotesCard.vue'
 
+const router = useRouter()
 const value = ref(addDays(Date.now(), 1).valueOf())
 const message = useMessage()
+
+const moreNotes = () => {
+  router.push('/random-notes')
+}
 const handleUpdateValue = (
   _: number,
   { year, month, date }: { year: number; month: number; date: number },
@@ -78,8 +77,15 @@ const isDateDisabled = (timestamp: number) => {
   }
   .random-notes-content-box {
     display: flex;
+    height: 700px;
     .random-notes-left-box {
       margin-right: 40px;
+      flex: 0.4;
+      .calendar {
+        padding: 10px;
+        border-radius: 10px;
+        background-color: var(--box-bg-color1);
+      }
       :deep(.n-calendar) {
         height: auto;
         .n-calendar-dates {
@@ -87,7 +93,6 @@ const isDateDisabled = (timestamp: number) => {
         }
       }
       .random-notes-text {
-        margin-top: 40px;
         p {
           padding: 20px 0;
         }
@@ -108,18 +113,11 @@ const isDateDisabled = (timestamp: number) => {
         }
       }
     }
-    .random-notes-right-box {
-      flex: 1;
-      .n-card.n-card--bordered {
-        height: 100%;
-        @include g.borderRadius(10px);
-        box-shadow: -4px 4px 8px 2px rgba(147, 146, 146, 0.5);
-      }
-    }
   }
   .random-notes-more {
     @include g.flexCenter;
     margin: 50px;
+    @include g.moreBtn(94px, 48px);
   }
 }
 </style>
