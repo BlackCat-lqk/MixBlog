@@ -6,7 +6,6 @@ import 'vant/lib/index.css'
 import { createApp } from 'vue'
 import pinia from './stores/index'
 import { useThemeStore } from '@/stores/themeStore'
-import '@/mock/randomNotes.ts'
 
 import App from './App.vue'
 import router from './router'
@@ -17,6 +16,16 @@ app.use(pinia)
 app.use(router)
 app.use(naive)
 app.use(Vant)
+
+// 只在开发环境启用 mirage
+if (import.meta.env.MODE === 'development') {
+  import('./mirage/index').then(({ default: makeServer }) => {
+    makeServer()
+    console.log('Mirage server started')
+  }).catch((error) => {
+    console.error('Failed to start Mirage server:', error)
+  })
+}
 
 app.mount('#app')
 

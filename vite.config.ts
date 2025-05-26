@@ -25,9 +25,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // 代理目标地址
+        target: 'http://localhost:3000', // 代理目标地址
         changeOrigin: true,
       },
     },
   },
+  optimizeDeps: {
+    include: ['@faker-js/faker']
+  }
 })

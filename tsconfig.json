@@ -10,5 +10,9 @@
     {
       "path": "./tsconfig.vitest.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "moduleResolution": "Bundler", // "Node10", "Node16" or "NodeNext"
+    "strict": true // Optional, but recommended
+  }
 }
