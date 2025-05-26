@@ -22,6 +22,19 @@
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import NotesCard from '@/components/NotesCard.vue'
+import { ref, onMounted } from 'vue'
+import type { NoteItem } from '@/apiType/note'
+
+const notesList = ref<NoteItem[]>([])
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/notes/list')
+    const data = await res.json()
+    notesList.value = data.data.list
+  } catch (error) {
+    console.error('请求失败:', error)
+  }
+})
 </script>
 
 <style scoped lang="scss">

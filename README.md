@@ -72,3 +72,5 @@ npm install postcss-pxtorem autoprefixer --save-dev
 
 移动端使用：vant组件库
 使用了动态路由来加载H5
+
+使用了mock.js来模拟数据
