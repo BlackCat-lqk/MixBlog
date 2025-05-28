@@ -38,6 +38,16 @@ const router = createRouter({
       name: 'About',
       component: () => import('@/views/About/AboutView.vue'),
     },
+    {
+      path: '/bms/overview',
+      name: 'Overview',
+      component: () => import('@/views/BMS/Overview/OverView.vue'),
+    },
+    {
+      path: '/bms/article',
+      name: 'Article',
+      component: () => import('@/views/BMS/BlogArticle/BlogArticle.vue'),
+    },
   ],
 })
 
