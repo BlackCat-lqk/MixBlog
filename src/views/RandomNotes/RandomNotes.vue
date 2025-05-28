@@ -5,12 +5,28 @@
   <div class="random-notes-main">
     <div class="random-notes-list-box">
       <div class="random-notes-list">
-        <div class="random-notes-list-item" v-for="(item, idx) in 8" :key="idx"></div>
+        <div
+          class="random-notes-list-item"
+          v-for="(item, idx) in notesList"
+          :key="idx"
+          @click="handleNotesDetail(item)"
+        >
+          <div class="random-notes-list-date">
+            <div class="note-date">
+              <span>{{ item.date }}</span>
+            </div>
+            <div class="note-whter"><img src="@/assets/images/WeatherSunny.svg" /></div>
+          </div>
+          <div class="random-notes-list-content">
+            <p>{{ item.title }}</p>
+            <p>{{ item.content }}</p>
+          </div>
+        </div>
       </div>
       <div class="random-notes-comment"></div>
     </div>
     <div class="random-notes-content">
-      <notes-card></notes-card>
+      <notes-card :notesDetail="notesDetail"></notes-card>
     </div>
   </div>
   <footer>
@@ -26,11 +42,22 @@ import { ref, onMounted } from 'vue'
 import type { NoteItem } from '@/apiType/note'
 
 const notesList = ref<NoteItem[]>([])
+const notesDetail = ref<NoteItem>({
+  id: '',
+  title: '',
+  content: '',
+  date: '',
+})
+
+const handleNotesDetail = (item: NoteItem) => {
+  notesDetail.value = item
+}
+
 onMounted(async () => {
   try {
     const res = await fetch('/api/notes/list')
     const data = await res.json()
-    notesList.value = data.data.list
+    notesList.value = data.data
   } catch (error) {
     console.error('请求失败:', error)
   }
@@ -60,7 +87,7 @@ onMounted(async () => {
       gap: 24px;
       overflow: auto;
       grid-template-columns: repeat(auto-fill, minmax(1, 1fr)); /* 每个子元素最小200px，自动换行 */
-      grid-auto-rows: 200px;
+      grid-auto-rows: 180px;
       @include g.scrollbarCustom;
       padding-right: 10px;
       .random-notes-list-item {
@@ -68,6 +95,42 @@ onMounted(async () => {
         height: 100%;
         background-color: #fff;
         border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        .random-notes-list-date {
+          height: 30px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          .note-whter {
+            width: 30px;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+        }
+        .random-notes-list-content {
+          flex: 1;
+          padding: 10px;
+          > p:first-child {
+            font-size: 20px;
+            line-height: 1.4;
+            padding-bottom: 8px;
+            font-weight: 600;
+          }
+          > p:last-child {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+          }
+        }
       }
     }
     .random-notes-comment {

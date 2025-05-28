@@ -3,9 +3,9 @@
     <n-card>
       <template #header>
         <div class="random-notes-title">
-          <span>文章标题</span>
+          <span>{{ props.notesDetail.title }}</span>
           <div class="random-notes-date">
-            <p>2025-05-29</p>
+            <p>{{ props.notesDetail.date }}</p>
             <n-icon size="20">
               <img src="@/assets/images/WeatherSunny.svg" alt="" />
             </n-icon>
@@ -15,7 +15,7 @@
       <n-divider />
       <div class="random-notes-content">
         <p>
-          短短的春节已经结束，我的2025年正式开启。无论是工作还是生活种种。从这一刻起，我要用一个全新的面貌去面对2025年。对于之前的种种遗憾和失落心情通通盖下定论就此翻过。让他们尘封在这一刻之前。接下来的一切都是崭新的，这一刻也都是崭新的。我要时刻关注我对新一年许下的心愿，和那些积极的规划。用全新的心态去迎接我对自己的挑战。让这些心愿都朝着设想的方向前进。一定是一个更好的自己在下一刻等着我。朋友们如果你对2025有所计划，让我们一起努力，一起去为自己加油吧！加油！加油！加油
+          {{ props.notesDetail.content }}
         </p>
       </div>
     </n-card>
@@ -30,7 +30,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
+
+const props = defineProps({
+  notesDetail: {
+    type: Object,
+    default: () => ({}),
+  },
+})
 
 const hasNote = ref(true)
 </script>
@@ -56,6 +63,10 @@ const hasNote = ref(true)
         font-size: 24px;
         line-height: 34px;
         font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: calc(100% - 300px);
       }
       .random-notes-date {
         @include g.flexCenter;
