@@ -43,23 +43,25 @@ $btnColor: #21b5e2;
 /* 后台管理框架样式 */
 @mixin bms {
   .bms-main-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  .content-box{
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex: 1;
-    .sidebar-box {
-      margin: 8px;
-      padding: 8px 16px;
-      background-color: #fff;
-    }
-    .main-router-box {
+    flex-direction: column;
+    .content-box {
+      display: flex;
       flex: 1;
-      background-color: #fff;
-      margin: 8px;
+      .sidebar-box {
+        margin: 8px;
+        padding: 8px 16px;
+        background-color: #fff;
+        border-radius: 8px;
+      }
+      .main-router-box {
+        flex: 1;
+        background-color: #fff;
+        margin: 8px;
+        border-radius: 8px;
+      }
     }
   }
-}
 }

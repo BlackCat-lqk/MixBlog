@@ -7,6 +7,7 @@
         <img v-if="state.switchTheme" src="/src/assets/images/logo-transparent.png" alt="" />
         <img v-else src="/src/assets/images/logo-transparent-night.png" alt="" />
       </div>
+      <n-button @click="jumpPage('/bms/overview')">管理后台</n-button>
       <div class="search-box">
         <n-popselect
           v-model:value="state.searchQuery"
