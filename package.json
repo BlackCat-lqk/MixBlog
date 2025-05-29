@@ -19,6 +19,7 @@
   "dependencies": {
     "@faker-js/faker": "^9.8.0",
     "@rollup/plugin-terser": "^0.4.4",
+    "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^13.2.0",
     "axios": "^1.9.0",
     "echarts": "^5.6.0",

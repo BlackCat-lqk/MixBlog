@@ -55,11 +55,15 @@ $btnColor: #21b5e2;
         padding: 8px 16px;
         background-color: #fff;
         border-radius: 8px;
+        position: fixed;
+        top: 56px;
+        z-index: 1;
+        height: calc(100% - 86px);
       }
       .main-router-box {
         flex: 1;
         background-color: #fff;
-        margin: 8px;
+        margin: 64px 8px 8px 248px;
         border-radius: 8px;
       }
     }

@@ -74,3 +74,5 @@ npm install postcss-pxtorem autoprefixer --save-dev
 使用了动态路由来加载H5
 
 使用了mirage.js、faker-js/faker来模拟数据
+
+使用了@vueup/vue-quill组件进行富文本编辑

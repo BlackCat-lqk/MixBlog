@@ -17,7 +17,7 @@
               <div class="gather-cards-content">
                 <h2>99</h2>
                 <div class="gather-cards-content-icon">
-                  <n-button strong secondary>
+                  <n-button strong secondary @click="handleJump(item)">
                     <img src="@/assets/images/Add.svg" />
                   </n-button>
                 </div>
@@ -25,13 +25,23 @@
             </n-card>
           </div>
         </div>
-        <visit-line
-          :options="lineOptions"
-          :dark="isDarkMode"
-          :loading="loading"
-          :isEmpty="isEmptyData"
-        >
-        </visit-line>
+        <div class="view-statistics">
+          <div class="echarts-view">
+            <div>
+              <echarts-init :options="lineOptions" :dark="isDarkMode" :loading="loading" :isEmpty="isEmptyData">
+              </echarts-init>
+            </div>
+
+            <div>
+              <echarts-init :options="pieOptions" :dark="isDarkMode" :loading="loading" :isEmpty="isEmptyData">
+              </echarts-init>
+            </div>
+
+          </div>
+          <div class="comment-info">
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -39,40 +49,35 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { EChartsOption } from 'echarts'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import VisitLine from '@/echarts/VisitLine.vue'
+import EchartsInit from '@/echarts/EchartsInit.vue'
+import { lineOptions, pieOptions } from '@/echarts/echartsConfig.ts'
+import { useRouter } from 'vue-router'
 
 // 加载状态
 const loading = ref(true)
 const isEmptyData = ref(false)
 // 主题控制
 const isDarkMode = ref(false)
+const router = useRouter()
 
 // 模拟异步加载数据
 setTimeout(() => {
   loading.value = false
 }, 1000)
 
-const lineOptions: EChartsOption = {
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-  },
-  yAxis: {},
-  series: [
-    {
-      type: 'line',
-      data: [120, 132, 101, 134, 90, 230, 210],
-    },
-  ],
+const handleJump = (item: number) => {
+  if(item === 1){
+    router.push('/bms/editarticle')
+  }
 }
+
 </script>
 
 <style lang="scss" scoped>
 @include g.bms;
+
 .main-router-box {
   margin-left: 208px;
   padding: 32px;
@@ -81,12 +86,14 @@ const lineOptions: EChartsOption = {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     h3 {
       font-size: 24px;
       line-height: 1.34;
       font-weight: 600;
     }
   }
+
   .gather {
     display: flex;
     gap: 16px;
@@ -94,35 +101,66 @@ const lineOptions: EChartsOption = {
     justify-content: flex-start;
     align-items: flex-start;
     margin-top: 24px;
+
     .gather-cards {
       width: calc((100% - 32px) / 3);
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       .n-card {
         background: linear-gradient(rgba(43, 90, 237, 0.8) 0%, rgb(43, 90, 237) 100%);
         border-radius: 10px;
       }
+
       .gather-cards-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         h2 {
           font-size: 32px;
           line-height: 1.28;
           font-weight: 600;
           color: #fff;
         }
+
         .gather-cards-content-icon {
           background-color: #41444f14;
           border-radius: 10px;
+
           img {
             width: 16px;
             height: 16px;
           }
         }
       }
+    }
+  }
+
+  .view-statistics {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    .echarts-view {
+      flex: 0.6;
+      gap: 12px;
+      max-width: 60%;
+      div {
+        margin-bottom: 12px;
+        border: 1px solid #424242;
+        height: 400px;
+        border-radius: 8px;
+      }
+      div:last-child{
+        margin-bottom: 0;
+      }
+    }
+    .comment-info {
+      flex: 0.4;
+      border: 1px solid #424242;
+      border-radius: 8px;
     }
   }
 }

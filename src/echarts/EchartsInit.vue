@@ -79,10 +79,10 @@ onBeforeUnmount(() => {
 .chart-wrapper {
   position: relative;
   width: 100%;
-
+  height: 100%;
   .chart-container {
     width: 100%;
-    height: 400px;
+    height: 100%;
   }
 
   .chart-loading,

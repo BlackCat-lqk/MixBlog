@@ -8,17 +8,17 @@
     </div>
     <div class="menu-box">
       <div @click="changeTheme" class="theme-icon">
-        <n-icon v-if="theme === 'light'" size="30">
+        <n-icon v-if="theme === 'light'" size="24">
           <img src="@/assets/images/LightModeFilled.svg" />
         </n-icon>
-        <n-icon v-else size="30">
+        <n-icon v-else size="24">
           <img src="@/assets/images/NightlightRoundSharp.svg" />
         </n-icon>
       </div>
       <div class="avatar-box">
         <n-avatar
           round
-          size="large"
+          size="small"
           src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
         />
       </div>
@@ -41,12 +41,14 @@ const changeTheme = () => {
 <style lang="scss" scoped>
 .header-view-box {
   width: 100%;
-  height: 60px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
   padding: 10px 0px 5px 0px;
+  position: fixed;
+  z-index: 1;
   .logo-box {
     display: flex;
     align-items: center;
@@ -70,12 +72,19 @@ const changeTheme = () => {
     .theme-icon {
       cursor: pointer;
       margin-right: 20px;
+      display: flex;
+      align-items: center;
     }
     .avatar-box {
       margin-right: 20px;
+      display: flex;
+      align-items: center;
     }
     .exit-box {
       margin-right: 10px;
+      .n-button{
+        width: 80px;
+      }
     }
   }
 }
