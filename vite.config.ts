@@ -13,14 +13,18 @@ import terser from '@rollup/plugin-terser'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx(), vueDevTools(),
+  plugins: [
+    vue(),
+    vueJsx(),
+    vueDevTools(),
     preload(),
     // 使用gzip压缩算法
     compression({
-    algorithm: 'gzip',
-    ext: '.gz',
-    deleteOriginFile: false,
-  })],
+      algorithm: 'gzip',
+      ext: '.gz',
+      deleteOriginFile: false,
+    }),
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -45,10 +49,10 @@ export default defineConfig({
     watch: {
       usePolling: true,
       interval: 100,
-    }
+    },
   },
   optimizeDeps: {
-    include: ['@faker-js/faker']
+    include: ['@faker-js/faker'],
   },
   build: {
     cssMinify: true,
@@ -61,14 +65,12 @@ export default defineConfig({
     },
     // 拆分第三方库
     rollupOptions: {
-      plugins: [
-        terser(),
-      ],
+      plugins: [terser()],
       output: {
         manualChunks: {
-          vendor: ['vue', 'vue-router', 'pinia', '@vitejs/plugin-vue']
-        }
+          vendor: ['vue', 'vue-router', 'pinia', '@vitejs/plugin-vue'],
+        },
       },
     },
-  }
+  },
 })

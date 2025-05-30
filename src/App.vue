@@ -3,6 +3,7 @@
     <!-- <div class="mix-main-progress-bar">
       <n-progress type="line" :percentage="loadedResources" indicator-placement="inside" processing />
     </div> -->
+
     <n-message-provider>
       <RouterView />
     </n-message-provider>

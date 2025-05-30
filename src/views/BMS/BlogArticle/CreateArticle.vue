@@ -23,22 +23,50 @@
                   <n-input placeholder="请输入标题" v-model:value="title" />
                 </div>
                 <div class="classify-tag-box">
-                  <n-select v-model:value="classifyValue" :options="classifyOption" placeholder="请选择分类" />
+                  <n-select
+                    v-model:value="classifyValue"
+                    :options="classifyOption"
+                    placeholder="请选择分类"
+                  >
+                    <template #action>
+                      <n-button type="info" style="width: 100%" strong secondary>
+                        <img style="width: 16px" src="@/assets/images/Add.svg" />新增分类
+                      </n-button>
+                    </template>
+                  </n-select>
                   <span>|</span>
-                  <n-button quaternary>
-                    插入标签
-                  </n-button>
+                  <n-button secondary @click="insertTag"> 插入标签 </n-button>
                 </div>
               </div>
               <div class="cover-box">
-                <n-upload list-type="image-card" @preview="handlePreview" :default-file-list="previewFileList" />
-                <n-modal v-model:show="showModalRef" preset="card" style="width: 600px" title="预览">
-                  <img :src="previewImageUrlRef" style="width: 100%">
+                <n-upload
+                  list-type="image-card"
+                  @preview="handlePreview"
+                  :default-file-list="previewFileList"
+                >
+                  <div class="cover-box-icon">
+                    <img src="@/assets/images/Add.svg" />
+                    <span>封面800*600</span>
+                  </div>
+                </n-upload>
+                <n-modal
+                  v-model:show="showModalRef"
+                  preset="card"
+                  style="width: 600px"
+                  title="预览"
+                >
+                  <img :src="previewImageUrlRef" style="width: 100%" />
                 </n-modal>
               </div>
             </div>
             <div class="introduction-box">
-              <n-input v-model:value="introduction" type="textarea" placeholder="请输入简介..." show-count maxlength="150" />
+              <n-input
+                v-model:value="introduction"
+                type="textarea"
+                placeholder="请输入简介..."
+                show-count
+                maxlength="150"
+              />
             </div>
           </div>
           <QuillEditor v-model="articleContent" :options="options" />
@@ -54,8 +82,11 @@ import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import type { UploadFileInfo } from 'naive-ui'
 import { ref } from 'vue'
+import { useDialog, useMessage } from 'naive-ui'
 
 const title = ref('')
+const dialog = useDialog()
+const message = useMessage()
 const articleContent = ref('')
 const introduction = ref('')
 const showModalRef = ref(false)
@@ -65,12 +96,12 @@ const classifyValue = ref(null)
 const classifyOption = [
   {
     label: 'Drive My Car',
-    value: 'song1'
+    value: 'song1',
   },
   {
     label: 'Norwegian Wood',
-    value: 'song2'
-  }
+    value: 'song2',
+  },
 ]
 
 const options = {
@@ -80,31 +111,47 @@ const options = {
         ['bold', 'italic', 'underline', 'strike'], // 加粗 斜体 下划线 删除线
         ['blockquote', 'code-block'], // 引用代码块
 
-        [{ 'header': 1 }, { 'header': 2 }], // 标题
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }], // 有序/无序列表
-        [{ 'script': 'sub' }, { 'script': 'super' }], // 上标/下标
+        [{ header: 1 }, { header: 2 }], // 标题
+        [{ list: 'ordered' }, { list: 'bullet' }], // 有序/无序列表
+        [{ script: 'sub' }, { script: 'super' }], // 上标/下标
 
-        [{ 'indent': '-1' }, { 'indent': '+1' }], // 缩进
-        [{ 'direction': 'rtl' }], // 文字方向
+        [{ indent: '-1' }, { indent: '+1' }], // 缩进
+        [{ direction: 'rtl' }], // 文字方向
 
-        [{ 'size': ['small', false, 'large', 'huge'] }], // 字号
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }], // 标题级别
+        [{ size: ['small', false, 'large', 'huge'] }], // 字号
+        [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题级别
 
-        [{ 'color': [] }, { 'background': [] }], // 颜色选择器
-        [{ 'font': [] }], // 字体选择
-        [{ 'align': [] }], // 对齐方式
+        [{ color: [] }, { background: [] }], // 颜色选择器
+        [{ font: [] }], // 字体选择
+        [{ align: [] }], // 对齐方式
 
         ['clean'], // 清除样式
-        ['link', 'image', 'video'] // 插入链接、图片、视频
-      ]
-    }
+        ['link', 'image', 'video'], // 插入链接、图片、视频
+      ],
+    },
   },
   placeholder: 'Compose an epic...',
   readOnly: false,
-  theme: 'snow'
+  theme: 'snow',
 }
 
 const previewFileList = ref([])
+
+const insertTag = () => {
+  dialog.create({
+    title: '警告',
+    content: '你确定？',
+    positiveText: '确定',
+    negativeText: '不确定',
+    draggable: true,
+    onPositiveClick: () => {
+      message.success('确定')
+    },
+    onNegativeClick: () => {
+      message.error('不确定')
+    },
+  })
+}
 
 const handlePreview = (file: UploadFileInfo) => {
   const { url } = file
@@ -112,7 +159,6 @@ const handlePreview = (file: UploadFileInfo) => {
   showModalRef.value = true
   console.log(previewImageUrlRef.value)
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -156,17 +202,35 @@ const handlePreview = (file: UploadFileInfo) => {
           min-width: 300px;
           margin-bottom: 30px;
           .title-input-box {
-          margin-bottom: 20px;
-        }
-        .classify-tag-box {
-          display: flex;
-          align-items: center;
-          span {
-            margin-left: 10px;
+            margin-bottom: 20px;
+          }
+          .classify-tag-box {
+            display: flex;
+            align-items: center;
+            span {
+              margin: 0 10px;
+            }
           }
         }
+        .cover-box {
+          .cover-box-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            img {
+              width: 16px;
+              height: 16px;
+            }
+            span {
+              margin-top: 4px;
+              font-size: 14px;
+              color: #1e2025b8;
+              line-height: 18px;
+            }
+          }
         }
-
       }
     }
     .introduction-box {
