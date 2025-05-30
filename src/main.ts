@@ -9,7 +9,6 @@ import { useThemeStore } from '@/stores/themeStore'
 
 import App from './App.vue'
 import router from './router'
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const app = createApp(App)
 
