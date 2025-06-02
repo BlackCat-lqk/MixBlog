@@ -5,7 +5,8 @@
       tertiary
       v-for="(item, index) in menu"
       :key="index"
-      @click="() => $router.push(item.path)"
+      :class="{ active: item.active }"
+      @click="() => router.push(item.path)"
     >
       <img :src="item.icon" />
       {{ item.name }}
@@ -14,38 +15,47 @@
 </template>
 
 <script setup lang="ts">
-const menu = [
-  {
-    name: '总览',
-    path: '/bms/overview',
-    icon: new URL('@/assets/images/overview.svg', import.meta.url).href,
-  },
-  {
-    name: '博客文章',
-    path: '/bms/article',
-    icon: new URL('@/assets/images/Article.svg', import.meta.url).href,
-  },
-  {
-    name: '摄影图库',
-    path: '/',
-    icon: new URL('@/assets/images/PhotoLibrary.svg', import.meta.url).href,
-  },
-  {
-    name: '随笔随记',
-    path: '/bms/article',
-    icon: new URL('@/assets/images/Notes.svg', import.meta.url).href,
-  },
-  {
-    name: 'Banner',
-    path: '/bms/article',
-    icon: new URL('@/assets/images/StarBanner.svg', import.meta.url).href,
-  },
-  {
-    name: '用户设置',
-    path: '/bms/article',
-    icon: new URL('@/assets/images/UserSet.svg', import.meta.url).href,
-  },
-]
+import { computed, reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+const menu = reactive(
+  [
+    {
+      name: '总览',
+      path: '/bms/overview',
+      icon: new URL('@/assets/images/overview.svg', import.meta.url).href,
+    },
+    {
+      name: '博客文章',
+      path: '/bms/article',
+      icon: new URL('@/assets/images/Article.svg', import.meta.url).href,
+    },
+    {
+      name: '摄影图库',
+      path: '/bms/photo',
+      icon: new URL('@/assets/images/PhotoLibrary.svg', import.meta.url).href,
+    },
+    {
+      name: '随笔随记',
+      path: '/bms/notes',
+      icon: new URL('@/assets/images/Notes.svg', import.meta.url).href,
+    },
+    {
+      name: 'Banner',
+      path: '/bms/banner',
+      icon: new URL('@/assets/images/StarBanner.svg', import.meta.url).href,
+    },
+    {
+      name: '用户设置',
+      path: '/bms/userSet',
+      icon: new URL('@/assets/images/UserSet.svg', import.meta.url).href,
+    },
+  ].map((item) => ({
+    ...item,
+    active: computed(() => route.path === item.path),
+  })),
+)
 </script>
 
 <style lang="scss" scoped>
@@ -65,6 +75,10 @@ const menu = [
       object-fit: cover;
       margin-right: 10px;
     }
+  }
+  .active {
+    background-color: #2b5aed;
+    color: #fff;
   }
 }
 </style>

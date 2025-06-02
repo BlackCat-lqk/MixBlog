@@ -23,7 +23,11 @@
                   <n-input placeholder="请输入标题" v-model:value="title" />
                 </div>
                 <div class="classify-tag-box">
-                  <n-select v-model:value="classifyValue" :options="classifyOption" placeholder="请选择分类">
+                  <n-select
+                    v-model:value="classifyValue"
+                    :options="classifyOption"
+                    placeholder="请选择分类"
+                  >
                     <template #action>
                       <n-button type="info" style="width: 100%" strong secondary>
                         <img style="width: 16px" src="@/assets/images/Add.svg" />新增分类
@@ -35,22 +39,37 @@
                 </div>
               </div>
               <div class="cover-box">
-                <n-upload list-type="image-card" @preview="handlePreview" :default-file-list="previewFileList">
+                <n-upload
+                  list-type="image-card"
+                  @preview="handlePreview"
+                  :default-file-list="previewFileList"
+                >
                   <div class="cover-box-icon">
                     <img src="@/assets/images/Add.svg" />
                     <span>封面800*600</span>
                   </div>
                 </n-upload>
-                <n-modal v-model:show="showModalRef" preset="card" style="width: 600px" title="预览">
+                <n-modal
+                  v-model:show="showModalRef"
+                  preset="card"
+                  style="width: 600px"
+                  title="预览"
+                >
                   <img :src="previewImageUrlRef" style="width: 100%" />
                 </n-modal>
               </div>
             </div>
             <div class="introduction-box">
-              <n-input v-model:value="introduction" type="textarea" placeholder="请输入简介..." show-count maxlength="150" />
+              <n-input
+                v-model:value="introduction"
+                type="textarea"
+                placeholder="请输入简介..."
+                show-count
+                maxlength="150"
+              />
             </div>
           </div>
-          <tiptap-editor></tiptap-editor>
+          <!-- <tiptap-editor></tiptap-editor> -->
         </div>
       </div>
     </div>
@@ -63,8 +82,7 @@ import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import type { UploadFileInfo } from 'naive-ui'
 import { ref } from 'vue'
 import { useDialog, useMessage } from 'naive-ui'
-import TiptapEditor from '@/components/TiptapEditor.vue'
-
+// import TiptapEditor from '@/components/TiptapEditor.vue'
 
 const title = ref('')
 const dialog = useDialog()
@@ -86,7 +104,6 @@ const classifyOption = [
 ]
 
 const previewFileList = ref([])
-
 
 const insertTag = () => {
   dialog.create({
@@ -110,7 +127,6 @@ const handlePreview = (file: UploadFileInfo) => {
   showModalRef.value = true
   console.log(previewImageUrlRef.value)
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -197,6 +213,5 @@ const handlePreview = (file: UploadFileInfo) => {
       margin-bottom: 30px;
     }
   }
-
 }
 </style>

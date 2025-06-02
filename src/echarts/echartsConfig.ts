@@ -2,6 +2,16 @@ import type { EChartsOption } from 'echarts'
 
 // 访问量折线图
 const lineOptions: EChartsOption = {
+  title: {
+    text: '访问量',
+    show: true,
+    top: '2%',
+    left: '3%',
+  },
+  grid: {
+    left: '8%',
+    bottom: '8%',
+  },
   tooltip: {},
   xAxis: {
     type: 'category',
@@ -18,42 +28,46 @@ const lineOptions: EChartsOption = {
 
 // 数据监测饼状图
 const pieOptions: EChartsOption = {
+  title: {
+    text: '数据监测',
+    show: true,
+    top: '2%',
+    left: '3%',
+  },
   tooltip: {
-    trigger: 'item'
+    trigger: 'item',
   },
   legend: {
-    top: '5%',
-    left: 'center'
+    top: '15%',
+    left: 'center',
   },
   series: [
     {
       name: 'Access From',
       type: 'pie',
       radius: ['40%', '70%'],
+      center: ['50%', '60%'],
       avoidLabelOverlap: false,
       label: {
         show: false,
-        position: 'center'
+        position: 'center',
       },
       emphasis: {
         label: {
           show: true,
-          fontSize: 40,
-          fontWeight: 'bold'
-        }
+          fontSize: 24,
+          fontWeight: 'bold',
+        },
       },
       labelLine: {
-        show: false
+        show: false,
       },
       data: [
         { value: 1048, name: '移动端' },
         { value: 735, name: 'PC端' },
-      ]
-    }
-  ]
+      ],
+    },
+  ],
 }
 
-export{
-  lineOptions,
-  pieOptions
-}
+export { lineOptions, pieOptions }

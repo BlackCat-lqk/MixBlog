@@ -5,6 +5,7 @@
         <img src="@/assets/images/logo-transparent.png" />
       </div>
       <n-gradient-text :size="24" type="success"> Mix Blog BMS </n-gradient-text>
+      <p @click="router.push('/')">返回前台</p>
     </div>
     <div class="menu-box">
       <div @click="changeTheme" class="theme-icon">
@@ -30,8 +31,10 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
+const router = useRouter()
 const theme = ref('light')
 const changeTheme = () => {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
@@ -82,7 +85,7 @@ const changeTheme = () => {
     }
     .exit-box {
       margin-right: 10px;
-      .n-button{
+      .n-button {
         width: 80px;
       }
     }
