@@ -15,18 +15,29 @@
         <div class="list-photo-box">
           <div class="photo-box" v-for="(item, idx) in 8" :key="idx">
             <div class="images-box">
-              <div class="top-mix-image"></div>
+              <div class="top-mix-image">
+                <img src="@/assets/wallpaper/nanning.jpg" />
+              </div>
               <div class="footer-image-box">
-                <div class="footer-image-item"></div>
-                <div class="footer-image-item"></div>
-                <div class="footer-image-item"></div>
+                <div class="footer-image-item">
+                  <img src="@/assets/wallpaper/about.jpg" />
+                </div>
+                <div class="footer-image-item">
+                  <img src="@/assets/wallpaper/about1.png" />
+                </div>
+                <div class="footer-image-item">
+                  <img src="@/assets/wallpaper/login-register-item2.jpg" />
+                </div>
               </div>
             </div>
             <div class="photo-desc">
               <h3>Title</h3>
               <div class="photo-desc-info">
-                <span>喜欢1</span>
-                <span>查看1</span>
+                <div>
+                  <span>喜欢1</span>
+                  <span>查看1</span>
+                </div>
+
                 <span>2025.5.31</span>
               </div>
             </div>
@@ -43,7 +54,6 @@ import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import HeaderDetail from '@/views/BMS/components/HeaderDetail.vue'
 import ClassifyManage from '@/views/BMS/components/ClassifyManage.vue'
 const title = '摄影图库'
-
 </script>
 
 <style lang="scss" scoped>
@@ -54,42 +64,58 @@ const title = '摄影图库'
   .list-photo-box {
     display: flex;
     flex-wrap: wrap;
-    gap: 24px;
-    .photo-box{
+    gap: 32px;
+    .photo-box {
       display: flex;
       flex-direction: column;
       .images-box {
         display: flex;
         flex-direction: column;
-        width: 240px;
+        width: 238px;
         height: 240px;
         border-radius: 10px;
         overflow: hidden;
         .top-mix-image {
           width: 100%;
           height: 160px;
-          border: 1px solid #000;
+          margin-bottom: 2px;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
         }
-        .footer-image-box{
+        .footer-image-box {
           display: flex;
           .footer-image-item {
             width: 78px;
             height: 78px;
-            border: 1px solid #000;
+            margin-right: 2px;
+            &:last-child {
+              margin-right: 0;
+            }
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
           }
         }
       }
       .photo-desc {
         display: flex;
         flex-direction: column;
+        margin-top: 20px;
         h3 {
           font-size: 16px;
+          line-height: 1.34;
           font-weight: bold;
         }
-        .photo-desc-info{
+        .photo-desc-info {
           display: flex;
           justify-content: space-between;
-          span{
+          padding-top: 10px;
+          span {
             margin: 0 5px;
             font-size: 12px;
             color: #999;
@@ -99,6 +125,5 @@ const title = '摄影图库'
       }
     }
   }
-
 }
 </style>
