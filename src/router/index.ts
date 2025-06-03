@@ -53,6 +53,21 @@ const router = createRouter({
       name: 'CreateArticle',
       component: () => import('@/views/BMS/BlogArticle/CreateArticle.vue'),
     },
+    {
+      path: '/bms/photo',
+      name: 'ImageLibrary',
+      component: () => import('@/views/BMS/ImageLibrary/ImageLibrary.vue'),
+    },
+    {
+      path: '/bms/editPhoto',
+      name: 'CreatePhoto',
+      component: () => import('@/views/BMS/ImageLibrary/CreatePhoto.vue'),
+    },
+    {
+      path: '/bms/notes',
+      name: 'RandomNotes',
+      component: () => import('@/views/BMS/RandomNotes/RandomNotes.vue'),
+    },
   ],
 })
 

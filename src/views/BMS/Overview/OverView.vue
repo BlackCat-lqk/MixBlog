@@ -204,6 +204,10 @@ setTimeout(() => {
 const handleJump = (item: number) => {
   if (item === 1) {
     router.push('/bms/editarticle')
+  }else if(item === 2){
+     router.push('/bms/editPhoto')
+  }else if(item === 3){
+     router.push('/bms/notes')
   }
 }
 </script>
