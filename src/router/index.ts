@@ -55,7 +55,7 @@ const router = createRouter({
     },
     {
       path: '/bms/photo',
-      name: 'ImageLibrary',
+      name: 'Photo',
       component: () => import('@/views/BMS/ImageLibrary/ImageLibrary.vue'),
     },
     {
@@ -65,7 +65,7 @@ const router = createRouter({
     },
     {
       path: '/bms/notes',
-      name: 'RandomNotes',
+      name: 'BmsNotes',
       component: () => import('@/views/BMS/RandomNotes/RandomNotes.vue'),
     },
   ],
