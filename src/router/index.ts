@@ -68,6 +68,11 @@ const router = createRouter({
       name: 'BmsNotes',
       component: () => import('@/views/BMS/RandomNotes/RandomNotes.vue'),
     },
+    {
+      path: '/bms/userSet',
+      name: 'BmsUserSet',
+      component: () => import('@/views/BMS/UserSet/UerSet.vue'),
+    }
   ],
 })
 
