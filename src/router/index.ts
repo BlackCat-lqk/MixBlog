@@ -72,6 +72,11 @@ const router = createRouter({
       path: '/bms/userSet',
       name: 'BmsUserSet',
       component: () => import('@/views/BMS/UserSet/UerSet.vue'),
+    },
+    {
+      path: '/bms/bannerSet',
+      name: 'BmsBannerSet',
+      component: () => import('@/views/BMS/Banner/BannerSet.vue'),
     }
   ],
 })

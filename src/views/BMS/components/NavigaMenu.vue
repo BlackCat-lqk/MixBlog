@@ -43,7 +43,7 @@ const menu = reactive(
     },
     {
       name: 'Banner',
-      path: '/bms/banner',
+      path: '/bms/bannerSet',
       icon: new URL('@/assets/images/StarBanner.svg', import.meta.url).href,
     },
     {
