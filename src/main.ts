@@ -17,15 +17,15 @@ app.use(router)
 app.use(naive)
 app.use(Vant)
 
-// 只在开发环境启用 mirage
-if (import.meta.env.MODE === 'development') {
-  import('./mirage/index').then(({ default: makeServer }) => {
-    makeServer()
-    console.log('Mirage server started')
-  }).catch((error) => {
-    console.error('Failed to start Mirage server:', error)
-  })
-}
+// // 只在开发环境启用 mirage
+// if (import.meta.env.MODE === 'development') {
+//   import('./mirage/index').then(({ default: makeServer }) => {
+//     makeServer()
+//     console.log('Mirage server started')
+//   }).catch((error) => {
+//     console.error('Failed to start Mirage server:', error)
+//   })
+// }
 
 app.mount('#app')
 

@@ -24,8 +24,8 @@
             <div class="add-from-box">
               <n-form ref="formRef" inline :model="formValue" :rules="rules">
                 <n-grid :cols="24" :x-gap="24">
-                  <n-form-item-gi :span="12" label="用户名" path="name">
-                    <n-input v-model:value="formValue.name" placeholder="输入用户名" />
+                  <n-form-item-gi :span="12" label="用户名" path="userName">
+                    <n-input v-model:value="formValue.userName" placeholder="输入用户名" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="邮箱" path="email">
                     <n-input v-model:value="formValue.email" placeholder="输入邮箱" />
@@ -55,8 +55,8 @@
             <div class="edit-from-box">
               <n-form ref="editFormRef" inline :model="editFormValue" :rules="rules">
                 <n-grid :cols="24" :x-gap="24">
-                  <n-form-item-gi :span="12" label="用户名" path="name">
-                    <n-input v-model:value="editFormValue.name" placeholder="输入用户名" />
+                  <n-form-item-gi :span="12" label="用户名" path="userName">
+                    <n-input v-model:value="editFormValue.userName" placeholder="输入用户名" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="邮箱" path="email">
                     <n-input v-model:value="editFormValue.email" placeholder="输入邮箱" />
@@ -92,6 +92,7 @@ import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import { h, reactive, ref } from 'vue'
 import { NButton, useMessage, useDialog } from 'naive-ui'
 import { validateEmail, validateUsername, validatePassword } from '@/utils/validate'
+import { registerUser } from '@/http/user'
 const message = useMessage()
 const dialog = useDialog()
 const state = reactive({
@@ -104,17 +105,17 @@ const formRef = ref<FormInst | null>(null)
 const editFormRef = ref<FormInst | null>(null)
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const formValue = reactive({
-  name: '',
+  userName: '',
   email: '',
   password: '',
   role: '',
   confirmPassword: '',
 })
 const editFormValue = reactive({
-  name: '',
+  userName: '',
   email: '',
-  role: '',
-  status: '',
+  role: 'user',
+  status: 'enable',
 })
 // 再次输入密码验证
 const confirmPassword = (rule: FormItemRule, value: string): boolean | Error => {
@@ -122,7 +123,7 @@ const confirmPassword = (rule: FormItemRule, value: string): boolean | Error => 
 }
 // 表单验证规则
 const rules = {
-  name: {
+  userName: {
     required: true,
     trigger: ['input', 'blur'],
     validator: validateUsername
@@ -143,10 +144,12 @@ const rules = {
     validator: confirmPassword
   }
 }
+// 确认新增用户
 const handleValidateClick = (e: MouseEvent) => {
   e.preventDefault()
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate( async (errors) => {
     if (!errors) {
+      await registerUser(formValue)
       message.success('Valid')
     }
     else {
@@ -171,7 +174,7 @@ const handleEditValidate = (e: MouseEvent) => {
 interface User {
   no: number
   id: string
-  name: string
+  userName: string
   email: string
   role: string
   status: string
@@ -188,7 +191,7 @@ function createColumns({
     {
       type: 'selection',
       disabled(row: User) {
-        return row.name === 'Edward King 3'
+        return row.userName === 'Edward King 3'
       }
     },
     {
@@ -200,8 +203,8 @@ function createColumns({
       key: 'id'
     },
     {
-      title: 'Name',
-      key: 'name'
+      title: 'User Name',
+      key: 'userName'
     },
     {
       title: 'Email',
@@ -253,8 +256,8 @@ function createColumns({
 }
 const tableColumns = createColumns({
   operateEdit: (row) => {
-    message.info(`Edit ${row.name}`)
-    editFormValue.name = row.name
+    message.info(`Edit ${row.userName}`)
+    editFormValue.userName = row.userName
     editFormValue.email = row.email
     editFormValue.role = row.role
     editFormValue.status = row.status
@@ -275,12 +278,12 @@ const tableColumns = createColumns({
         message.error('取消')
       }
     })
-    message.info(`Delete ${row.name}`)
+    message.info(`Delete ${row.userName}`)
   }
 })
 const data: User[] = [
-  { no: 1, id: '2e01fd', name: 'Wonderwall', email: '15010@qq.com', role: 'admin', status: 'enable', created_at: '2021-09-01' },
-  { no: 2, id: '3e01fd', name: 'lqk', email: '15010@qq.com', role: 'user', status: 'disable', created_at: '2021-09-01' }
+  { no: 1, id: '2e01fd', userName: 'Wonderwall', email: '15010@qq.com', role: 'admin', status: 'enable', created_at: '2021-09-01' },
+  { no: 2, id: '3e01fd', userName: 'lqk', email: '15010@qq.com', role: 'user', status: 'disable', created_at: '2021-09-01' }
 ]
 const handleTableCheck = (rowKeys: DataTableRowKey[]) => {
   checkedRowKeysRef.value = rowKeys
