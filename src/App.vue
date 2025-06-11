@@ -1,10 +1,11 @@
 <template>
   <main>
-    <n-message-provider>
-      <n-dialog-provider>
-        <RouterView />
-      </n-dialog-provider>
-    </n-message-provider>
+      <n-message-provider>
+        <n-dialog-provider>
+          <RouterView />
+        </n-dialog-provider>
+      </n-message-provider>
+
   </main>
 </template>
 

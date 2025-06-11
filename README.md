@@ -76,3 +76,5 @@ npm install postcss-pxtorem autoprefixer --save-dev
 使用了mirage.js、faker-js/faker来模拟数据
 
 使用了@vueup/vue-quill组件进行富文本编辑
+
+使用 npx node-modules-inspector命令生成依赖可视化

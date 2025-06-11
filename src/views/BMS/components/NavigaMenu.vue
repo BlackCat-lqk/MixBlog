@@ -51,6 +51,11 @@ const menu = reactive(
       path: '/bms/userSet',
       icon: new URL('@/assets/images/UserSet.svg', import.meta.url).href,
     },
+    {
+      name: '用户管理',
+      path: '/bms/UserManagement',
+      icon: new URL('@/assets/images/UserManagement.svg', import.meta.url).href,
+    },
   ].map((item) => ({
     ...item,
     active: computed(() => route.path === item.path),
