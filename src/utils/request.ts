@@ -25,16 +25,25 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const res = response.data
-    if (res.code === 200) {
-      return response
+    console.log('success', response)
+    if (res.data.code === 200) {
+      return res
     } else {
-      console.log(res.message || '未知错误')
-      return Promise.reject(new Error(res.message || 'Unknown error'))
+      console.log(res.data.message || '未知错误')
+      return Promise.reject(new Error(res.data.message || 'Unknown error'))
     }
   },
   (error) => {
-    console.log('网络异常，请稍后再试')
-    return Promise.reject(error)
+    console.log('网络异常，请稍后再试', error)
+    const res = {
+      data: {
+        code: 400,
+        message: error.response.data.data.message,
+        data: null,
+        success: false,
+      },
+    }
+    return res
   },
 )
 
