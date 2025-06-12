@@ -10,6 +10,7 @@
       <div class="main-router-box">
         <h3>用户设置</h3>
         <personal-info></personal-info>
+        <h3>网站logo及首屏设置</h3>
         <logo-home-screen></logo-home-screen>
         <about-set></about-set>
       </div>
