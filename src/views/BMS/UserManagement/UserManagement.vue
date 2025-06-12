@@ -8,6 +8,9 @@
         <naviga-menu></naviga-menu>
       </div>
       <div class="main-router-box">
+        <div class="header-text">
+          <h3>用户管理</h3>
+        </div>
         <div class="option-btn-box">
           <n-space>
             <n-button type="info" @click="state.showAddModal = true">新增</n-button>
@@ -16,20 +19,11 @@
         </div>
         <div class="table-box" ref="tableBox">
           <n-config-provider>
-            <n-data-table
-              :columns="tableColumns"
-              :data="tableData"
-              :row-key="rowKey"
-              @update:checked-row-keys="handleTableCheck"
-            />
+            <n-data-table :columns="tableColumns" :data="tableData" :row-key="rowKey"
+              @update:checked-row-keys="handleTableCheck" />
           </n-config-provider>
-          <n-modal
-            v-model:show="state.showAddModal"
-            :to="$refs.tableBox"
-            style="width: 600px; padding: 10px"
-            preset="dialog"
-            title="新增用户"
-          >
+          <n-modal v-model:show="state.showAddModal" :to="$refs.tableBox" style="width: 600px; padding: 20px"
+            preset="dialog" title="新增用户">
             <div class="add-from-box">
               <n-form ref="formRef" inline :model="formValue" :rules="rules">
                 <n-grid :cols="24" :x-gap="24">
@@ -40,20 +34,13 @@
                     <n-input v-model:value="formValue.email" placeholder="输入邮箱" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="角色" path="role">
-                    <n-select
-                      v-model:value="formValue.role"
-                      placeholder="请选择角色"
-                      :options="state.roleOptions"
-                    />
+                    <n-select v-model:value="formValue.role" placeholder="请选择角色" :options="state.roleOptions" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="密码" path="password">
                     <n-input v-model:value="formValue.password" placeholder="请输入密码" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="确认密码" path="confirmPassword">
-                    <n-input
-                      v-model:value="formValue.confirmPassword"
-                      placeholder="请再次输入确认密码"
-                    />
+                    <n-input v-model:value="formValue.confirmPassword" placeholder="请再次输入确认密码" />
                   </n-form-item-gi>
                 </n-grid>
               </n-form>
@@ -63,12 +50,7 @@
               </div>
             </div>
           </n-modal>
-          <n-modal
-            v-model:show="state.showEditModal"
-            style="width: 600px; padding: 10px"
-            preset="dialog"
-            title="编辑用户"
-          >
+          <n-modal v-model:show="state.showEditModal" style="width: 600px; padding: 10px" preset="dialog" title="编辑用户">
             <div class="edit-from-box">
               <n-form ref="editFormRef" inline :model="editFormValue" :rules="rules">
                 <n-grid :cols="24" :x-gap="24">
@@ -79,18 +61,10 @@
                     <n-input v-model:value="editFormValue.email" placeholder="输入邮箱" disabled />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="角色" path="role">
-                    <n-select
-                      v-model:value="editFormValue.role"
-                      placeholder="请选择角色"
-                      :options="state.roleOptions"
-                    />
+                    <n-select v-model:value="editFormValue.role" placeholder="请选择角色" :options="state.roleOptions" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="状态" path="status">
-                    <n-select
-                      v-model:value="editFormValue.status"
-                      placeholder="状态"
-                      :options="state.statusOptions"
-                    />
+                    <n-select v-model:value="editFormValue.status" placeholder="状态" :options="state.statusOptions" />
                   </n-form-item-gi>
                 </n-grid>
               </n-form>
@@ -133,7 +107,7 @@ const state = reactive({
 const formRef = ref<FormInst | null>(null)
 const editFormRef = ref<FormInst | null>(null)
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
-let formValue = reactive({
+const formValue = ref({
   userName: '',
   email: '',
   password: '',
@@ -150,7 +124,7 @@ const editFormValue = reactive({
 
 // 再次输入密码验证
 const confirmPassword = (rule: FormItemRule, value: string): boolean | Error => {
-  return value === formValue.password ? true : new Error('密码不一致')
+  return value === formValue.value.password ? true : new Error('密码不一致')
 }
 // 表单验证规则
 const rules = {
@@ -180,12 +154,12 @@ const handleValidateClick = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const response = await registerUser(formValue)
+      const response = await registerUser(formValue.value)
       const res = response.data
       if (res.code === 200) {
         message.success(res.message)
         state.showAddModal = false
-        formValue = {
+        formValue.value = {
           userName: '',
           email: '',
           password: '',
@@ -320,7 +294,7 @@ const tableColumns = createColumns({
         message.success(res.data.message)
         getUsersList()
       },
-      onNegativeClick: () => {},
+      onNegativeClick: () => { },
     })
   },
 })
@@ -352,7 +326,13 @@ const rowKey = (row: User) => {
 }
 const cancleAdd = () => {
   state.showAddModal = false
-  message.error('取消')
+  formValue.value = {
+    userName: '',
+    email: '',
+    password: '',
+    role: '',
+    confirmPassword: '',
+  }
 }
 onMounted(() => {
   getUsersList()
@@ -365,6 +345,19 @@ onMounted(() => {
 .main-router-box {
   padding: 10px;
 
+  .header-text {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.34;
+      font-weight: 600;
+      color: #1e2025;
+    }
+  }
+
   .option-btn-box {
     padding: 10px;
     background-color: #2e33380d;
@@ -376,11 +369,12 @@ onMounted(() => {
     margin-top: 20px;
     background-color: #2e33380d;
     border-radius: 8px;
-    height: calc(100% - 94px);
+    height: calc(100% - 130px);
   }
 
   .add-from-box,
   .edit-from-box {
+
     .add-btn-space,
     .edit-btn-space {
       display: flex;

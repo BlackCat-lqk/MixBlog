@@ -16,32 +16,48 @@
     </div>
     <div class="home-data-banner">
       <n-carousel autoplay show-arrow>
-        <img
-          class="carousel-img"
-          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
-        />
-        <img
-          class="carousel-img"
-          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
-        />
-        <img
-          class="carousel-img"
-          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
-        />
-        <img
-          class="carousel-img"
-          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
-        />
+        <div v-for="(item, idx) in state.banners" :key="idx" class="carousel-box">
+          <div class="banner-config-box">
+            <h3>{{ item.title }}</h3>
+            <h4>{{ item.sub }}</h4>
+            <n-button type="primary">{{ item.mainBtnName }}</n-button>
+            <n-button strong secondary type="info">{{ item.childBtnName }}</n-button>
+          </div>
+          <div class="carousel-img">
+            <img :src="item.cover" />
+          </div>
+
+        </div>
       </n-carousel>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, reactive } from 'vue'
 import { useScrollStore } from '@/stores/scrollStore'
+import { getAllBanners } from '@/http/banner'
 const scrollStore = useScrollStore()
 const homeDataRef = ref()
+interface bannerDataType {
+  _id: string
+  title: string
+  sub: string
+  introduction: string
+  mainBtnName: string
+  childBtnName: string
+  mainBtnUrl: string
+  childBtnUrl: string
+  cover: string
+
+}
+const state = reactive({
+  banners: [] as bannerDataType[],
+})
+const getBannerData = async () => {
+  const res = await getAllBanners()
+  state.banners = res.data.data
+}
 watch(
   () => scrollStore.targetId,
   (newValue) => {
@@ -53,6 +69,9 @@ watch(
     }
   },
 )
+onMounted(() => {
+  getBannerData()
+})
 </script>
 
 <style scoped lang="scss">
@@ -60,6 +79,7 @@ watch(
   height: 400px;
   display: flex;
   scroll-margin-top: 80px;
+
   .home-data-detail {
     width: 316px;
     height: 100%;
@@ -67,13 +87,15 @@ watch(
     flex-direction: column;
     justify-content: space-between;
     margin-right: 30px;
+
     :deep(.n-statistic-value__content) {
       font-size: 48px;
       font-weight: 500;
       line-height: 48px;
       color: var(--text-color);
     }
-    & > div {
+
+    &>div {
       flex: 0.44;
       background-image: var(--box-bg-color);
       @include g.borderRadius(24px);
@@ -81,6 +103,7 @@ watch(
       display: flex;
       flex-direction: column;
       justify-content: center;
+
       p {
         font-size: 24px;
         line-height: 48px;
@@ -88,14 +111,46 @@ watch(
       }
     }
   }
+
   .home-data-banner {
     flex: 1;
     @include g.borderRadius(24px);
     overflow: hidden;
-    .carousel-img {
+
+    .carousel-box {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      position: relative;
+
+      .banner-config-box {
+        position: absolute;
+        left: 2%;
+        top: 50%;
+        color: #fff;
+        z-index: 1;
+        margin-top: 20px;
+
+        h3,
+        h4 {
+          margin-bottom: 16px;
+        }
+
+        .n-button {
+          margin-right: 16px;
+        }
+      }
+
+      .carousel-img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
     }
   }
 }

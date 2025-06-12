@@ -30,5 +30,12 @@ import AboutSet from './components/AboutSet.vue'
 .main-router-box {
   padding: 10px;
   gap: 12px;
+  h3 {
+    font-size: 18px;
+    line-height: 1.34;
+    font-weight: 600;
+    color: #1e2025;
+    padding-bottom: 10px;
+  }
 }
 </style>
