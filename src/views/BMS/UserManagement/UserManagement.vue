@@ -11,7 +11,7 @@
         <div class="option-btn-box">
           <n-space>
             <n-button type="info" @click="state.showAddModal = true">新增</n-button>
-            <n-button type="error">删除</n-button>
+            <n-button type="error" @click="deleteSelectUsers">删除</n-button>
           </n-space>
         </div>
         <div class="table-box" ref="tableBox">
@@ -76,7 +76,7 @@
                     <n-input v-model:value="editFormValue.userName" placeholder="输入用户名" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="邮箱" path="email">
-                    <n-input v-model:value="editFormValue.email" placeholder="输入邮箱" />
+                    <n-input v-model:value="editFormValue.email" placeholder="输入邮箱" disabled />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="角色" path="role">
                     <n-select
@@ -207,8 +207,10 @@ const handleEditValidate = (e: MouseEvent) => {
   e.preventDefault()
   editFormRef.value?.validate(async (errors) => {
     if (!errors) {
-      const res = await updateUsers(editFormValue._id, editFormValue)
+      const res = await updateUsers(editFormValue.email, editFormValue)
       message.success(res.data.message)
+      state.showEditModal = false
+      getUsersList()
     } else {
       console.log(errors)
       message.error('Invalid')
@@ -310,19 +312,16 @@ const tableColumns = createColumns({
     dialog.warning({
       title: '警告',
       content: `确定删除${row.email}?`,
-      positiveText: '确定',
-      negativeText: '不确定',
+      positiveText: '删除',
+      negativeText: '取消',
       draggable: true,
       onPositiveClick: async () => {
         const res = await deleteUsers({ ids: [row._id] })
         message.success(res.data.message)
         getUsersList()
       },
-      onNegativeClick: () => {
-        message.error('取消')
-      },
+      onNegativeClick: () => {},
     })
-    message.info(`Delete ${row.userName}`)
   },
 })
 const tableData = ref<User[]>([])
@@ -337,9 +336,16 @@ const getUsersList = async () => {
     console.log('tableData', tableData)
   }
 }
-const handleTableCheck = (rowKeys: DataTableRowKey[]) => {
+const handleTableCheck = async (rowKeys: DataTableRowKey[]) => {
   checkedRowKeysRef.value = rowKeys
   console.log(checkedRowKeysRef.value)
+}
+// 删除选择的用户
+const deleteSelectUsers = async () => {
+  const ids = checkedRowKeysRef.value
+  const res = await deleteUsers({ ids })
+  message.success(res.data.message)
+  getUsersList()
 }
 const rowKey = (row: User) => {
   return row._id

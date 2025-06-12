@@ -21,17 +21,17 @@ export function getAllUsers() {
  * 批量删除用户
  * @returns {Promise}
  */
-export function deleteUsers(params: { ids: string[] }) {
+export function deleteUsers(params: { ids: unknown }) {
   return request.post('/deleteUsers', params)
 }
 
 /**
- * 根据id更新用户信息
+ * 根据邮箱更新用户信息
  * @returns {Promise}
  */
 export function updateUsers(
-  id: string,
-  data: Partial<{ userName: string; email: string; role: string; status: string }>,
+  email: string,
+  data: Partial<{ userName: string; role: string; status: string }>,
 ) {
-  return request.put(`/updateUsers/id=${id}`, data)
+  return request.put(`/updateUsers/${email}`, data)
 }
