@@ -9,10 +9,11 @@ const service = axios.create({
 service.interceptors.request.use(
   (config) => {
     // 在请求发送之前做一些处理
-    const token = localStorage.getItem('token')
+    const userData = localStorage.getItem('userInfo')
+    const token = userData ? JSON.parse(userData).data.token : ''
     if (token) {
       // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-      config.headers['X-Token'] = 'token test'
+      config.headers['Authorization'] = `Bearer ${token}`
     }
     return config
   },

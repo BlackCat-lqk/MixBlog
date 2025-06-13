@@ -5,9 +5,20 @@
         <n-form-item label="上传logo">
           <div class="logo-from-box">
             <n-upload
-              action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
+              action="http://localhost:3000/api/upload-avatar"
               list-type="image-card"
+              @on-finish="avatarUploadFinish"
+              @on-error="avatarUploadError"
+              :default-file-list="defaultFileList"
+              name="avatar"
+              :data="{
+                _id: userInfoStore.data.user._id,
+              }"
+              :headers="{
+                Authorization: `Bearer ${userInfoStore.data.token}`
+              }"
             />
+
           </div>
         </n-form-item>
         <div>
@@ -51,9 +62,11 @@
 </template>
 
 <script setup lang="ts">
-import type { FormInst } from 'naive-ui'
+import type { FormInst, UploadFileInfo } from 'naive-ui'
 import { ref, reactive } from 'vue'
+import { useUserInfoStore } from '@/stores/userInfo'
 
+const userInfoStore = useUserInfoStore()
 const formRef = ref<FormInst | null>(null)
 const formValue = reactive({
   logoPicture: '',
@@ -61,6 +74,16 @@ const formValue = reactive({
   slogan: '',
   cover: '',
 })
+const defaultFileList = ref([])
+
+// logo上传成功后将头像地址替换掉
+const avatarUploadFinish = (file: UploadFileInfo) => {
+
+  console.log(file)
+}
+const avatarUploadError = (file: UploadFileInfo) => {
+  console.log(file)
+}
 </script>
 
 <style scoped lang="scss">

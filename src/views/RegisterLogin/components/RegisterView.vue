@@ -85,7 +85,7 @@ const handleRegister = () => {
 watch(
   () => formValue.email,
   async (newVal) => {
-    await validateEmail(null, newVal, (error) => {
+    await validateEmail(newVal, (error) => {
       if (error) {
         isEmailValid.value = false
       } else {

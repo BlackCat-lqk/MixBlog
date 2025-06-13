@@ -35,3 +35,11 @@ export function updateUsers(
 ) {
   return request.put(`/updateUsers/${email}`, data)
 }
+
+/**
+ * 用户登录
+ * @returns {Promise}
+ */
+export function loginUserApi(params: { email: string; password: string}) {
+  return request.post('/login', params)
+}

@@ -306,8 +306,6 @@ const getUsersList = async () => {
   const res = response.data
   if (res.code === 200) {
     tableData.value = res.data
-
-    console.log('tableData', tableData)
   }
 }
 const handleTableCheck = async (rowKeys: DataTableRowKey[]) => {

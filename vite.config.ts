@@ -45,6 +45,10 @@ export default defineConfig({
         target: 'http://localhost:3000', // 代理目标地址
         changeOrigin: true,
       },
+      '/uploads': {
+        target: 'http://localhost:3000', // 代理目标地址
+        changeOrigin: true,
+      },
     },
     watch: {
       usePolling: true,

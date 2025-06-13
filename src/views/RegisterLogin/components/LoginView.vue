@@ -1,11 +1,11 @@
 <template>
   <div class="Login-main-box">
     <n-form ref="formRef" inline :label-width="80" :model="formValue" :rules="rules" :size="size">
-      <n-form-item label="用户名称" path="userName">
-        <n-input v-model:value="formValue.userName" placeholder="UserName" />
+      <n-form-item label="Email" path="email">
+        <n-input v-model:value="formValue.email" placeholder="请输入邮箱..." />
       </n-form-item>
-      <n-form-item label="密码" path="password">
-        <n-input v-model:value="formValue.password" placeholder="Password" />
+      <n-form-item label="Password" path="password">
+        <n-input v-model:value="formValue.password" placeholder="请输入密码..." />
       </n-form-item>
       <div><span>忘记密码?</span></div>
       <n-form-item>
@@ -20,33 +20,48 @@ import { NButton, useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import type { FormInst } from 'naive-ui'
 import { ref, reactive } from 'vue'
+import { validateEmail, validatePassword } from '@/utils/validate'
+import { loginUserApi } from '@/http/user'
+import {useUserInfoStore} from '@/stores/userInfo'
 const router = useRouter()
 const message = useMessage()
+const userInfoStore = useUserInfoStore()
 const formRef = ref<FormInst | null>(null)
 const size = ref<'samll' | 'medium' | 'large'>('medium')
-const formValue = reactive({
-  userName: '',
+interface FormType {
+  email: string
+  password: string
+}
+const formValue: FormType = reactive({
+  email: '',
   password: '',
 })
 const rules = {
-  userName: {
+  email: {
     required: true,
-    message: '请输入用户名称',
-    trigger: 'blur',
+    trigger: ['input', 'blur'],
+    validator: validateEmail,
   },
   password: {
     required: true,
-    message: '请输入密码',
     trigger: ['input', 'blur'],
+    validator: validatePassword
   },
 }
 const handleLogin = () => {
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      router.push({ path: '/' })
-      message.success('登录成功')
+      const response = await loginUserApi(formValue)
+      const res = response.data
+      if(res.code === 200){
+        message.success(`欢迎您：${res.data.user.userName}`)
+        userInfoStore.setUserInfo(res.data)
+        router.push({ path: '/' })
+      }else {
+        message.error('登录失败,请检查账号邮箱或密码')
+      }
     } else {
-      message.error('请检查账号或密码')
+      message.error('请检查账号邮箱或密码')
     }
   })
 }

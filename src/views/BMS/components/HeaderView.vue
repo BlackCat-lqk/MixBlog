@@ -20,7 +20,7 @@
         <n-avatar
           round
           size="small"
-          src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+          :src="avatar"
         />
       </div>
       <div class="exit-box">
@@ -33,7 +33,11 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { useUserInfoStore } from '@/stores/userInfo'
 
+const userStore = useUserInfoStore()
+const avatar = userStore.data.user.avatar
+console.log(avatar)
 const router = useRouter()
 const theme = ref('light')
 const changeTheme = () => {
