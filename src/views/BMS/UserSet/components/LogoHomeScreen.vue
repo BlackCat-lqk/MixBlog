@@ -70,6 +70,7 @@ const formValue = reactive({
   background-color: #2e33380d;
   padding: 20px 10px;
   border-radius: 8px;
+  margin-bottom: 24px;
   .form-box {
     flex: 0.5;
     .n-form {

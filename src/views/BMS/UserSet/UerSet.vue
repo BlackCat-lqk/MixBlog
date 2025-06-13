@@ -12,6 +12,7 @@
         <personal-info></personal-info>
         <h3>网站logo及首屏设置</h3>
         <logo-home-screen></logo-home-screen>
+        <h3>关于页设置</h3>
         <about-set></about-set>
       </div>
     </div>
