@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
 /**
- * 注册/新增用户
- * @param {Object} params - 注册/新增参数
+ * 新增用户
+ * @param {Object} params - 新增参数
  * @returns {Promise}
  */
-export function registerUser(params: { userName: string; email: string; password: string }) {
-  return request.post('/register', params)
+export function createUser(params: { userName: string; email: string; password: string }) {
+  return request.post('/createUser', params)
 }
 
 /**
@@ -31,7 +31,16 @@ export function deleteUsers(params: { ids: unknown }) {
  */
 export function updateUsers(
   email: string,
-  data: Partial<{ userName: string; role: string; status: string }>,
+  data: Partial<{
+    userName: string
+    role: string
+    status: string
+    avatar: string
+    sex: string
+    birthday: null
+    desc: string
+    updatedAt: string
+  }>,
 ) {
   return request.put(`/updateUsers/${email}`, data)
 }
@@ -40,6 +49,35 @@ export function updateUsers(
  * 用户登录
  * @returns {Promise}
  */
-export function loginUserApi(params: { email: string; password: string}) {
+export function loginUserApi(params: { email: string; password: string }) {
   return request.post('/login', params)
+}
+
+/**
+ * 用户注册
+ * @returns {Promise}
+ */
+export function registerUserApi(params: {
+  userName: string
+  email: string
+  code: string
+  password: string
+}) {
+  return request.post('/register', params)
+}
+
+/**
+ * 用户获取邮箱验证码
+ * @returns {Promise}
+ */
+export function getEmailCodeApi(params: { email: string }) {
+  return request.post('/getEmailCode', params)
+}
+
+/**
+ * 用户退出登录
+ * @returns {Promise}
+ */
+export function logOutUserApi() {
+  return request.post('/logOutUser')
 }

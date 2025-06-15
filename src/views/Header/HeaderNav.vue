@@ -4,10 +4,10 @@
     <div class="background-blur" :style="{ filter: `blur(${opacity}px)` }"></div>
     <div class="header-logo-search-box">
       <div class="header-logo-box">
-        <img v-if="state.switchTheme" src="/src/assets/images/logo-transparent.png" alt="" />
+        <img v-if="state.switchTheme" :src="sloganStore.sloganConfig.logoPicture" alt="" />
         <img v-else src="/src/assets/images/logo-transparent-night.png" alt="" />
       </div>
-      <n-button @click="jumpPage('/bms/overview')">管理后台</n-button>
+      <span style="padding-right: 10px">{{ sloganStore.sloganConfig.logoName }}</span>
       <div class="search-box">
         <n-popselect
           v-model:value="state.searchQuery"
@@ -53,13 +53,26 @@
       </div>
     </div>
     <div class="oprate-box">
+      <n-button type="info" @click="jumpPage('/bms/overview')">管理后台</n-button>
       <div class="user-info-box">
-        <n-avatar round :size="40">
-          <n-icon>
-            <img src="/src/assets/images/UserAvatarFilled.svg" />
-          </n-icon>
-        </n-avatar>
-        <span @click="jumpPage('/register-login')">去登录</span>
+        <div v-if="state.userInfo.userName">
+          <n-dropdown :options="state.avatarOptions" @select="handleAvatarClick">
+            <n-avatar round :size="40">
+              <n-icon>
+                <img :src="state.userInfo.avatar" />
+              </n-icon>
+            </n-avatar>
+          </n-dropdown>
+          <span class="has-user-name">{{ state.userInfo.userName }}</span>
+        </div>
+        <div v-else>
+          <n-avatar round :size="40">
+            <n-icon>
+              <img :src="state.userInfo.avatar" />
+            </n-icon>
+          </n-avatar>
+          <span class="user-name" @click="jumpPage('/register-login')">去登录</span>
+        </div>
       </div>
       <div class="switch-theme-box">
         <n-switch v-model:value="state.switchTheme" size="large" @update:value="handleChangeTheme">
@@ -80,10 +93,15 @@ import { watch, ref, reactive, onMounted, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScroll } from '@vueuse/core'
 import { useThemeStore } from '@/stores/themeStore'
+import { useUserInfoStore } from '@/stores/userInfo'
 import { useGlobalSearchStore } from '@/stores/globalSearch'
 import { useMessage } from 'naive-ui'
+import { logOutUserApi } from '@/http/user'
+import { useSloganInfoStore } from '@/stores/configInfo'
+const sloganStore = useSloganInfoStore()
 
 const router = useRouter()
+const userInfoStore = useUserInfoStore()
 const themeStore = useThemeStore()
 const globalSearchStore = useGlobalSearchStore()
 const message = useMessage()
@@ -120,6 +138,24 @@ const state = reactive({
   searchHistory: [],
   searchOptions: [],
   headerColorTheme: '',
+  userInfo: {
+    avatar: '',
+    userName: '',
+  },
+  avatarOptions: [
+    {
+      label: '个人设置',
+      key: 0,
+    },
+    {
+      label: '切换账号',
+      key: 1,
+    },
+    {
+      label: '退出登录',
+      key: 2,
+    },
+  ],
 })
 const handleChangeTheme = (value: boolean) => {
   if (value) {
@@ -143,6 +179,36 @@ const clearHistory = () => {
   state.searchHistory = []
   localStorage.removeItem('globalSearch')
   message.success('已清空搜索记录')
+}
+// 用户头像菜单select回调
+const handleAvatarClick = async (key: string | number) => {
+  console.log(key)
+  if (key === 0) {
+    console.log('个人设置')
+  } else if (key === 1) {
+    router.push('/register-login')
+  } else if (key === 2) {
+    const response = await logOutUserApi()
+    const res = response.data
+    if (res.code === 200) {
+      //清除有关用户的全部数据
+      userInfoStore.removeUserInfo()
+      router.push('/register-login')
+      message.success(res.message)
+    } else {
+      message.error(res.message)
+    }
+  }
+}
+// 用户数据初始化
+const initUserData = () => {
+  const userInfo = userInfoStore.data.user
+  if (userInfo) {
+    state.userInfo = userInfo
+    if (userInfo.avatar.length <= 0) {
+      state.userInfo.avatar = '/src/assets/images/UserAvatarFilled.svg'
+    }
+  }
 }
 
 const jumpPage = (path: string, idx?: number | undefined) => {
@@ -196,6 +262,7 @@ onBeforeMount(() => {
   initTheme()
 })
 onMounted(() => {
+  initUserData()
   activeRouterInit()
   handleSearchHistory()
 })
@@ -279,15 +346,31 @@ onMounted(() => {
     display: flex;
     align-items: center;
     margin-right: 20px;
-
+    > .n-button {
+      margin-right: 10px;
+      background: -webkit-linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
+      background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
+    }
     .user-info-box {
       @include g.flexCenter;
       margin-right: 30px;
-
-      > span {
+      > div {
+        display: flex;
+        align-items: center;
+      }
+      .n-avatar {
+        img {
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+      .user-name,
+      .has-user-name {
         margin-left: 10px;
         cursor: pointer;
         color: var(--text-color);
+      }
+      .user-name {
         &:hover {
           color: #409eff;
         }

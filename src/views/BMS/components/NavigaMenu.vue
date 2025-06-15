@@ -77,7 +77,7 @@ const menu = reactive(
     img {
       width: 28px;
       height: 28px;
-      object-fit: cover;
+      object-fit: contain;
       margin-right: 10px;
     }
   }

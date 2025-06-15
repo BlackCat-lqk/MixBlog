@@ -1,14 +1,26 @@
 <template>
   <div class="banner">
     <div class="banner-pic">
-      <img src="@/assets/images/logo2024.png" alt="" srcset="" />
+      <img :src="sloganStore.sloganConfig.cover" alt="" srcset="" />
     </div>
     <div class="banner-left">
       <div>
         <div>
-          <h1><n-gradient-text type="info"> Mix Blog </n-gradient-text></h1>
-          <p><n-gradient-text type="danger"> 记录生活 </n-gradient-text></p>
-          <p><n-gradient-text type="warning"> 学习充电 </n-gradient-text></p>
+          <h1>
+            <n-gradient-text type="info">
+              {{ sloganStore.sloganConfig.sloganTitle }}
+            </n-gradient-text>
+          </h1>
+          <p>
+            <n-gradient-text type="danger">
+              {{ sloganStore.sloganConfig.sloganSub1 }}
+            </n-gradient-text>
+          </p>
+          <p>
+            <n-gradient-text type="warning">
+              {{ sloganStore.sloganConfig.sloganSub2 }}
+            </n-gradient-text>
+          </p>
         </div>
         <div></div>
       </div>
@@ -40,6 +52,8 @@
 
 <script lang="ts" setup>
 import { useScrollStore } from '@/stores/scrollStore'
+import { useSloganInfoStore } from '@/stores/configInfo'
+const sloganStore = useSloganInfoStore()
 
 const scrollStore = useScrollStore()
 const handelScrollDown = () => {

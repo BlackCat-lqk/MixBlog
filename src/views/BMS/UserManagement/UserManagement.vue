@@ -19,11 +19,20 @@
         </div>
         <div class="table-box" ref="tableBox">
           <n-config-provider>
-            <n-data-table :columns="tableColumns" :data="tableData" :row-key="rowKey"
-              @update:checked-row-keys="handleTableCheck" />
+            <n-data-table
+              :columns="tableColumns"
+              :data="tableData"
+              :row-key="rowKey"
+              @update:checked-row-keys="handleTableCheck"
+            />
           </n-config-provider>
-          <n-modal v-model:show="state.showAddModal" :to="$refs.tableBox" style="width: 600px; padding: 20px"
-            preset="dialog" title="新增用户">
+          <n-modal
+            v-model:show="state.showAddModal"
+            :to="$refs.tableBox"
+            style="width: 600px; padding: 20px"
+            preset="dialog"
+            title="新增用户"
+          >
             <div class="add-from-box">
               <n-form ref="formRef" inline :model="formValue" :rules="rules">
                 <n-grid :cols="24" :x-gap="24">
@@ -34,13 +43,20 @@
                     <n-input v-model:value="formValue.email" placeholder="输入邮箱" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="角色" path="role">
-                    <n-select v-model:value="formValue.role" placeholder="请选择角色" :options="state.roleOptions" />
+                    <n-select
+                      v-model:value="formValue.role"
+                      placeholder="请选择角色"
+                      :options="state.roleOptions"
+                    />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="密码" path="password">
                     <n-input v-model:value="formValue.password" placeholder="请输入密码" />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="确认密码" path="confirmPassword">
-                    <n-input v-model:value="formValue.confirmPassword" placeholder="请再次输入确认密码" />
+                    <n-input
+                      v-model:value="formValue.confirmPassword"
+                      placeholder="请再次输入确认密码"
+                    />
                   </n-form-item-gi>
                 </n-grid>
               </n-form>
@@ -50,7 +66,12 @@
               </div>
             </div>
           </n-modal>
-          <n-modal v-model:show="state.showEditModal" style="width: 600px; padding: 10px" preset="dialog" title="编辑用户">
+          <n-modal
+            v-model:show="state.showEditModal"
+            style="width: 600px; padding: 10px"
+            preset="dialog"
+            title="编辑用户"
+          >
             <div class="edit-from-box">
               <n-form ref="editFormRef" inline :model="editFormValue" :rules="rules">
                 <n-grid :cols="24" :x-gap="24">
@@ -61,10 +82,18 @@
                     <n-input v-model:value="editFormValue.email" placeholder="输入邮箱" disabled />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="角色" path="role">
-                    <n-select v-model:value="editFormValue.role" placeholder="请选择角色" :options="state.roleOptions" />
+                    <n-select
+                      v-model:value="editFormValue.role"
+                      placeholder="请选择角色"
+                      :options="state.roleOptions"
+                    />
                   </n-form-item-gi>
                   <n-form-item-gi :span="12" label="状态" path="status">
-                    <n-select v-model:value="editFormValue.status" placeholder="状态" :options="state.statusOptions" />
+                    <n-select
+                      v-model:value="editFormValue.status"
+                      placeholder="状态"
+                      :options="state.statusOptions"
+                    />
                   </n-form-item-gi>
                 </n-grid>
               </n-form>
@@ -89,7 +118,7 @@ import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import { h, reactive, ref, onMounted } from 'vue'
 import { NButton, useMessage, useDialog } from 'naive-ui'
 import { validateEmail, validateUsername, validatePassword } from '@/utils/validate'
-import { registerUser, getAllUsers, deleteUsers, updateUsers } from '@/http/user'
+import { createUser, getAllUsers, deleteUsers, updateUsers } from '@/http/user'
 const message = useMessage()
 const dialog = useDialog()
 const state = reactive({
@@ -154,7 +183,7 @@ const handleValidateClick = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const response = await registerUser(formValue.value)
+      const response = await createUser(formValue.value)
       const res = response.data
       if (res.code === 200) {
         message.success(res.message)
@@ -294,7 +323,7 @@ const tableColumns = createColumns({
         message.success(res.data.message)
         getUsersList()
       },
-      onNegativeClick: () => { },
+      onNegativeClick: () => {},
     })
   },
 })
@@ -372,7 +401,6 @@ onMounted(() => {
 
   .add-from-box,
   .edit-from-box {
-
     .add-btn-space,
     .edit-btn-space {
       display: flex;

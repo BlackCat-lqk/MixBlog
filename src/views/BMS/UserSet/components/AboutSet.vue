@@ -3,10 +3,27 @@
     <div class="about-content-box">
       <n-form ref="formRef" inline :label-width="80" :model="formValue" class="about-form-box">
         <n-form-item label="一句话介绍自己">
-          <n-input v-model:value="formValue.introduction" placeholder="请输入..." />
+          <n-input v-model:value="formValue.intro" placeholder="请输入..." />
         </n-form-item>
         <n-form-item label="标签（用空格隔开）">
           <n-input v-model:value="formValue.tags" placeholder="请输入..." />
+        </n-form-item>
+        <n-form-item label="上传背景图">
+          <n-upload
+            action="/api/upload-about-cover"
+            list-type="image-card"
+            @finish="aboutBgUploadFinish"
+            @error="aboutBgUploadError"
+            :default-file-list="aboutBgImage"
+            name="aboutBgImages"
+            :max="1"
+            :data="{
+              _id: userInfoStore.data.user._id,
+            }"
+            :headers="{
+              Authorization: `Bearer ${userInfoStore.data.token}`,
+            }"
+          />
         </n-form-item>
         <n-form-item
           v-for="(item, index) in formValue.modules"
@@ -25,24 +42,24 @@
         </n-form-item>
         <n-form-item>
           <n-space vertical>
-            <n-button type="info" @click="addItem">
+            <n-button type="success" @click="addItem">
               <img style="width: 16px" src="@/assets/images/Add.svg" />添加模块
             </n-button>
-            <n-button attr-type="button" @click="handleValidateClick"> 应用 </n-button>
+            <n-button type="info" @click="handleValidateClick"> 应用 </n-button>
           </n-space>
         </n-form-item>
       </n-form>
     </div>
     <div class="preview-box">
-      <div class="sample-btn">
-        <n-button type="info">示例</n-button>
-      </div>
-      <div class="preview-content-box">
+      <div
+        :class="formValue?.cover ? 'preview-content-box preview-has-bg' : 'preview-content-box'"
+        :style="formValue?.cover ? { backgroundImage: `url(${formValue?.cover})` } : {}"
+      >
         <div class="avatar-box">
-          <img src="@/assets/images/logo2024.png" />
+          <img :src="userInfoStore.data.user.avatar" />
         </div>
-        <h3 class="user-name-title">ikun</h3>
-        <span>{{ formValue.introduction }}</span>
+        <h3 class="user-name-title">{{ userInfoStore.data.user.userName }}</h3>
+        <span class="introduction-text">{{ formValue.intro }}</span>
         <n-space>
           <n-tag v-for="(item, idx) in previewTags" :key="idx" :bordered="false">
             {{ item }}
@@ -60,41 +77,110 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue'
-import type { FormInst } from 'naive-ui'
+import { reactive, ref, computed, onMounted } from 'vue'
+import type { FormInst, UploadFileInfo } from 'naive-ui'
+import { useUserInfoStore } from '@/stores/userInfo'
+import { getAboutConfigApi, upsertAboutApi } from '@/http/about'
+import { useMessage } from 'naive-ui'
 
 const formRef = ref<FormInst | null>(null)
+const userInfoStore = useUserInfoStore()
+const message = useMessage()
 interface modulesType {
   title: string
   content: string
+  image: string
 }
 interface formType {
-  introduction: string
+  uId: string
+  email: string
+  intro: string
   tags: string
   modules: modulesType[]
+  cover: string
 }
 const formValue: formType = reactive({
-  introduction: '',
+  uId: '',
+  email: '',
+  intro: '',
   tags: '',
-  modules: [{ title: '', content: '' }],
+  modules: [{ title: '', content: '', image: '' }],
+  cover: '',
 })
+const aboutBgImage = reactive([
+  {
+    id: 'aboutBgImages',
+    name: 'aboutBgImages',
+    url: '',
+    status: 'finished',
+  },
+])
 const addItem = () => {
-  formValue.modules.push({ title: '', content: '' })
+  formValue.modules.push({ title: '', content: '', image: '' })
 }
 const deleteItem = (idx: number) => {
   formValue.modules.splice(idx, 1)
 }
 const handleValidateClick = () => {
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      console.log('验证通过')
+      const response = await upsertAboutApi(formValue)
+      const res = response.data
+      if (res.code === 200) {
+        console.log(res)
+        message.success(res.message)
+      } else {
+        message.error(res.message)
+      }
     } else {
-      console.log(errors)
+      message.error('请检查输入合法性')
     }
   })
 }
 const previewTags = computed(() => {
   return formValue.tags ? formValue.tags.split(' ') : []
+})
+
+// 背景图上传成功
+const aboutBgUploadFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
+  const res = (event?.target as XMLHttpRequest).response
+  message.success(JSON.parse(res).message)
+  const newAvatar = JSON.parse(res).url
+  formValue.cover = newAvatar
+  return file
+}
+
+// 背景图上传失败
+const aboutBgUploadError = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
+  const res = (event?.target as XMLHttpRequest).response
+  message.error(JSON.parse(res).message)
+  return file
+}
+
+// 获取About页面的配置
+const getAboutConfig = async () => {
+  const params = {
+    email: userInfoStore.data.user.email,
+    uId: userInfoStore.data.user._id,
+  }
+  const response = await getAboutConfigApi(params)
+  const res = response.data
+  if (res.code === 200) {
+    formValue.uId = res.data.uId
+    formValue.email = res.data.email
+    formValue.intro = res.data.intro
+    formValue.tags = res.data.tags
+    formValue.cover = res.data.cover
+    aboutBgImage[0].url = formValue.cover
+    formValue.modules = res.data.modules
+    console.log(formValue)
+  } else {
+    message.error(res.message)
+  }
+}
+
+onMounted(() => {
+  getAboutConfig()
 })
 </script>
 
@@ -131,34 +217,32 @@ const previewTags = computed(() => {
       }
     }
   }
-
   .preview-box {
     flex: 0.5;
-    position: relative;
-    border-radius: 8px;
-    background: url(@/assets/wallpaper/regist-login.jpg);
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    position: relative;
-    .sample-btn {
-      position: absolute;
-      left: 2%;
-      top: 2%;
+    height: 700px;
+    min-height: 700px;
+    .preview-has-bg {
+      background-repeat: no-repeat;
+      background-size: cover; // 不裁剪图片，完整显示
+      background-position: center center; // 居中显示
     }
     .preview-content-box {
-      position: absolute;
-      width: 100%;
-      top: 10%;
+      padding: 20px 10px;
+      width: calc(100% - 20px);
+      min-height: 500px;
       display: flex;
-      justify-content: center;
       flex-direction: column;
       align-items: center;
+      border-radius: 8px;
+      // background-color: #f4f2ec;
+      box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+      gap: 24px;
       .avatar-box {
-        width: 80px;
-        height: 80px;
+        width: 108px;
+        height: 108px;
         border-radius: 50%;
-        border: 1px solid #ccc;
+        border: 2px solid #fff;
+        box-sizing: content-box;
         overflow: hidden;
         img {
           width: 100%;
@@ -166,10 +250,45 @@ const previewTags = computed(() => {
           object-fit: cover;
         }
       }
+      .user-name-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1e2025;
+      }
+      .introduction-text {
+        color: #1e2025b8;
+        font-size: 14px;
+      }
+      .n-tag {
+        font-size: 12px;
+        line-height: 28px;
+        padding: 0 12px;
+        color: #1e2025;
+        background-color: #1e202514;
+        border-radius: 14px;
+      }
       .preview-module-box {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
+        h3 {
+          font-size: 20px;
+          color: #1e2025;
+          font-weight: 600;
+          padding-bottom: 4px;
+          padding-top: 12px;
+        }
+        p {
+          text-align: center;
+          font-size: 14px;
+          color: #1e2025b8;
+          overflow: hidden;
+          width: 680px;
+          word-wrap: break-word;
+          line-height: 20px;
+          padding: 8px 0;
+        }
       }
     }
   }

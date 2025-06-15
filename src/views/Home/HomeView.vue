@@ -5,7 +5,7 @@
     <article-blog></article-blog>
     <random-notes></random-notes>
     <photography-gallery></photography-gallery>
-    <n-back-top style="z-index: 99;" :left="50" />
+    <n-back-top style="z-index: 99" :left="50" />
   </div>
 </template>
 

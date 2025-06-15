@@ -5,7 +5,7 @@
         <img src="@/assets/images/logo-transparent.png" />
       </div>
       <n-gradient-text :size="24" type="success"> Mix Blog BMS </n-gradient-text>
-      <p @click="router.push('/')">返回前台</p>
+      <n-button @click="router.push('/')" type="info"> 返回前台 </n-button>
     </div>
     <div class="menu-box">
       <div @click="changeTheme" class="theme-icon">
@@ -17,11 +17,7 @@
         </n-icon>
       </div>
       <div class="avatar-box">
-        <n-avatar
-          round
-          size="small"
-          :src="avatar"
-        />
+        <n-avatar round size="small" :src="avatar" />
       </div>
       <div class="exit-box">
         <n-button type="success"> Exit </n-button>
@@ -71,6 +67,11 @@ const changeTheme = () => {
         height: 100%;
         object-fit: cover;
       }
+    }
+    .n-button {
+      margin-left: 10px;
+      background: -webkit-linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
+      background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
     }
   }
   .menu-box {

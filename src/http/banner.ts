@@ -44,7 +44,25 @@ export function deleteBanner(params: { ids: unknown }) {
  */
 export function updateBanner(
   _id: String,
-  data: Partial<{ title: string; sub: string; introduction: string, mainBtnName: string, childBtnName: string, mainBtnUrl: string, childBtnUrl: string, cover: string }>,
+  data: Partial<{
+    title: string
+    sub: string
+    introduction: string
+    mainBtnName: string
+    childBtnName: string
+    mainBtnUrl: string
+    childBtnUrl: string
+    cover: string
+  }>,
 ) {
   return request.put(`/updateBanner/${_id}`, data)
+}
+
+/**
+ * 上传Banner图片
+ * @param {Object} params - 上传Banner图片参数
+ * @returns {Promise}
+ */
+export function uploadBannerCoverApi(params: unknown) {
+  return request.post('upload-banner-cover', params)
 }
