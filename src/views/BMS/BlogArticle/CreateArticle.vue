@@ -69,7 +69,7 @@
               />
             </div>
           </div>
-          <!-- <tiptap-editor></tiptap-editor> -->
+          <tiptap-editor></tiptap-editor>
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@ import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import type { UploadFileInfo } from 'naive-ui'
 import { ref } from 'vue'
 import { useDialog, useMessage } from 'naive-ui'
-// import TiptapEditor from '@/components/TiptapEditor.vue'
+import TiptapEditor from '@/components/TiptapEditor.vue'
 
 const title = ref('')
 const dialog = useDialog()

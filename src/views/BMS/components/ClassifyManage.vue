@@ -6,9 +6,9 @@
         <span>99</span>
       </n-tag>
       <div v-if="isAddInput">
-        <n-input :style="{ width: '240px' }"> </n-input>
+        <n-input v-model:value="state.value" :style="{ width: '240px' }"> </n-input>
         <n-button type="primary" ghost @click="isAddInput = !isAddInput"> 取消 </n-button>
-        <n-button type="info"> 确认 </n-button>
+        <n-button type="info" @click="confirmAddCategory"> 确认 </n-button>
       </div>
 
       <n-button v-else secondary round strong @click="isAddInput = !isAddInput">
@@ -38,10 +38,49 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useUserInfoStore } from '@/stores/userInfo'
+import { ref, reactive } from 'vue'
+import { upsertCategoryTags } from '@/http/categoryTags'
+import { useMessage } from 'naive-ui'
 
 const isAddInput = ref(false)
 const showModal = ref(false)
+const userInfoStore = useUserInfoStore()
+
+const message = useMessage()
+const state = reactive({
+  value: '',
+  categoryArray: [],
+  tagsArray: []
+})
+interface CategoryTagsType {
+  uid: string
+  email: string
+  type: string
+  category: string[]
+  tags: string[]
+}
+const params: CategoryTagsType = reactive({
+  uid: '',
+  email: '',
+  type: 'article',
+  category: [],
+  tags: []
+})
+const confirmAddCategory = async () => {
+  params.uid = userInfoStore.data.user._id
+  params.email = userInfoStore.data.user.email
+  params.category = [state.value]
+  params.tags = state.tagsArray
+  const response = await upsertCategoryTags(params)
+  const res = response.data
+  if (res.code === 200) {
+    message.success(res.message)
+  }else {
+    message.error(res.message)
+  }
+
+}
 </script>
 
 <style scoped lang="scss">
