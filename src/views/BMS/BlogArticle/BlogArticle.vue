@@ -10,7 +10,7 @@
       <div class="main-router-box">
         <header-detail :title="title"></header-detail>
         <div style="padding: 20px 0">
-          <classify-manage></classify-manage>
+          <classify-manage @getCategoryTags="getCategoryTags" :isUpdateTag="state.updateTagCount"></classify-manage>
         </div>
         <div class="list-tag-box">
           <n-list hoverable clickable>
@@ -51,18 +51,18 @@
               <span>标签</span>
               <n-button secondary strong>
                 <img src=" @/assets/images/seting.svg" />
-                管理分组
+                管理标签
               </n-button>
             </div>
             <div class="tags-list">
-              <n-tag size="large" round v-for="(item, idx) in 5" :key="idx">
-                标签{{ item }}：
-                <span>99</span>
+              <n-tag size="large" round v-for="(item, idx) in state.tagsArray" :key="idx">
+                {{ item }}：
+                <span>0</span>
               </n-tag>
               <div v-if="isAddInput">
-                <n-input :style="{ width: '240px' }"> </n-input>
-                <n-button type="primary" ghost @click="isAddInput = !isAddInput"> 取消 </n-button>
-                <n-button type="info"> 确认 </n-button>
+                <n-input v-model:value="state.tagvalue" :style="{ width: '180px' }"> </n-input>
+                <n-button type="primary" ghost @click="closeAddTagInput"> 取消 </n-button>
+                <n-button type="info" @click="confirmAddTag"> 确认 </n-button>
               </div>
 
               <n-button v-else secondary round strong @click="isAddInput = !isAddInput">
@@ -78,15 +78,88 @@
 </template>
 
 <script setup lang="ts">
+import { useUserInfoStore } from '@/stores/userInfo'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import HeaderDetail from '@/views/BMS/components/HeaderDetail.vue'
 import ClassifyManage from '@/views/BMS/components/ClassifyManage.vue'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
+import { upsertCategoryTags } from '@/http/categoryTags'
+import { NButton, useMessage } from 'naive-ui'
+const userInfoStore = useUserInfoStore()
+const message = useMessage()
+
 
 const title = '博客文章'
 const isAddInput = ref(false)
 
+
+interface State {
+  tagvalue: string;
+  tagsArray: string[];
+  tagsData: string[];
+  updateTagCount: number;
+}
+const state = reactive<State>({
+  tagvalue: '',
+  tagsArray: [],
+  tagsData: [],
+  updateTagCount: 0
+})
+interface CategoryTagsType {
+  _id: string
+  uid: string
+  email: string
+  type: string
+  tags: string[]
+  createdAt: string
+  updatedAt: string
+}
+interface TagsParamsType {
+  uid: string
+  email: string
+  type: 'article',
+  tags: string[]
+}
+const params: TagsParamsType = reactive({
+  uid: '',
+  email: '',
+  type: 'article',
+  tags: [],
+})
+// 添加或更新标签接口
+const upsertCategory = async (params: object) => {
+  const response = await upsertCategoryTags(params)
+  const res = response.data
+  if (res.code === 200) {
+    closeAddTagInput()
+    state.updateTagCount++
+    message.success(res.message)
+  } else {
+    message.error(res.message)
+  }
+}
+// 确认添加标签
+const confirmAddTag = () => {
+  params.uid = userInfoStore.data.user._id
+  params.email = userInfoStore.data.user.email
+  params.tags = [...state.tagsArray, state.tagvalue]
+  upsertCategory(params)
+}
+// 拿到分类标签数据
+const getCategoryTags = (val: CategoryTagsType) => {
+  console.log('tags', val)
+  state.tagsArray = val.tags
+}
+// 关闭添加分类input
+const closeAddTagInput = () => {
+  isAddInput.value = false
+  state.tagvalue = ''
+}
+
+// onMounted(() => {
+//   getTags()
+// })
 </script>
 
 <style lang="scss" scoped>
@@ -167,6 +240,7 @@ const isAddInput = ref(false)
       width: 320px;
       background-color: #2e33380d;
       padding: 10px;
+      border-radius: 8px;
       .tags-title {
         display: flex;
         justify-content: space-between;

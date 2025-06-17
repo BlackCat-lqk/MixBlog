@@ -1,6 +1,12 @@
 <template>
   <div class="classify-manage-box">
     <div class="classify-box">
+      <n-tag size="large" round>
+          全部：<span>{{ state.categoryArray.length }}</span>
+      </n-tag>
+      <n-tag size="large" round>
+          未分类：<span>0</span>
+      </n-tag>
       <n-tag size="large" round v-for="(item, idx) in state.categoryArray" :key="idx">
         {{ item }}：
         <span>0</span>
@@ -44,7 +50,7 @@
 
 <script setup lang="ts">
 import { useUserInfoStore } from '@/stores/userInfo'
-import { ref, reactive, onMounted, h } from 'vue'
+import { ref, reactive, onMounted, h, defineEmits, defineProps, watch } from 'vue'
 import { upsertCategoryTags, getCategoryTagsApi } from '@/http/categoryTags'
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { NButton, useMessage } from 'naive-ui'
@@ -52,27 +58,39 @@ import { NButton, useMessage } from 'naive-ui'
 const isAddInput = ref(false)
 const showModal = ref(false)
 const userInfoStore = useUserInfoStore()
+const emit = defineEmits(['getCategoryTags'])
+
+const props = defineProps({
+  isUpdateTag: {
+    type: Number,
+    default: 0
+  }
+})
+
+watch(() => props.isUpdateTag, (newValue) => {
+  if(newValue)(
+    getCategory()
+  )
+})
 
 const message = useMessage()
 const state = reactive({
   categoryvalue: '',
   categoryArray: [],
-  tagsArray: [],
   categoryData: [],
+  allData:{}
 })
 interface CategoryTagsType {
   uid: string
   email: string
   type: string
   category: string[]
-  tags: string[]
 }
 const params: CategoryTagsType = reactive({
   uid: '',
   email: '',
   type: 'article',
   category: [],
-  tags: [],
 })
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 interface category {
@@ -81,7 +99,6 @@ interface category {
   email: string
   type: string
   category: string[]
-  tags: string[]
   createdAt: string
   updatedAt: string
 }
@@ -91,7 +108,6 @@ const rowKey = (row: category) => {
 // 获取选中的行
 const handleTableCheck = async (rowKeys: DataTableRowKey[]) => {
   checkedRowKeysRef.value = rowKeys
-  console.log(checkedRowKeysRef.value)
 }
 function createColumns({
   operateEdit,
@@ -161,18 +177,30 @@ function createColumns({
 }
 const tableColumns = createColumns({
   operateEdit: (row) => {
-    message.info(`Delete ${row}`)
+    message.info(`Edit ${row}`)
   },
   operateDelete: (row) => {
-    message.info(`Delete ${row}`)
+    params.uid = row._id
+    params.email = row.email
+    const delData = state.categoryArray.filter((item) => {
+      if(item !== row.category){
+        return true
+      }else {
+        return false
+      }
+    })
+    params.category = delData
+    upsertCategory(params)
   },
 })
-// 获取分类数据
+// 获取分类标签数据
 const getCategory = async () => {
   const params = 'article'
   const response = await getCategoryTagsApi(params)
   const res = response.data
   if (res.code == 200) {
+    state.allData = res.data
+    emit('getCategoryTags', state.allData)
     if (res.data.category.length > 0) {
       state.categoryArray = res.data.category
       state.categoryData = res.data.category.map((item: string) => {
@@ -194,12 +222,8 @@ const closeAddCategory = () => {
   isAddInput.value = false
   state.categoryvalue = ''
 }
-// 确认添加分类
-const confirmAddCategory = async () => {
-  params.uid = userInfoStore.data.user._id
-  params.email = userInfoStore.data.user.email
-  params.category = [...state.categoryData, state.categoryvalue]
-  params.tags = state.tagsArray
+// 添加或更新分类接口
+const upsertCategory = async (params: object) => {
   const response = await upsertCategoryTags(params)
   const res = response.data
   if (res.code === 200) {
@@ -209,6 +233,13 @@ const confirmAddCategory = async () => {
   } else {
     message.error(res.message)
   }
+}
+// 确认添加分类
+const confirmAddCategory = () => {
+  params.uid = userInfoStore.data.user._id
+  params.email = userInfoStore.data.user.email
+  params.category = [...state.categoryArray, state.categoryvalue]
+  upsertCategory(params)
 }
 
 onMounted(() => {
