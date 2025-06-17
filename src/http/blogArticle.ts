@@ -6,7 +6,7 @@ import request from '@/utils/request'
  * @returns {Promise}
  */
 export function uploadArticleCoverApi(params: unknown) {
-  return request.post('upload-banner-cover', params)
+  return request.post('/upload-article-cover', params)
 }
 
 /**
@@ -24,7 +24,11 @@ export function createBlogArtileApi(params: {
   intro: string
   content: string
   status: string
-
 }) {
   return request.post('/createBlogArticle', params)
+}
+
+// 获取所有BlogArticle文章
+export function getAllBlogArticleApi() {
+  return request.get('/articles-with-stats')
 }

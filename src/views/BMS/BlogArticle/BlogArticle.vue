@@ -10,25 +10,31 @@
       <div class="main-router-box">
         <header-detail :title="title"></header-detail>
         <div style="padding: 20px 0">
-          <classify-manage @getCategoryTags="getCategoryTags" :isUpdateTag="state.updateTagCount"></classify-manage>
+          <classify-manage
+            @getCategoryTags="getCategoryTags"
+            :isUpdateTag="state.updateTagCount"
+          ></classify-manage>
         </div>
         <div class="list-tag-box">
           <n-list hoverable clickable>
-            <n-list-item v-for="(item, idx) in 5" :key="idx">
+            <n-list-item v-for="(item, idx) in state.articleData" :key="idx">
               <div class="list-content">
-                <img class="cover-img" src="@/assets/wallpaper/about.jpg" />
+                <img
+                  class="cover-img"
+                  :src="item?.cover ? item?.cover : '@/assets/wallpaper/about.jpg'"
+                />
                 <div class="list-content-detail">
-                  <h3>iPhone 17：未来科技的巅峰之作</h3>
+                  <h3>{{ item.title }}</h3>
                   <div class="footer-box">
-                    <p>科技|产品</p>
-                    <p>2023-03-01</p>
+                    <p>{{ item.tags.join('|') }}</p>
+                    <p>{{ new Date(item.updatedAt).toLocaleString() }}</p>
                     <div>
                       <img src="@/assets/images/View.svg" />
-                      <span>1</span>
+                      <span>{{ item.likes }}</span>
                     </div>
                     <div>
                       <img src="@/assets/images/Like.svg" />
-                      <span>0</span>
+                      <span>{{ item.views }}</span>
                     </div>
                     <div>
                       <img src="@/assets/images/CommentOutlined.svg" />
@@ -83,28 +89,36 @@ import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import HeaderDetail from '@/views/BMS/components/HeaderDetail.vue'
 import ClassifyManage from '@/views/BMS/components/ClassifyManage.vue'
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { upsertCategoryTags } from '@/http/categoryTags'
 import { NButton, useMessage } from 'naive-ui'
+import { getAllBlogArticleApi } from '@/http/blogArticle'
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
 
-
 const title = '博客文章'
 const isAddInput = ref(false)
-
-
+interface ArticleItemType {
+  cover: string
+  title: string
+  tags: [string]
+  updatedAt: string
+  likes: number
+  views: number
+}
 interface State {
-  tagvalue: string;
-  tagsArray: string[];
-  tagsData: string[];
-  updateTagCount: number;
+  tagvalue: string
+  tagsArray: string[]
+  tagsData: string[]
+  updateTagCount: number
+  articleData: ArticleItemType[]
 }
 const state = reactive<State>({
   tagvalue: '',
   tagsArray: [],
   tagsData: [],
-  updateTagCount: 0
+  updateTagCount: 0,
+  articleData: [],
 })
 interface CategoryTagsType {
   _id: string
@@ -118,7 +132,7 @@ interface CategoryTagsType {
 interface TagsParamsType {
   uid: string
   email: string
-  type: 'article',
+  type: 'article'
   tags: string[]
 }
 const params: TagsParamsType = reactive({
@@ -157,9 +171,23 @@ const closeAddTagInput = () => {
   state.tagvalue = ''
 }
 
-// onMounted(() => {
-//   getTags()
-// })
+// 获取文章列表数据
+const getArticleData = async () => {
+  const response = await getAllBlogArticleApi()
+  const res = response.data
+  if (res.code === 200) {
+    state.articleData = res.data.list
+    console.log(res.data.list)
+
+    message.success(res.message)
+  } else {
+    message.error(res.message)
+  }
+}
+
+onMounted(() => {
+  getArticleData()
+})
 </script>
 
 <style lang="scss" scoped>

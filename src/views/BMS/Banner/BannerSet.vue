@@ -87,7 +87,6 @@
                     Authorization: `Bearer ${userInfoStore.data.token}`,
                   }"
                 ></n-upload>
-                <!-- <n-input v-model:value="formBanner.cover" /> -->
               </n-form-item>
               <n-form-item class="banner-submit-btn-box">
                 <n-button type="info" @click="submit">发布</n-button>

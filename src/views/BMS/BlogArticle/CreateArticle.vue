@@ -24,8 +24,12 @@
                     <n-input placeholder="请输入标题" v-model:value="createParams.title" />
                   </div>
                   <div class="classify-tag-box">
-                    <n-select v-model:value="createParams.category" clearable :options="state.classifyOptions"
-                      placeholder="请选择分类">
+                    <n-select
+                      v-model:value="createParams.category"
+                      clearable
+                      :options="state.classifyOptions"
+                      placeholder="请选择分类"
+                    >
                       <template #action>
                         <n-button type="info" style="width: 100%" strong secondary>
                           <img style="width: 16px" src="@/assets/images/Add.svg" />新增分类
@@ -35,16 +39,31 @@
                     <span>|</span>
                     <n-button secondary @click="state.showModal = true"> 插入标签 </n-button>
                     <n-modal v-model:show="state.showModal" :mask-closable="false">
-                      <n-card style="width: 600px" title="选择标签" :bordered="false" size="huge" role="dialog"
-                        aria-modal="true">
-                        <n-checkbox-group :value="createParams.tags" @update:value="handleUpdateTags">
+                      <n-card
+                        style="width: 600px"
+                        title="选择标签"
+                        :bordered="false"
+                        size="huge"
+                        role="dialog"
+                        aria-modal="true"
+                      >
+                        <n-checkbox-group
+                          :value="createParams.tags"
+                          @update:value="handleUpdateTags"
+                        >
                           <n-space align="center" item-style="display: flex;">
-                            <n-checkbox v-for="(item, idx) in state.tagsOption" :key="idx" :value="item"
-                              :label="item" />
+                            <n-checkbox
+                              v-for="(item, idx) in state.tagsOption"
+                              :key="idx"
+                              :value="item"
+                              :label="item"
+                            />
                           </n-space>
                         </n-checkbox-group>
                         <template #footer>
-                          <n-button type="info" strong secondary @click="cancleSelectTags">取消</n-button>
+                          <n-button type="info" strong secondary @click="cancleSelectTags"
+                            >取消</n-button
+                          >
                           <n-button type="info" @click="state.showModal = false">确定</n-button>
                         </template>
                       </n-card>
@@ -52,11 +71,17 @@
                   </div>
                 </div>
                 <div class="cover-box">
-                  <n-upload :default-file-list="newFileImgageList" :max="1" list-type="image-card"
-                    :custom-request="createCustomUpload" :finish="createUploadFinish" :error="createUploadError"
+                  <n-upload
+                    :default-file-list="newFileImgageList"
+                    :max="1"
+                    list-type="image-card"
+                    :custom-request="createCustomUpload"
+                    :finish="createUploadFinish"
+                    :error="createUploadError"
                     :headers="{
                       Authorization: `Bearer ${userInfoStore.data.token}`,
-                    }">
+                    }"
+                  >
                     <div class="cover-box-icon">
                       <img src="@/assets/images/Add.svg" />
                       <span>封面800*600</span>
@@ -65,8 +90,13 @@
                 </div>
               </div>
               <div class="introduction-box">
-                <n-input v-model:value="createParams.intro" type="textarea" placeholder="请输入简介..." show-count
-                  maxlength="150" />
+                <n-input
+                  v-model:value="createParams.intro"
+                  type="textarea"
+                  placeholder="请输入简介..."
+                  show-count
+                  maxlength="150"
+                />
               </div>
             </div>
             <tiptap-editor v-model:content="state.tiptapEditorValue"></tiptap-editor>
@@ -96,7 +126,7 @@ const state = reactive({
   showModal: false,
   classifyOptions: [],
   tagsOption: [],
-  tiptapEditorValue: ''
+  tiptapEditorValue: '',
 })
 interface CreateParamsType {
   title: string
@@ -118,12 +148,12 @@ const createParams: CreateParamsType = reactive({
   intro: '',
   uid: '',
   email: '',
-  status: ''
+  status: '',
 })
 const newFileImgageList = reactive([
   {
-    id: 'articleImages',
-    name: 'articleImages',
+    id: 'createFile',
+    name: 'createFile',
     url: '',
     status: 'finished',
   },
@@ -210,14 +240,13 @@ const saveArticle = async (status: string) => {
   if (res.code === 200) {
     // 成功后再上传文件
     const fileResonse = await uploadFile(res.data._id)
-    if(fileResonse){
+    if (fileResonse) {
       message.success(status === 'published' ? '发布成功' : '保存成功')
-    }else {
+    } else {
       message.error(status === 'published' ? '发布失败' : '保存失败')
     }
-  }else {
+  } else {
     message.error(res.message)
-
   }
 }
 
