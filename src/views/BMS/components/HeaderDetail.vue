@@ -1,7 +1,8 @@
 <template>
   <div class="header-detail-box">
-    <div class="title">{{ props.title }}</div>
-    <div>
+    <div class="title">{{ props.data.title }}</div>
+    <div class="op-box">
+      <n-button strong type="info" @click="$router.push(props.data.url)">去新建</n-button>
       <n-input type="text" placeholder="搜索">
         <template #suffix>
           <img src=" /src/assets/images/Search.svg" alt="search" />
@@ -15,9 +16,9 @@
 import { defineProps } from 'vue'
 
 const props = defineProps({
-  title: {
-    type: String,
-    default: '',
+  data: {
+    type: Object,
+    default: () => {},
   },
 })
 </script>
@@ -38,6 +39,13 @@ const props = defineProps({
     width: 16px;
     height: 16px;
     cursor: pointer;
+  }
+  .op-box {
+    display: flex;
+    align-items: center;
+    .n-input {
+      margin-left: 10px;
+    }
   }
 }
 </style>

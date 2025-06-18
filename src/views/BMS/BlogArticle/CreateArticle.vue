@@ -12,6 +12,7 @@
           <div class="header-option-box">
             <h3>新建博客文章</h3>
             <div class="option-btn-box">
+              <n-button strong secondary @click="$router.push('/bms/article')">取消新建</n-button>
               <n-button strong secondary @click="saveArticle('unpublished')">保存</n-button>
               <n-button strong type="info" @click="saveArticle('published')">发布</n-button>
             </div>

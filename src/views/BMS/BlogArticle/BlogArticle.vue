@@ -8,7 +8,7 @@
         <naviga-menu></naviga-menu>
       </div>
       <div class="main-router-box">
-        <header-detail :title="title"></header-detail>
+        <header-detail :data="headerData"></header-detail>
         <div style="padding: 20px 0">
           <classify-manage
             @getCategoryTags="getCategoryTags"
@@ -96,7 +96,10 @@ import { getAllBlogArticleApi } from '@/http/blogArticle'
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
 
-const title = '博客文章'
+const headerData = reactive({
+  title: '博客文章',
+  url: '/bms/editarticle',
+})
 const isAddInput = ref(false)
 interface ArticleItemType {
   cover: string
