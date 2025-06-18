@@ -32,3 +32,21 @@ export function createBlogArtileApi(params: {
 export function getAllBlogArticleApi() {
   return request.get('/articles-with-stats')
 }
+
+/**
+ * 删除博客文章封面图片
+ * @param {Object} params - 删除博客文章封面片参数
+ * @returns {Promise}
+ */
+export function deleteBlogArticleApi(params: { _id: string }) {
+  return request.post('/deleteBlogArticle', params)
+}
+
+/**
+ * 更新博客文章
+ * @param {Object} params - 更新博客文章参数
+ * @returns {Promise}
+ */
+export function updateBlogArticleApi(params: Object) {
+  return request.post('/updateBlogArticle', params)
+}

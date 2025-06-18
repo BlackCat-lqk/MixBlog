@@ -14,16 +14,38 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 import ArticleCard from '@/components/ArticleCard.vue'
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
+import { getAllBlogArticleApi } from '@/http/blogArticle'
+import { useMessage } from 'naive-ui'
+const message = useMessage()
 
 const router = useRouter()
 const articleData = reactive({
-  data: 4,
+  data: [],
   columns: 2,
 })
 const moreArticle = () => {
   router.push('/articles')
 }
+interface articelDataType {
+  status: string
+}
+// 获取所有文章数据
+const getAllBlogArticleData = async () => {
+  const response = await getAllBlogArticleApi()
+  const res = response.data
+  if (res.code === 200) {
+    articleData.data = res.data.list.filter((item: articelDataType) => item.status === 'published')
+
+  } else {
+    message.error(res.message)
+  }
+}
+
+// 初始化文章数据
+onMounted(() => {
+  getAllBlogArticleData()
+})
 </script>
 
 <style scoped lang="scss">

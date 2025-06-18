@@ -6,32 +6,32 @@
     <div class="article-card-box" v-for="(item, idx) in props.articleData.data" :key="idx">
       <div class="article-card-header">
         <div class="article-card-header-img">
-          <img src="@/assets/wallpaper/login-register-item2.jpg" />
+          <img :src="item.cover" />
         </div>
         <div class="article-card-header-title">
-          <h3>我的个人网站</h3>
-          <p>2025-5-22</p>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.updatedAt }}</p>
         </div>
       </div>
       <div class="article-card-content">
         <p>
-          我能不能把我的网站做成一个公用的个人网站呢？这样每个人只要有帐号，就可以拥有一个跟我一样的个人网站了，而且每个帐号的个人网站是完全独立的。
+          {{ item.content }}
         </p>
       </div>
       <div class="article-card-footer">
-        <span>产品/个人网站</span>
+        <span>分类：{{ item.category }}&nbsp;&nbsp;标签：{{ (item.tags).join('|') }}</span>
         <div>
           <span>
             <n-icon size="small">
               <img src="@/assets/images/CommentOutlined.svg" />
             </n-icon>
-            12
+            0
           </span>
           <span>
             <n-icon size="small">
               <img src="@/assets/images/View.svg" />
             </n-icon>
-            24
+            {{ item.views }}
           </span>
         </div>
       </div>

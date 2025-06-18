@@ -45,9 +45,9 @@
               </div>
               <div class="option-box">
                 <div class="option-btn">
-                  <img src="@/assets/images/Rollback.svg" />
-                  <img src="@/assets/images/Edit.svg" />
-                  <img src="@/assets/images/Delete.svg" />
+                  <img @click="publishStatus(item)" :src="getRollbackIcon(item.isHovered1, 1, item.status)" @mouseenter="item.isHovered1 = true" @mouseleave="item.isHovered1 = false" />
+                  <img @click="editArticle" :src="getRollbackIcon(item.isHovered2, 2)" @mouseenter="item.isHovered2 = true" @mouseleave="item.isHovered2 = false" />
+                  <img @click="deleteArticle(item._id)" :src="getRollbackIcon(item.isHovered3, 3)" @mouseenter="item.isHovered3 = true" @mouseleave="item.isHovered3 = false" />
                 </div>
               </div>
             </n-list-item>
@@ -92,7 +92,7 @@ import ClassifyManage from '@/views/BMS/components/ClassifyManage.vue'
 import { ref, reactive, onMounted } from 'vue'
 import { upsertCategoryTags } from '@/http/categoryTags'
 import { NButton, useMessage } from 'naive-ui'
-import { getAllBlogArticleApi } from '@/http/blogArticle'
+import { getAllBlogArticleApi, deleteBlogArticleApi, updateBlogArticleApi } from '@/http/blogArticle'
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
 
@@ -102,19 +102,24 @@ const headerData = reactive({
 })
 const isAddInput = ref(false)
 interface ArticleItemType {
+  _id: string
   cover: string
   title: string
   tags: [string]
+  status: string
   updatedAt: string
   likes: number
   views: number
+  isHovered1: boolean
+  isHovered2: boolean
+  isHovered3: boolean
 }
 interface State {
   tagvalue: string
   tagsArray: string[]
   tagsData: string[]
   updateTagCount: number
-  articleData: ArticleItemType[]
+  articleData: ArticleItemType[],
 }
 const state = reactive<State>({
   tagvalue: '',
@@ -144,6 +149,27 @@ const params: TagsParamsType = reactive({
   type: 'article',
   tags: [],
 })
+const getRollbackIcon = (isHovered: boolean, type: number, status?: string) => {
+  if(type === 1){
+    if(status === 'published'){
+      return !isHovered
+    ? new URL('@/assets/images/Rollback.svg', import.meta.url).href
+    : new URL('@/assets/images/RollbackHover.svg', import.meta.url).href
+    }else {
+      return !isHovered
+    ? new URL('@/assets/images/Publish.svg', import.meta.url).href
+    : new URL('@/assets/images/PublishHover.svg', import.meta.url).href
+    }
+  }else if(type === 2){
+    return !isHovered
+    ? new URL('@/assets/images/Edit.svg', import.meta.url).href
+    : new URL('@/assets/images/EditHover.svg', import.meta.url).href
+  }else{
+    return !isHovered
+    ? new URL('@/assets/images/Delete.svg', import.meta.url).href
+    : new URL('@/assets/images/DeleteHover.svg', import.meta.url).href
+  }
+}
 // 添加或更新标签接口
 const upsertCategory = async (params: object) => {
   const response = await upsertCategoryTags(params)
@@ -152,6 +178,36 @@ const upsertCategory = async (params: object) => {
     closeAddTagInput()
     state.updateTagCount++
     message.success(res.message)
+  } else {
+    message.error(res.message)
+  }
+}
+// 更新文章的发布状态
+const publishStatus = async(val: ArticleItemType) => {
+  val.status = val.status === 'published' ? 'unpublished' : 'published'
+  const response = await updateBlogArticleApi(val)
+  const res= response.data
+  if (res.code === 200) {
+    message.success(res.message)
+    getArticleData()
+  } else {
+    message.error(res.message)
+  }
+}
+// 编辑文章
+const editArticle = () => {
+  message.info('正在待开发...')
+}
+// 删除文章
+const deleteArticle = async (id: string) => {
+  const params = {
+    _id: id,
+  }
+  const response = await deleteBlogArticleApi(params)
+  const res = response.data
+  if (res.code === 200) {
+    message.success(res.message)
+    getArticleData()
   } else {
     message.error(res.message)
   }

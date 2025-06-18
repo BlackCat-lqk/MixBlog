@@ -2,7 +2,7 @@
   <div class="header-detail-box">
     <div class="title">{{ props.data.title }}</div>
     <div class="op-box">
-      <n-button strong type="info" @click="$router.push(props.data.url)">去新建</n-button>
+      <n-button v-if="props.data?.url" strong type="info" @click="$router.push(props.data.url)">去新建</n-button>
       <n-input type="text" placeholder="搜索">
         <template #suffix>
           <img src=" /src/assets/images/Search.svg" alt="search" />
