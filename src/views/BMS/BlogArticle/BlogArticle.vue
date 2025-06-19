@@ -236,8 +236,6 @@ const getArticleData = async () => {
   const res = response.data
   if (res.code === 200) {
     state.articleData = res.data.list
-    console.log(res.data.list)
-
     message.success(res.message)
   } else {
     message.error(res.message)

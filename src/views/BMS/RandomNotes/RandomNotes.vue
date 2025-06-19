@@ -15,31 +15,32 @@
               <div class="title-box">
                 <div class="title-box-left">
                   <h3>{{ item.title }}</h3>
-                  <img src="@/assets/images/Weather/snow.svg" />
-                </div>
-                <n-button class="delete-btn">
                   <img :src="weatherIconsURLs[item.weather]" />
+                </div>
+                <n-button strong secondary round type="error" class="delete-btn" @click="handleDeleteNote(item._id)">
+                  <img src="@/assets/images/Delete.svg" />
                 </n-button>
               </div>
-              <span>{{ item.updatedAt }}</span>
-              <p>{{ item.content }}</p>
-              <div class="content-img-box"><img src="@/assets/wallpaper/nanning.jpg" /></div>
+              <span class="note-update-time">{{ item.updatedAt }}</span>
+              <p class="note-content-detail-box">{{ item.content }}</p>
+              <div class="content-img-box"><img :src="item.cover" /></div>
             </div>
           </div>
           <div class="edit-release-box">
             <n-form ref="formRef" inline :label-width="80" :model="createForm" :rules="rules">
-              <div class="title-box">
-                <h3>新建随笔随记</h3>
-                <div class="title-btn-box">
-                  <n-button strong secondary>取消</n-button>
-                  <n-button type="info" @click="createValidateClick">发布</n-button>
-                </div>
+              <div style="width: 100%;">
+                <div class="title-box">
+                  <h3>新建随笔随记</h3>
+                  <div class="title-btn-box">
+                    <n-button strong secondary @click="clearClick">重置</n-button>
+                    <n-button type="info" @click="createValidateClick">发布</n-button>
+                  </div>
 
-              </div>
-              <div class="note-title-box">
-                <n-form-item path="title">
-                  <n-input v-model:value="createForm.title" type="text" maxlength="12" show-count clearable
-                    placeholder="请输入标题" />
+                </div>
+                <div class="note-title-box">
+                  <n-form-item path="title">
+                    <n-input v-model:value="createForm.title" type="text" maxlength="12" show-count clearable
+                      placeholder="请输入标题" />
                     <n-popover trigger="hover">
                       <template #trigger>
                         <img :src="initWeather">
@@ -47,25 +48,28 @@
                       <div style="padding: 20px;">
                         <n-grid :x-gap="24" :y-gap="24" :cols="4">
                           <n-grid-item v-for="(item, idx) in weatherIconData" :key="idx">
-                            <img :src="weatherIconsURLs[item]" style="cursor: pointer;" @click="changeWeatherIcon(item)">
+                            <img :src="weatherIconsURLs[item]" style="cursor: pointer;"
+                              @click="changeWeatherIcon(item)">
                           </n-grid-item>
                         </n-grid>
                       </div>
                     </n-popover>
 
-                </n-form-item>
+                  </n-form-item>
+                </div>
+                <div class="note-content-box">
+                  <n-form-item path="content">
+                    <n-input v-model:value="createForm.content" type="textarea" maxlength="500" show-count clearable
+                      placeholder="请输入内容" :autosize="{
+                        minRows: 10,
+                        maxRows: 30,
+                      }" />
+                  </n-form-item>
+                </div>
               </div>
-              <div class="note-content-box">
-                <n-form-item path="content">
-                  <n-input v-model:value="createForm.content" type="textarea" maxlength="500" show-count clearable
-                    placeholder="请输入内容" :autosize="{
-                      minRows: 10,
-                      maxRows: 30,
-                    }" />
-                </n-form-item>
-              </div>
+              <n-divider />
               <div class="note-img-box">
-                <n-form-item path="tempFile">
+                <n-form-item >
                   <n-upload :default-file-list="newFileImgageList" :max="1" list-type="image-card"
                     :custom-request="createCustomUpload" :finish="createUploadFinish" :error="createUploadError"
                     :headers="{
@@ -89,16 +93,18 @@ import { reactive, ref, computed, onMounted } from 'vue'
 import type { FormInst, UploadFileInfo } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
-import { createNotesApi, getNotesApi } from '@/http/notes'
+import { createNotesApi, getNotesApi, uploadNoteImageApi, delteNoteApi } from '@/http/notes'
 
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 const formRef = ref<FormInst | null>(null)
 interface NoteItem {
+  _id: string
   title: string
   content: string
   updatedAt: string
   weather: string
+  cover: string
 }
 type notesDataType = NoteItem[]
 const notesData = ref<notesDataType>([])
@@ -205,20 +211,80 @@ const createUploadFinish = () => {
 const createUploadError = () => {
   message.error('文件选择失败')
 }
+// 删除Note
+const handleDeleteNote = async (val: string) => {
+  const response = await delteNoteApi({ _id: val })
+  const res = response.data
+  if (res.code === 200) {
+    message.success(res.message)
+    notesData.value = notesData.value.filter((item) => item._id !== val)
+  } else {
+    message.error(res.message)
+  }
+}
+// 清空内容
+const clearClick = () => {
+  formRef.value?.restoreValidation()
+  newFileImgageList[0].url = ''
+  createForm.tempFile = null
+  createForm.title = ''
+  createForm.content = ''
+  createForm.cover = ''
+  currentWeather.value = 'sun'
+}
+// 文件上传
+const uploadFile = async (id: string) => {
+  if (createForm.tempFile && createForm.tempFile.file) {
+    const formData = new FormData()
+    formData.append('noteImages', createForm.tempFile?.file)
+    formData.append('_id', id)
+    try {
+      const response = await uploadNoteImageApi(formData)
+      const res = response.data
+      if (res.code === 200) {
+          createForm.cover = res.data.url
+        message.success(res.message)
+        return true
+      } else {
+        message.error(res.message)
+        return false
+      }
+    } catch (err) {
+      message.error('图片上传失败，请重试')
+      console.error(err)
+      return false
+    }
+  } else {
+    return true
+  }
+}
 // 发布校验提交
 const createValidateClick = (e: MouseEvent) => {
   e.preventDefault()
-  formRef.value?.validate( async (errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      // 图片文件是否为空，不为空先上传图片，为空直接创建Note
       createForm.uid = userInfoStore.data.user._id
       createForm.email = userInfoStore.data.user.email
       createForm.weather = currentWeather.value
-      const response = await createNotesApi(createForm)
+      const response = await createNotesApi(createForm) // 创建Note数据
       const res = response.data
       if (res.code === 200) {
+        // 是否本地选择了图片文件
+        if (createForm.tempFile) {
+          const isUpload = await uploadFile(res.data._id)
+          if (isUpload) {
+            getNotesData()
+            message.success('更新成功')
+          } else {
+            message.error('更新失败')
+          }
+        } else {
+          getNotesData()
+          message.success('更新成功')
+        }
+
         message.success(res.message)
-      }else {
+      } else {
         message.error(res.message)
       }
     }
@@ -237,7 +303,7 @@ const getNotesData = async () => {
   const res = response.data
   if (res.code === 200) {
     notesData.value = res.data
-  }else {
+  } else {
     message.error(res.message)
 
   }
@@ -259,15 +325,20 @@ onMounted(() => {
     padding-top: 20px;
     max-height: 84vh;
     height: 90vh;
+    gap: 24px;
 
     .published-box {
       flex: 1;
       min-width: 320px;
       max-height: 100%;
       overflow-y: auto;
+      box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+      background-color: #2e33380d;
+      padding: 20px;
+      border-radius: 8px;
 
       .published-content {
-        height: 180px;
+        height: auto;
         min-height: 180px;
         background-color: #2e33380d;
         margin-bottom: 20px;
@@ -275,30 +346,51 @@ onMounted(() => {
         display: flex;
         border-radius: 10px;
         flex-direction: column;
-
         .title-box {
           display: flex;
           justify-content: space-between;
 
           .title-box-left {
+            display: flex;
+            align-items: center;
+            h3 {
+              font-size: 20px;
+              font-weight: 600;
+              line-height: 1.54;
+            }
             img {
-              width: 12px;
-              height: 12px;
+              width: 24px;
+              height: 24px;
+              margin-left: 10px;
             }
           }
 
           .delete-btn {
             img {
-              width: 12px;
-              height: 12px;
+              width: 16px;
+              height: 16px;
             }
           }
         }
+        .note-update-time {
+          font-size: 14px;
+          line-height: 1.54;
+          color: rgba(30, 32, 37, .48);
+        }
+        .note-content-detail-box {
+          margin-top: 16px;
+          font-size: 14px;
+          line-height: 1.54;
+          font-weight: 400;
+          color: #1e2025;
+        }
 
         .content-img-box {
+          margin-top: 16px;
           img {
             width: 84px;
             height: 84px;
+            border-radius: 4px;
           }
         }
       }
@@ -320,7 +412,8 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
         width: 100%;
-
+        justify-content: space-between;
+        height: 100%;
         .title-box {
           display: flex;
           width: 100%;
@@ -336,6 +429,7 @@ onMounted(() => {
 
         .note-title-box {
           width: 100%;
+
           img {
             margin-left: 10px;
             cursor: pointer;
