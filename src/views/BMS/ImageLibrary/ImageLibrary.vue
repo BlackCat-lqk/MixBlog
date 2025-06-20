@@ -16,7 +16,11 @@
           <div class="photo-box" v-for="(item, idx) in state.photoLibraryData" :key="idx">
             <div class="images-box">
               <div class="top-mix-image">
-                <img :src="item.photos[0]" />
+                <img class="cover-img" :src="item.photos[0]" />
+                <div class="edit-delete-box">
+                  <img src="@/assets/images/EditHover.svg">
+                  <img src="@/assets/images/DeleteHover.svg">
+                </div>
               </div>
               <div class="footer-image-box">
                 <div v-for="(photo, idx) in item.photos.length > 3 ? item.photos.slice(0, 3) : item.photos" :key="idx"
@@ -127,26 +131,45 @@ onMounted(() => {
           width: 100%;
           height: 160px;
           margin-bottom: 2px;
-
-          img {
+          position: relative;
+          .cover-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+          }
+          .edit-delete-box {
+            position: absolute;
+            padding: 5px;
+            top: 5px;
+            right: 5px;
+            height: 24px;
+            background-color: #ffffff31;
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            gap: 10px;
+            display: none;
+            img {
+              width: 16px;
+              height: 16px;
+              cursor: pointer;
+            }
+          }
+          &:hover {
+            .edit-delete-box {
+              display: flex;
+            }
           }
         }
 
         .footer-image-box {
           display: flex;
-
+          gap: 2px;
           .footer-image-item {
             width: 78px;
             height: 78px;
-            margin-right: 2px;
-
-            &:last-child {
-              margin-right: 0;
-            }
-
             img {
               width: 100%;
               height: 100%;

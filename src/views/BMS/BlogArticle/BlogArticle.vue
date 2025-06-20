@@ -24,10 +24,14 @@
                   :src="item?.cover ? item?.cover : '@/assets/wallpaper/about.jpg'"
                 />
                 <div class="list-content-detail">
-                  <h3>{{ item.title }}</h3>
+                  <div class="list-content-title">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.intro }}</p>
+                  </div>
                   <div class="footer-box">
-                    <p>{{ item.tags.join('|') }}</p>
-                    <p>{{ new Date(item.updatedAt).toLocaleString() }}</p>
+                    <p>分类：{{ item.category }}</p>
+                    <p><n-tag type="info" size="small" round v-for="(tag, idx) in item.tags" :key="idx">{{ tag }}</n-tag></p>
+                    <p>{{ _formatTime(item.updatedAt) }}</p>
                     <div>
                       <img src="@/assets/images/View.svg" />
                       <span>{{ item.likes }}</span>
@@ -45,9 +49,21 @@
               </div>
               <div class="option-box">
                 <div class="option-btn">
-                  <img @click="publishStatus(item)" :src="getRollbackIcon(item.isHovered1, 1, item.status)" @mouseenter="item.isHovered1 = true" @mouseleave="item.isHovered1 = false" />
-                  <img @click="editArticle" :src="getRollbackIcon(item.isHovered2, 2)" @mouseenter="item.isHovered2 = true" @mouseleave="item.isHovered2 = false" />
-                  <img @click="deleteArticle(item._id)" :src="getRollbackIcon(item.isHovered3, 3)" @mouseenter="item.isHovered3 = true" @mouseleave="item.isHovered3 = false" />
+                  <n-tooltip trigger="hover">
+                    <template #trigger>
+                      <img @click="publishStatus(item)" :src="getRollbackIcon(item.isHovered1, 1, item.status)" @mouseenter="item.isHovered1 = true" @mouseleave="item.isHovered1 = false" />
+                    </template>
+                    {{ item.status === 'published' ? '取消发布' : '发布' }}
+                  </n-tooltip>
+                  <img @click="editArticle(item)" :src="getRollbackIcon(item.isHovered2, 2)" @mouseenter="item.isHovered2 = true" @mouseleave="item.isHovered2 = false" />
+                  <n-popconfirm
+                    @positive-click="deleteArticle(item._id)"
+                  >
+                    <template #trigger>
+                      <img :src="getRollbackIcon(item.isHovered3, 3)" @mouseenter="item.isHovered3 = true" @mouseleave="item.isHovered3 = false" />
+                    </template>
+                    确认删除？删除后的数据将无法恢复
+                  </n-popconfirm>
                 </div>
               </div>
             </n-list-item>
@@ -80,6 +96,7 @@
         </div>
       </div>
     </div>
+    <edit-article-form v-model:showModal="state.isModalVisible" :editData="editArticleData" @updateArticleList="getArticleData"></edit-article-form>
   </div>
 </template>
 
@@ -89,10 +106,12 @@ import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import HeaderDetail from '@/views/BMS/components/HeaderDetail.vue'
 import ClassifyManage from '@/views/BMS/components/ClassifyManage.vue'
+import EditArticleForm from './EditArticleForm.vue'
 import { ref, reactive, onMounted } from 'vue'
 import { upsertCategoryTags } from '@/http/categoryTags'
 import { NButton, useMessage } from 'naive-ui'
 import { getAllBlogArticleApi, deleteBlogArticleApi, updateBlogArticleApi } from '@/http/blogArticle'
+import { _formatTime } from '@/utils/publickFun'
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
 
@@ -105,6 +124,8 @@ interface ArticleItemType {
   _id: string
   cover: string
   title: string
+  intro: string
+  category: string
   tags: [string]
   status: string
   updatedAt: string
@@ -120,6 +141,7 @@ interface State {
   tagsData: string[]
   updateTagCount: number
   articleData: ArticleItemType[],
+  isModalVisible: boolean
 }
 const state = reactive<State>({
   tagvalue: '',
@@ -127,12 +149,14 @@ const state = reactive<State>({
   tagsData: [],
   updateTagCount: 0,
   articleData: [],
+  isModalVisible: false
 })
 interface CategoryTagsType {
   _id: string
   uid: string
   email: string
   type: string
+  category: string[]
   tags: string[]
   createdAt: string
   updatedAt: string
@@ -148,6 +172,30 @@ const params: TagsParamsType = reactive({
   email: '',
   type: 'article',
   tags: [],
+})
+interface editArticleDataType {
+  _id: string
+  title: string
+  intro: string
+  category: string[]
+  selectCategory: string
+  selectTags: string[]
+  tags: string[]
+  cover: string
+  count: number
+
+}
+// 编辑窗口的数据
+const editArticleData: editArticleDataType = reactive({
+  _id: '',
+  title: '',
+  intro: '',
+  category: [],
+  selectCategory: '',
+  selectTags: [],
+  tags: [],
+  cover: '',
+  count: 0,
 })
 const getRollbackIcon = (isHovered: boolean, type: number, status?: string) => {
   if(type === 1){
@@ -195,8 +243,16 @@ const publishStatus = async(val: ArticleItemType) => {
   }
 }
 // 编辑文章
-const editArticle = () => {
-  message.info('正在待开发...')
+const editArticle = (val: ArticleItemType) => {
+ state.isModalVisible = !state.isModalVisible
+ // 拿到文章数据到编辑窗口
+ editArticleData.title = val.title
+ editArticleData.intro = val.intro
+ editArticleData._id = val._id
+ editArticleData.cover = val.cover
+ editArticleData.selectCategory = val.category
+ editArticleData.selectTags = val.tags
+ editArticleData.count++
 }
 // 删除文章
 const deleteArticle = async (id: string) => {
@@ -223,6 +279,8 @@ const confirmAddTag = () => {
 const getCategoryTags = (val: CategoryTagsType) => {
   console.log('tags', val)
   state.tagsArray = val.tags
+  editArticleData.tags = val.tags
+  editArticleData.category = val.category
 }
 // 关闭添加分类input
 const closeAddTagInput = () => {
@@ -285,29 +343,43 @@ onMounted(() => {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 15px 0;
-          h3 {
+          .list-content-title{
+            h3 {
             font-size: 18px;
             font-weight: 600;
             line-height: 1.34;
           }
+          p {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #666;
+            height: 84px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            word-break: break-all;
+            line-height: 1.5;
+          }
+          }
+
           .footer-box {
             display: flex;
-            justify-content: space-evenly;
             gap: 18px;
-            div {
+            align-items: center;
+            flex: 1;
+            div, p {
               display: flex;
               align-items: center;
+              text-wrap: nowrap;
             }
             img {
-              width: 14px;
+              width: 18px;
             }
           }
         }
       }
       .option-box {
-        width: 450px;
-        height: 160px;
         display: flex;
         align-items: flex-end;
         justify-content: flex-end;
@@ -315,7 +387,7 @@ onMounted(() => {
           display: flex;
           justify-content: flex-end;
           img {
-            width: 24px;
+            width: 18px;
             margin-left: 15px;
           }
         }

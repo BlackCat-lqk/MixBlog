@@ -4,10 +4,11 @@
       <div class="logo">
         <img src="@/assets/images/logo-transparent.png" />
       </div>
-      <n-gradient-text :size="24" type="success"> Mix Blog BMS </n-gradient-text>
+      <n-gradient-text :size="16" type="info"> Mix Blog BMS </n-gradient-text>
       <n-button @click="router.push('/')" type="info"> 返回前台 </n-button>
     </div>
     <div class="menu-box">
+      <div ref="timeDisplay">time</div>
       <div @click="changeTheme" class="theme-icon">
         <n-icon v-if="theme === 'light'" size="24">
           <img src="@/assets/images/LightModeFilled.svg" />
@@ -20,7 +21,7 @@
         <n-avatar round size="small" :src="avatar" />
       </div>
       <div class="exit-box">
-        <n-button type="success"> Exit </n-button>
+        <n-button type="info" @click="exitLogin"> Exit Login </n-button>
       </div>
     </div>
   </div>
@@ -28,17 +29,48 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useUserInfoStore } from '@/stores/userInfo'
+import { logOutUserApi } from '@/http/user'
+import { useMessage } from 'naive-ui'
 
-const userStore = useUserInfoStore()
-const avatar = userStore.data.user.avatar
+const userInfoStore = useUserInfoStore()
+const message = useMessage()
+const avatar = userInfoStore.data.user.avatar
 console.log(avatar)
 const router = useRouter()
 const theme = ref('light')
 const changeTheme = () => {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
 }
+const timeDisplay = ref<HTMLElement | null>(null)
+
+const updateClock = () => {
+  const now = new Date()
+  if(timeDisplay.value){
+    timeDisplay.value.textContent = now.toLocaleTimeString()
+  }
+  requestAnimationFrame(() => {
+    setTimeout(updateClock, 1000)
+  })
+}
+// 退出登录
+const exitLogin = async () => {
+  const response = await logOutUserApi()
+    const res = response.data
+    if (res.code === 200) {
+      //清除有关用户的全部数据
+      userInfoStore.removeUserInfo()
+      router.push('/register-login')
+      message.success(res.message)
+    } else {
+      message.error(res.message)
+    }
+}
+onMounted(() => {
+  updateClock()
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -57,9 +89,8 @@ const changeTheme = () => {
     align-items: center;
     height: 100%;
     .logo {
-      width: 90px;
+      width: 74px;
       height: 100%;
-      margin-right: 10px;
       display: flex;
       align-items: center;
       img {
@@ -79,7 +110,7 @@ const changeTheme = () => {
     align-items: center;
     .theme-icon {
       cursor: pointer;
-      margin-right: 20px;
+      margin: 0 20px;
       display: flex;
       align-items: center;
     }
@@ -90,9 +121,6 @@ const changeTheme = () => {
     }
     .exit-box {
       margin-right: 10px;
-      .n-button {
-        width: 80px;
-      }
     }
   }
 }

@@ -25,12 +25,18 @@
               <div class="btn-box">
                 <n-button type="info">{{ item.mainBtnName }}</n-button>
                 <n-button strong secondary type="info">{{ item.childBtnName }}</n-button>
-                <n-button class="op-btn" type="success" ghost @click="editBanner(item)"
-                  ><img style="width: 100%" src="@/assets/images/Edit.svg" />
+                <n-button class="op-btn" strong secondary type="success" @click="editBanner(item)"><img
+                    style="width: 18px" src="@/assets/images/Edit.svg" />
                 </n-button>
-                <n-button class="op-btn" type="error" ghost @click="handleDeleteBanner(item._id)"
-                  ><img style="width: 100%" src="@/assets/images/Delete.svg" />
-                </n-button>
+                <n-popconfirm @positive-click="handleDeleteBanner(item._id)">
+                  <template #trigger>
+                    <n-button class="op-btn" type="error" strong secondary><img style="width: 18px"
+                        src="@/assets/images/Delete.svg" />
+                    </n-button>
+                  </template>
+                  确认删除？删除后的数据将无法恢复
+                </n-popconfirm>
+
               </div>
             </div>
           </div>
@@ -38,7 +44,7 @@
             <n-empty description="还没有内容，去新建吧~!"></n-empty>
           </div>
           <div v-if="!newCreate" class="new-create-box">
-            <n-form style="width: 100%" ref="formRef" :model="formBanner">
+            <n-form style="width: 100%" ref="formRef" :model="formBanner" :rules="rules">
               <n-form-item label="Banner标题">
                 <n-input v-model:value="formBanner.title" maxlength="6" show-count clearable />
               </n-form-item>
@@ -46,47 +52,25 @@
                 <n-input v-model:value="formBanner.sub" maxlength="6" show-count clearable />
               </n-form-item>
               <n-form-item label="简要说明">
-                <n-input
-                  v-model:value="formBanner.introduction"
-                  maxlength="24"
-                  show-count
-                  clearable
-                />
+                <n-input v-model:value="formBanner.introduction" maxlength="24" show-count clearable />
               </n-form-item>
               <n-form-item label="主要按钮名称">
-                <n-input
-                  v-model:value="formBanner.mainBtnName"
-                  maxlength="4"
-                  show-count
-                  clearable
-                />
+                <n-input v-model:value="formBanner.mainBtnName" maxlength="4" show-count clearable />
               </n-form-item>
               <n-form-item label="主要按钮地址">
                 <n-input v-model:value="formBanner.mainBtnUrl" clearable />
               </n-form-item>
               <n-form-item label="次要按钮名称">
-                <n-input
-                  v-model:value="formBanner.childBtnName"
-                  maxlength="4"
-                  show-count
-                  clearable
-                />
+                <n-input v-model:value="formBanner.childBtnName" maxlength="4" show-count clearable />
               </n-form-item>
               <n-form-item label="次要按钮地址">
                 <n-input v-model:value="formBanner.childBtnUrl" clearable />
               </n-form-item>
-              <n-form-item label="上传封面">
-                <n-upload
-                  :default-file-list="newFileImgageList"
-                  :max="1"
-                  list-type="image-card"
-                  :custom-request="createCustomUpload"
-                  :finish="createUploadFinish"
-                  :error="createUploadError"
-                  :headers="{
+              <n-form-item label="上传封面" path="tempFile">
+                <n-upload :default-file-list="newFileImgageList" :max="1" list-type="image-card"
+                  :custom-request="createCustomUpload" :finish="createUploadFinish" :error="createUploadError" :headers="{
                     Authorization: `Bearer ${userInfoStore.data.token}`,
-                  }"
-                ></n-upload>
+                  }"></n-upload>
               </n-form-item>
               <n-form-item class="banner-submit-btn-box">
                 <n-button type="info" @click="submit">发布</n-button>
@@ -94,14 +78,10 @@
             </n-form>
           </div>
         </div>
-        <n-modal
-          v-model:show="state.showEditModal"
-          style="width: 600px; padding: 10px"
-          preset="dialog"
-          title="编辑Banner"
-        >
+        <n-modal v-model:show="state.showEditModal" style="width: 600px; padding: 10px" preset="dialog"
+          title="编辑Banner">
           <div class="edit-from-box">
-            <n-form ref="editFormRef" inline :model="editFormValue">
+            <n-form ref="editFormRef" inline :model="editFormValue" :rules="rules">
               <n-grid :cols="24" :x-gap="24">
                 <n-form-item-gi :span="12" label="标题" path="title">
                   <n-input v-model:value="editFormValue.title" />
@@ -125,17 +105,10 @@
                   <n-input v-model:value="editFormValue.childBtnUrl" />
                 </n-form-item-gi>
                 <n-form-item-gi :span="12" label="封面" path="cover">
-                  <n-upload
-                    :default-file-list="editFile"
-                    :max="1"
-                    list-type="image-card"
-                    :custom-request="editCustomUpload"
-                    :finish="editUploadFinish"
-                    :error="editUploadError"
-                    :headers="{
+                  <n-upload :default-file-list="editFile" :max="1" list-type="image-card"
+                    :custom-request="editCustomUpload" :finish="editUploadFinish" :error="editUploadError" :headers="{
                       Authorization: `Bearer ${userInfoStore.data.token}`,
-                    }"
-                  ></n-upload>
+                    }"></n-upload>
                 </n-form-item-gi>
               </n-grid>
             </n-form>
@@ -169,8 +142,31 @@ import { useUserInfoStore } from '@/stores/userInfo'
 
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
-// 存储临时文件对象，供后续提交时使用
-const tempFile = ref<UploadFileInfo | null>(null)
+
+const rules = {
+  tempFile: [
+  {
+    required: true,
+    message: '请上传图片',
+    trigger: ['blur', 'change']
+  },
+  {
+    validator: (rule: unknown, value: File | null) => {
+      if (!value) {
+        return new Error('请上传图片');
+      }
+
+      // 判断文件类型是否为图片
+      const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedImageTypes.includes(value.type)) {
+        return new Error('只能上传图片文件（如 JPEG、PNG、GIF、WEBP）');
+      }
+    },
+    trigger: 'change'
+  }
+]
+}
+
 const editFile = reactive([
   {
     id: 'editFile',
@@ -202,6 +198,7 @@ let editFormValue: bannerType = reactive({
   mainBtnUrl: '',
   childBtnUrl: '',
   cover: '',
+  tempFile: null
 })
 interface bannerType {
   _id: string
@@ -215,6 +212,7 @@ interface bannerType {
   childBtnName: string
   childBtnUrl: string
   cover: string
+  tempFile: UploadFileInfo | null
 }
 // 表单数据
 const formBanner: bannerType = reactive({
@@ -229,17 +227,18 @@ const formBanner: bannerType = reactive({
   childBtnName: '',
   childBtnUrl: '',
   cover: '',
+  tempFile: null
 })
 const bannerData = ref<bannerType[]>([])
 const newCreate = ref(true)
 const hasData = ref(true)
 // 自定义上传函数（不实际上传）
 const editCustomUpload = ({ file }: { file: UploadFileInfo }) => {
-  tempFile.value = file
+  editFormValue.tempFile = file
 }
 // 自定义上传函数（不实际上传）
 const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
-  tempFile.value = file
+  formBanner.tempFile = file
 }
 // 上传完成后的回调（手动设置 url）
 const editUploadFinish = () => {
@@ -272,6 +271,7 @@ const initFrom = () => {
   formBanner.childBtnName = ''
   formBanner.childBtnUrl = ''
   formBanner.cover = ''
+  formBanner.tempFile = null
 }
 // 新建提交函数
 const submit = async () => {
@@ -319,9 +319,10 @@ const editBanner = (item: bannerType) => {
 }
 // 文件上传
 const uploadFile = async (type: string, id: string) => {
-  if (tempFile.value && tempFile.value.file) {
+  const tempFile = type === 'edit' ? editFormValue.tempFile : formBanner.tempFile
+  if (tempFile && tempFile.file) {
     const formData = new FormData()
-    formData.append('bannerImages', tempFile.value?.file)
+    formData.append('bannerImages', tempFile?.file)
     formData.append('_id', id)
     try {
       const response = await uploadBannerCoverApi(formData)
@@ -376,6 +377,7 @@ onMounted(() => {
   gap: 12px;
   display: flex;
   flex-direction: column;
+
   .banner-set-header-box {
     display: flex;
     justify-content: space-between;
@@ -390,6 +392,7 @@ onMounted(() => {
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 12px;
       flex-wrap: wrap;
+
       .banner-item-box {
         background-color: #2e33380d;
         border-radius: 8px;
@@ -397,6 +400,8 @@ onMounted(() => {
         height: 320;
         max-height: 320px;
         max-width: 310px;
+        box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+
         div {
           margin: 10px 0;
         }
@@ -409,6 +414,7 @@ onMounted(() => {
             width: 96px;
             height: 40px;
           }
+
           .op-btn {
             width: 40px;
             height: 40px;
@@ -449,8 +455,9 @@ onMounted(() => {
       justify-content: center;
       margin-left: 18px;
       background-color: #2e33380d;
+      box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
-      padding: 10px;
+      padding: 20px;
       align-items: flex-start;
       height: auto;
 

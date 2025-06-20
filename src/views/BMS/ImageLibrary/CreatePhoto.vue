@@ -305,7 +305,7 @@ const createUploadError = () => {
     .quill-editor-box {
       padding: 10px 20px;
       min-height: 50%;
-      width: 100%;
+      width: calc(100% - 40px);
 
       .title-cover-introduc-box {
         display: flex;

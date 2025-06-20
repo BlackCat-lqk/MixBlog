@@ -182,7 +182,6 @@ const clearHistory = () => {
 }
 // 用户头像菜单select回调
 const handleAvatarClick = async (key: string | number) => {
-  console.log(key)
   if (key === 0) {
     console.log('个人设置')
   } else if (key === 1) {
