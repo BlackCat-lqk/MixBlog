@@ -1,6 +1,6 @@
 <template>
   <n-modal-provider>
-    <n-modal v-model:show="showModal">
+    <n-modal v-model:show="showModalRef">
       <n-card
         style="width: 600px"
         title="编辑博客文章"
@@ -17,11 +17,37 @@
       </n-card>
     </n-modal>
   </n-modal-provider>
-
 </template>
 
 <script lang="ts" setup>
+import { defineProps, defineEmits, watch, ref } from 'vue'
 
+const emit = defineEmits<{
+  (e: 'update:showModal', val: boolean): void
+}>()
+const props = defineProps<{
+  showModal: boolean
+}>()
+
+const showModalRef = ref(false)
+
+watch(
+  () => props.showModal,
+  (val) => {
+    if (val) {
+      showModalRef.value = val
+    }
+  },
+)
+
+watch(
+  () => showModalRef.value,
+  (val) => {
+    if (!val) {
+      emit('update:showModal', val)
+    }
+  },
+)
 </script>
 
 <style lang="scss" scoped></style>

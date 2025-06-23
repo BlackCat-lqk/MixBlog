@@ -15,49 +15,49 @@
 <script lang="ts" setup>
 const supportData = [
   {
-    img: '/src/assets/images/footer/javascript_certification.png',
+    img: new URL('@/assets/images/footer/javascript_certification.png', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/TepyScript.png',
+    img: new URL('@/assets/images/footer/TepyScript.png', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/vite.svg',
+    img: new URL('@/assets/images/footer/vite.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/echarts.png',
+    img: new URL('@/assets/images/footer/echarts.png', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/vant4.png',
+    img: new URL('@/assets/images/footer/vant4.png', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/Github.svg',
+    img: new URL('@/assets/images/footer/Github.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/vue3.svg',
+    img: new URL('@/assets/images/footer/vue3.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/naive.svg',
+    img: new URL('@/assets/images/footer/naive.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/pinia.svg',
+    img: new URL('@/assets/images/footer/pinia.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/nodeJs.png',
+    img: new URL('@/assets/images/footer/nodeJs.png', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/express.svg',
+    img: new URL('@/assets/images/footer/express.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/scss.svg',
+    img: new URL('@/assets/images/footer/scss.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/mongodb.svg',
+    img: new URL('@/assets/images/footer/mongodb.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/esLint.svg',
+    img: new URL('@/assets/images/footer/esLint.svg', import.meta.url).href,
   },
   {
-    img: '/src/assets/images/footer/unocss.svg',
+    img: new URL('@/assets/images/footer/unocss.svg', import.meta.url).href,
   },
 ]
 </script>

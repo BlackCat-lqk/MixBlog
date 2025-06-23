@@ -19,10 +19,8 @@
         />
       </van-cell-group>
       <p>忘记密码</p>
-      <div style="margin: 16px;">
-        <van-button round block type="primary" native-type="submit">
-          提交
-        </van-button>
+      <div style="margin: 16px">
+        <van-button round block type="primary" native-type="submit"> 提交 </van-button>
       </div>
     </van-form>
   </div>
@@ -33,15 +31,12 @@ import { reactive } from 'vue'
 
 const formData = reactive({
   username: '',
-  password: ''
+  password: '',
 })
 
-
-const onSubmit = (values) => {
+const onSubmit = (values: unknown) => {
   console.log('submit!', values)
 }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

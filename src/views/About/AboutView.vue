@@ -53,7 +53,7 @@ const toHome = () => {
     left: 0;
     width: 100%;
     height: 100vh;
-    background-image: url('@/assets/wallpaper/about1.png');
+    background-image: url('@/assets/wallpaper/about1.jpg');
     background-position: center center;
     background-size: cover;
     z-index: 0;

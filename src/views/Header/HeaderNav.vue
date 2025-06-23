@@ -5,7 +5,7 @@
     <div class="header-logo-search-box">
       <div class="header-logo-box">
         <img v-if="state.switchTheme" :src="sloganStore.sloganConfig.logoPicture" alt="" />
-        <img v-else src="/src/assets/images/logo-transparent-night.png" alt="" />
+        <img v-else src="@/assets/images/logo-transparent-night.png" alt="" />
       </div>
       <span style="padding-right: 10px">{{ sloganStore.sloganConfig.logoName }}</span>
       <div class="search-box">
