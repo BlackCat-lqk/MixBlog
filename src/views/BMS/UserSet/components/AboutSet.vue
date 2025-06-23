@@ -3,7 +3,15 @@
     <div class="about-content-box">
       <n-form ref="formRef" inline :label-width="80" :model="formValue" class="about-form-box">
         <n-form-item label="一句话介绍自己">
-          <n-input v-model:value="formValue.intro" placeholder="请输入..." />
+          <n-input
+            v-model:value="formValue.intro"
+            type="textarea"
+            placeholder="请输入..."
+            maxlength="100"
+            show-count
+            clearable
+            :autosize="{ minRows: 2 }"
+          />
         </n-form-item>
         <n-form-item label="标签（用空格隔开）">
           <n-input v-model:value="formValue.tags" placeholder="请输入..." />
@@ -25,25 +33,61 @@
             }"
           />
         </n-form-item>
-        <n-form-item
-          v-for="(item, index) in formValue.modules"
-          :key="index"
-          :label="`模块${index + 1}`"
-        >
+        <n-form-item label="上传背景音乐">
+          <n-upload
+            action="https://naive-upload.free.beeceptor.com/"
+            :headers="{
+              Authorization: `Bearer ${userInfoStore.data.token}`,
+            }"
+            :max="1"
+          >
+            <n-button>打开音频</n-button>
+          </n-upload>
+        </n-form-item>
+        <n-form-item v-for="(item, index) in formValue.modules" :key="index">
           <template #label>
             <span class="module-title"
-              >模块{{ index + 1 }} <img src="@/assets/images/Delete.svg" @click="deleteItem(index)"
-            /></span>
+              >模块{{ index + 1 }}
+              <n-popconfirm @positive-click="deleteItem(index)">
+                <template #trigger>
+                  <img src="@/assets/images/DeleteHover.svg" />
+                </template>
+                确认删除？删除后数据将无法恢复
+              </n-popconfirm>
+            </span>
           </template>
           <div class="module-input-box">
-            <n-input v-model:value="item.title" placeholder="请输入标题..." />
-            <n-input v-model:value="item.content" type="textarea" placeholder="请输入内容..." />
+            <n-input
+              v-model:value="item.title"
+              placeholder="请输入标题..."
+              maxlength="20"
+              show-count
+              clearable
+            />
+            <n-input
+              v-model:value="item.content"
+              type="textarea"
+              placeholder="请输入内容..."
+              maxlength="500"
+              show-count
+              clearable
+              :autosize="{ minRows: 5, maxRows: 20 }"
+            />
+            <n-upload
+              :max="3"
+              list-type="image-card"
+              :custom-request="createCustomUpload"
+              :headers="{
+                Authorization: `Bearer ${userInfoStore.data.token}`,
+              }"
+            ></n-upload>
           </div>
         </n-form-item>
-        <n-form-item>
+        <n-form-item class="banner-submit-btn-box">
           <n-space vertical>
-            <n-button type="success" @click="addItem">
-              <img style="width: 16px" src="@/assets/images/Add.svg" />添加模块
+            <n-button type="info" strong secondary @click="addItem">
+              <img style="width: 16px" src="@/assets/images/Add.svg" />
+              添加模块
             </n-button>
             <n-button type="info" @click="handleValidateClick"> 应用 </n-button>
           </n-space>
@@ -83,6 +127,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { getAboutConfigApi, upsertAboutApi } from '@/http/about'
 import { useMessage } from 'naive-ui'
 
+const selectedFiles = ref<UploadFileInfo[]>([])
 const formRef = ref<FormInst | null>(null)
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
@@ -98,6 +143,7 @@ interface formType {
   tags: string
   modules: modulesType[]
   cover: string
+  tempFile: UploadFileInfo[]
 }
 const formValue: formType = reactive({
   uId: '',
@@ -106,6 +152,7 @@ const formValue: formType = reactive({
   tags: '',
   modules: [{ title: '', content: '', image: '' }],
   cover: '',
+  tempFile: [],
 })
 const aboutBgImage = reactive([
   {
@@ -115,6 +162,11 @@ const aboutBgImage = reactive([
     status: 'finished',
   },
 ])
+// 自定义上传函数（不实际上传）
+const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
+  selectedFiles.value.push(file)
+  formValue.tempFile = selectedFiles.value
+}
 const addItem = () => {
   formValue.modules.push({ title: '', content: '', image: '' })
 }
@@ -198,9 +250,31 @@ onMounted(() => {
     .about-form-box {
       display: flex;
       flex-direction: column;
+      :deep(.n-form-item) {
+        width: 100%;
+        .n-form-item-label__text {
+          font-size: 14px;
+          font-weight: bold;
+          color: #525c75;
+        }
+        .n-form-item-blank {
+          > div {
+            width: 100%;
+          }
+        }
+      }
+      .banner-submit-btn-box {
+        > div {
+          width: 100%;
+          .n-button {
+            width: 100%;
+          }
+        }
+      }
       .module-title {
         display: flex;
         align-items: center;
+        line-height: 16px;
         img {
           width: 16px;
           height: 16px;
@@ -211,6 +285,7 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
         gap: 8px;
+        width: 100%;
         .n-input {
           width: 100%;
         }
@@ -230,16 +305,20 @@ onMounted(() => {
       padding: 20px 10px;
       width: calc(100% - 20px);
       min-height: 500px;
+      max-height: 800px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       border-radius: 8px;
-      // background-color: #f4f2ec;
       box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
       gap: 24px;
+      @include g.scrollbarCustom;
       .avatar-box {
         width: 108px;
         height: 108px;
+        min-height: 108px;
+        min-width: 108px;
         border-radius: 50%;
         border: 2px solid #fff;
         box-sizing: content-box;
@@ -258,6 +337,7 @@ onMounted(() => {
       .introduction-text {
         color: #1e2025b8;
         font-size: 14px;
+        text-align: center;
       }
       .n-tag {
         font-size: 12px;

@@ -4,6 +4,10 @@
 @use './theme/dark.scss';
 @use './theme/light.scss';
 
+html{
+  @include g.scrollbarCustom;
+}
+
 body {
   display: flex;
   min-height: 100vh;
