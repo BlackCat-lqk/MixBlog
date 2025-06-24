@@ -26,7 +26,7 @@
             name="aboutBgImages"
             :max="1"
             :data="{
-              _id: userInfoStore.data.user._id,
+              _id: formValue._id,
             }"
             :headers="{
               Authorization: `Bearer ${userInfoStore.data.token}`,
@@ -35,13 +35,19 @@
         </n-form-item>
         <n-form-item label="上传背景音乐">
           <n-upload
-            action="https://naive-upload.free.beeceptor.com/"
+            action="/api/upload-about-audio"
+            name="aboutAudio"
+            :default-file-list="adiuoList"
+            list-type="image"
+            :data="{
+              _id: formValue._id,
+            }"
             :headers="{
               Authorization: `Bearer ${userInfoStore.data.token}`,
             }"
             :max="1"
           >
-            <n-button>打开音频</n-button>
+            <n-button>上传音频</n-button>
           </n-upload>
         </n-form-item>
         <n-form-item v-for="(item, index) in formValue.modules" :key="index">
@@ -76,7 +82,7 @@
             <n-upload
               :max="3"
               list-type="image-card"
-              :custom-request="createCustomUpload"
+              :custom-request="(file: UploadFileInfo) => createCustomUpload(file, index)"
               :headers="{
                 Authorization: `Bearer ${userInfoStore.data.token}`,
               }"
@@ -134,25 +140,28 @@ const message = useMessage()
 interface modulesType {
   title: string
   content: string
-  image: string
+  image: string[]
+  tempFile: UploadFileInfo[]
 }
 interface formType {
+  _id: string
   uId: string
   email: string
   intro: string
   tags: string
   modules: modulesType[]
   cover: string
-  tempFile: UploadFileInfo[]
+  audio: string
 }
 const formValue: formType = reactive({
+  _id: '',
   uId: '',
   email: '',
   intro: '',
   tags: '',
-  modules: [{ title: '', content: '', image: '' }],
+  modules: [{ title: '', content: '', image: [], tempFile: [] }],
   cover: '',
-  tempFile: [],
+  audio: '',
 })
 const aboutBgImage = reactive([
   {
@@ -162,28 +171,46 @@ const aboutBgImage = reactive([
     status: 'finished',
   },
 ])
+const adiuoList = reactive([
+  {
+    id: 'aboutAudio',
+    name: 'aboutAudio',
+    url: '',
+    status: 'finished',
+  },
+])
 // 自定义上传函数（不实际上传）
-const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
-  selectedFiles.value.push(file)
-  formValue.tempFile = selectedFiles.value
+const createCustomUpload = (file: UploadFileInfo, idx: number) => {
+  // selectedFiles.value.push(file)
+  // formValue.modules[idx].tempFile = selectedFiles.value
+  const exists = formValue.modules[idx].tempFile.find(
+    (f: UploadFileInfo) => f.batchId === file.batchId,
+  )
+  if (!exists) {
+    formValue.modules[idx].tempFile.push(file)
+    console.log('1')
+    console.log(formValue.modules[idx].tempFile)
+  }
 }
 const addItem = () => {
-  formValue.modules.push({ title: '', content: '', image: '' })
+  formValue.modules.push({ title: '', content: '', image: [], tempFile: [] })
 }
 const deleteItem = (idx: number) => {
   formValue.modules.splice(idx, 1)
 }
+// 应用更新
 const handleValidateClick = () => {
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const response = await upsertAboutApi(formValue)
-      const res = response.data
-      if (res.code === 200) {
-        console.log(res)
-        message.success(res.message)
-      } else {
-        message.error(res.message)
-      }
+      console.log(formValue)
+      // const response = await upsertAboutApi(formValue)
+      // const res = response.data
+      // if (res.code === 200) {
+      //   console.log(res)
+      //   message.success(res.message)
+      // } else {
+      //   message.error(res.message)
+      // }
     } else {
       message.error('请检查输入合法性')
     }
@@ -218,11 +245,13 @@ const getAboutConfig = async () => {
   const response = await getAboutConfigApi(params)
   const res = response.data
   if (res.code === 200) {
+    formValue._id = res.data._id
     formValue.uId = res.data.uId
     formValue.email = res.data.email
     formValue.intro = res.data.intro
     formValue.tags = res.data.tags
     formValue.cover = res.data.cover
+    formValue.audio = res.data.audio
     aboutBgImage[0].url = formValue.cover
     formValue.modules = res.data.modules
     console.log(formValue)
