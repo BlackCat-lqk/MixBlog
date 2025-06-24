@@ -183,6 +183,7 @@ const insertTag = () => {
 const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
   selectedFiles.value.push(file);
   createForm.tempFile = selectedFiles.value;
+  console.log(createForm.tempFile);
 }
 // 上传完成后的回调（手动设置 url）
 const createUploadFinish = () => {

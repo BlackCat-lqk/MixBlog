@@ -80,9 +80,10 @@
               :autosize="{ minRows: 5, maxRows: 20 }"
             />
             <n-upload
+            v-model:file-list="formValue.modules[index].tempFile"
               :max="3"
               list-type="image-card"
-              :custom-request="(file: UploadFileInfo) => createCustomUpload(file, index)"
+              name="files"
               :headers="{
                 Authorization: `Bearer ${userInfoStore.data.token}`,
               }"
@@ -133,7 +134,6 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { getAboutConfigApi, upsertAboutApi } from '@/http/about'
 import { useMessage } from 'naive-ui'
 
-const selectedFiles = ref<UploadFileInfo[]>([])
 const formRef = ref<FormInst | null>(null)
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
@@ -179,19 +179,11 @@ const adiuoList = reactive([
     status: 'finished',
   },
 ])
+
 // 自定义上传函数（不实际上传）
-const createCustomUpload = (file: UploadFileInfo, idx: number) => {
-  // selectedFiles.value.push(file)
-  // formValue.modules[idx].tempFile = selectedFiles.value
-  const exists = formValue.modules[idx].tempFile.find(
-    (f: UploadFileInfo) => f.batchId === file.batchId,
-  )
-  if (!exists) {
-    formValue.modules[idx].tempFile.push(file)
-    console.log('1')
-    console.log(formValue.modules[idx].tempFile)
-  }
-}
+// const createCustomUpload = (file: UploadFileInfo, idx: number) => {
+//   console.log(formValue.modules[idx])
+// }
 const addItem = () => {
   formValue.modules.push({ title: '', content: '', image: [], tempFile: [] })
 }
@@ -203,14 +195,14 @@ const handleValidateClick = () => {
   formRef.value?.validate(async (errors) => {
     if (!errors) {
       console.log(formValue)
-      // const response = await upsertAboutApi(formValue)
-      // const res = response.data
-      // if (res.code === 200) {
-      //   console.log(res)
-      //   message.success(res.message)
-      // } else {
-      //   message.error(res.message)
-      // }
+      const response = await upsertAboutApi(formValue)
+      const res = response.data
+      if (res.code === 200) {
+        console.log(res)
+        message.success(res.message)
+      } else {
+        message.error(res.message)
+      }
     } else {
       message.error('请检查输入合法性')
     }
