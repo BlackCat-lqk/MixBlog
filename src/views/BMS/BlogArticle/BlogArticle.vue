@@ -335,7 +335,7 @@ onMounted(() => {
         .cover-img {
           width: 180px;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
           margin-right: 15px;
           border-radius: 8px;
         }

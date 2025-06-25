@@ -103,8 +103,8 @@
 </template>
 
 <script setup lang="ts">
-import { NConfigProvider } from 'naive-ui'
-import { ref, reactive } from 'vue'
+import { NConfigProvider, useMessage } from 'naive-ui'
+import { ref, reactive, onMounted } from 'vue'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import EchartsInit from '@/echarts/EchartsInit.vue'
@@ -112,6 +112,7 @@ import { lineOptions, pieOptions } from '@/echarts/echartsConfig.ts'
 import { useRouter } from 'vue-router'
 import type { DataTableColumns } from 'naive-ui'
 
+const message = useMessage()
 interface Comment {
   no: number
   user: string
@@ -204,12 +205,20 @@ setTimeout(() => {
 const handleJump = (item: number) => {
   if (item === 1) {
     router.push('/bms/editarticle')
-  }else if(item === 2){
-     router.push('/bms/editPhoto')
-  }else if(item === 3){
-     router.push('/bms/notes')
+  } else if (item === 2) {
+    router.push('/bms/editPhoto')
+  } else if (item === 3) {
+    router.push('/bms/notes')
   }
 }
+onMounted(() => {
+  // 订阅
+  const channel = new BroadcastChannel('dingyue')
+  // 接收消息
+  channel.onmessage = function (event) {
+    message.success('订阅成功', event.data)
+  }
+})
 </script>
 
 <style lang="scss" scoped>

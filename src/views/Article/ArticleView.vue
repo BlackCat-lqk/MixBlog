@@ -3,11 +3,13 @@
     <HeaderNav></HeaderNav>
   </header>
   <div class="article-menu-box">
-    <classify-meun :classify="classify"></classify-meun>
+    <classify-meun :classify="classify" @classifyEmit="handleClassify"></classify-meun>
     <article-card :articleData="articleData"></article-card>
-    <div class="more-btn">
-      <n-button tertiary round> 加载更多 </n-button>
+    <div class="more-btn" v-if="!isClassify">
+      <n-button v-if="articleData.data.length < articleData.deepData.length" tertiary round @click="moreArticle"> 加载更多 </n-button>
+      <n-gradient-text v-else type="info"> 没有更多了 </n-gradient-text>
     </div>
+    <div v-else class="more-btn"></div>
   </div>
   <footer>
     <FooterNav></FooterNav>
@@ -19,33 +21,71 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import ClassifyMeun from '@/components/ClassifyMeun.vue'
 import ArticleCard from '@/components/ArticleCard.vue'
-import { reactive } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
+import { getAllBlogArticleApi } from '@/http/blogArticle'
+import { useMessage } from 'naive-ui'
+import _ from 'lodash';
+const message = useMessage()
+const isClassify = ref(false)
 const articleData = reactive({
-  data: 8,
+  data: [],
   columns: 3,
+  deepData: []
 })
 const classify = reactive([
   {
     name: '全部',
-    number: 8,
-  },
-  {
-    name: '学习',
-    number: 2,
-  },
-  {
-    name: '总结',
-    number: 1,
-  },
-  {
-    name: '充电',
-    number: 3,
-  },
-  {
-    name: '爱好',
-    number: 2,
-  },
+    number: 0,
+  }
 ])
+interface articelDataType {
+  status: string,
+  category: string
+}
+// 获取所有文章数据
+const getAllBlogArticleData = async () => {
+  const response = await getAllBlogArticleApi()
+  const res = response.data
+  if (res.code === 200) {
+    const listData = res.data.list.filter((item: articelDataType) => item.status === 'published')
+    articleData.deepData = _.cloneDeep(listData)
+    classify[0].number = res.data.pagination.total
+    for(const key in res.data.stats.categories){
+      classify.push({
+        name: key,
+        number: res.data.stats.categories[key]
+      })
+    }
+    articleData.data = listData.slice(0, 6)
+  } else {
+    message.error(res.message)
+  }
+}
+
+// 加载更多文章
+const moreArticle = () => {
+  articleData.data = articleData.deepData.slice(0, articleData.data.length + 6)
+}
+
+// 过滤分类
+const handleClassify = (name: string) => {
+  const listData = _.cloneDeep(articleData.deepData)
+  const filterData = listData.filter((item: articelDataType) => {
+    return item.category === name
+  })
+  if(name === '全部'){
+    isClassify.value = false
+    articleData.data = listData.slice(0, 6)
+  }else {
+    isClassify.value = true
+    articleData.data = filterData
+  }
+}
+
+// 初始化文章数据
+onMounted(() => {
+  getAllBlogArticleData()
+})
 </script>
 
 <style scoped lang="scss">

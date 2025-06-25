@@ -34,8 +34,8 @@ export function getAllBlogArticleApi() {
 }
 
 /**
- * 删除博客文章封面图片
- * @param {Object} params - 删除博客文章封面片参数
+ * 删除博客文章
+ * @param {Object} params - 删除博客文章参数
  * @returns {Promise}
  */
 export function deleteBlogArticleApi(params: { _id: string }) {

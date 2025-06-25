@@ -35,7 +35,7 @@ const getAllBlogArticleData = async () => {
   const response = await getAllBlogArticleApi()
   const res = response.data
   if (res.code === 200) {
-    articleData.data = res.data.list.filter((item: articelDataType) => item.status === 'published')
+    articleData.data = res.data.list.filter((item: articelDataType) => item.status === 'published').slice(0, 4)
 
   } else {
     message.error(res.message)

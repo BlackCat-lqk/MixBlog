@@ -53,6 +53,7 @@
       </div>
     </div>
     <div class="oprate-box">
+      <n-button type="primary" @click="dingyue">订阅</n-button>
       <n-button type="info" @click="jumpPage('/bms/overview')">管理后台</n-button>
       <div class="user-info-box">
         <div v-if="state.userInfo.userName">
@@ -209,7 +210,14 @@ const initUserData = () => {
     }
   }
 }
-
+// 订阅
+const dingyue = () => {
+  const channel = new BroadcastChannel('dingyue')
+  channel.postMessage({ greeting: 'Hello from page 1!' })
+  channel.onmessage = (event) => {
+    message.success('订阅成功', event.data)
+  }
+}
 const jumpPage = (path: string, idx?: number | undefined) => {
   router.push(path)
   if (idx != undefined) {
