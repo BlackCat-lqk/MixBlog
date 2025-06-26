@@ -194,7 +194,6 @@ const deleteItem = (idx: number) => {
 const handleValidateClick = () => {
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      console.log(formValue)
       const response = await upsertAboutApi(formValue)
       const res = response.data
       if (res.code === 200) {

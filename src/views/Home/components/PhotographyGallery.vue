@@ -6,25 +6,28 @@
         <p>将美好的回忆和漂亮的相片留下来...</p>
       </div>
       <div class="photo-gallery-switch">
-        <n-button tertiary round>
+        <n-button tertiary round @click="getPrevious" :disabled="state.step <= 0">
           <n-icon>
             <img src="@/assets/images/ArrowLeft.svg" alt="left" />
           </n-icon>
         </n-button>
-        <n-button tertiary round>
+        <n-button tertiary round  @click="getNext" :disabled="state.step >= state.dataCount">
           <n-icon>
             <img src="@/assets/images/ArrowRight.svg" alt="left" />
           </n-icon>
         </n-button>
       </div>
     </div>
-    <div class="photo-gallery-centent">
+    <div
+      class="photo-gallery-centent"
+      :style="{ backgroundImage: 'url(' + photoItem.photos[0] + ')' }"
+    >
       <div class="photo-gallery-bg"></div>
       <div class="photo-gallery-desc">
         <div class="photo-gallery-title">
-          <h1>作品集1</h1>
+          <h1>{{ photoItem.title }}</h1>
           <div class="photo-gallery-title-data">
-            <p>2024-9-8</p>
+            <p>{{ photoItem.updatedAt }}</p>
             <div>
               <span>
                 <n-icon size="small">
@@ -42,21 +45,17 @@
           </div>
         </div>
         <div class="photo-gallery-desc-p">
-          <p>东北的冷真的冰冷刺骨，没有预备多厚的衣物，大腿皮肤都被冷风撕裂好多处。</p>
+          <p>{{ photoItem.content }}</p>
         </div>
       </div>
-      <div class="photo-gallery-preview">
+      <div v-if="photoItem.photos.length > 0" class="photo-gallery-preview">
         <n-marquee auto-fill>
-          <template #default>
             <div style="display: flex">
-              <div class="photo-item">
-                <img src="@/assets/wallpaper/login-register-item.jpg" />
-              </div>
-              <div class="photo-item">
-                <img src="@/assets/wallpaper/login-register-item2.jpg" />
+              <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
+                <img :src="item" />
               </div>
             </div>
-          </template>
+
         </n-marquee>
       </div>
     </div>
@@ -68,10 +67,72 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
+import { reactive, onMounted, ref } from 'vue'
+import { getPhotoLibraryApi } from '@/http/photoLibrary'
 const router = useRouter()
+interface photoItemType {
+  title: string
+  photos: string[]
+  content: string
+  updatedAt: string
+}
+const photoItem = ref<photoItemType>({
+  title: '',
+  photos: [],
+  content: '',
+  updatedAt: '',
+})
+const state = reactive({
+  photoLibrary: [],
+  step: 0,
+  dataCount: 0,
+})
+// 获取图库信息
+const getPhotoLibrary = async () => {
+  const response = await getPhotoLibraryApi()
+  const res = response.data
+  if (res.code == 200) {
+    state.step = 0
+    state.dataCount = 0
+    state.photoLibrary = res.data.list
+    if (res.data.list.length > 0) {
+      photoItem.value = state.photoLibrary[0]
+      state.dataCount = res.data.list.length - 1
+    }
+  } else {
+    console.log('获取图库列表失败')
+  }
+}
+// 切换上一页
+const getPrevious = () => {
+  console.log(state.step)
+  if (state.step > 0) {
+    state.step--
+    photoItem.value = {
+      ...photoItem.value,
+      photos: [],
+    }
+    photoItem.value = state.photoLibrary[state.step]
+  }
+}
+// 切换下一页
+const getNext = () => {
+  console.log(state.step)
+  if (state.step < state.dataCount) {
+    state.step++
+    photoItem.value = {
+      ...photoItem.value,
+      photos: [],
+    }
+    photoItem.value = state.photoLibrary[state.step]
+  }
+}
 const morePhotography = () => {
   router.push('/image-library')
 }
+onMounted(() => {
+  getPhotoLibrary()
+})
 </script>
 
 <style scoped lang="scss">
@@ -110,7 +171,7 @@ const morePhotography = () => {
     overflow: hidden;
     border-radius: 8px 0 0 8px;
     position: relative;
-    background-image: url('@/assets/wallpaper/login-register-item.jpg');
+    // background-image: url('@/assets/wallpaper/login-register-item.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

@@ -13,6 +13,7 @@
           <classify-manage
             @getCategoryTags="getCategoryTags"
             :isUpdateTag="state.updateTagCount"
+            :paramsName="classifyParamsName"
           ></classify-manage>
         </div>
         <div class="list-tag-box">
@@ -119,6 +120,7 @@ const headerData = reactive({
   title: '博客文章',
   url: '/bms/editarticle',
 })
+const classifyParamsName = ref('article')
 const isAddInput = ref(false)
 interface ArticleItemType {
   _id: string

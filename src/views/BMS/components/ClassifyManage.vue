@@ -64,6 +64,10 @@ const props = defineProps({
   isUpdateTag: {
     type: Number,
     default: 0
+  },
+  paramsName:{
+    type: String,
+    default: ''
   }
 })
 
@@ -89,7 +93,7 @@ interface CategoryTagsType {
 const params: CategoryTagsType = reactive({
   uid: '',
   email: '',
-  type: 'article',
+  type: '',
   category: [],
 })
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
@@ -195,7 +199,7 @@ const tableColumns = createColumns({
 })
 // 获取分类标签数据
 const getCategory = async () => {
-  const params = 'article'
+  const params = props.paramsName
   const response = await getCategoryTagsApi(params)
   const res = response.data
   if (res.code == 200) {
@@ -236,6 +240,7 @@ const upsertCategory = async (params: object) => {
 }
 // 确认添加分类
 const confirmAddCategory = () => {
+  params.type = props.paramsName
   params.uid = userInfoStore.data.user._id
   params.email = userInfoStore.data.user.email
   params.category = [...state.categoryArray, state.categoryvalue]

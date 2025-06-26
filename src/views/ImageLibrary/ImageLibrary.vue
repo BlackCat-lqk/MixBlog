@@ -3,56 +3,131 @@
     <HeaderNav></HeaderNav>
   </header>
   <div class="image-library-out-box">
-    <classify-meun :classify="classify"></classify-meun>
+    <classify-meun :classify="classify" @classifyEmit="handleClassify"></classify-meun>
     <div class="image-library-box">
-      <div class="image-library-box-item" v-for="(item, idx) in 8" :key="idx">
+      <div
+        class="image-library-box-item"
+        v-for="(item, idx) in photoData.data"
+        :key="idx"
+        :style="{ backgroundImage: 'url(' + item.photos[0] + ')' }"
+        @click="handleDetailImage(item)"
+      >
         <div class="image-numbers">
-          <p>4</p>
+          <p>{{ item.photos.length }}</p>
         </div>
         <div class="image-desc">
-          <p class="title">南岳衡山</p>
+          <p class="title">{{ item.title }}</p>
           <p class="introduce">
-            大学舍友结婚，有幸来一次哈尔滨看看。作为南方的我，正当冬天时节，当了一回南方小土豆。东北的冷真的冰冷刺骨，没有预备多厚的衣物，大腿皮肤都被冷风撕裂好多处。在中央大街走了两天，那里都是人流，大冬天的在外面游荡也是难得的经历，好似梦幻。终于看到了大块冰块砌成的冰雕，用手触摸根本没有一点融化的迹象。实在的东北菜一份真的好多好多。雪白的大雪还是那么吸引着我这个南方人，更何况那一块块透亮的冰块。松花江河床都被开设成可以游玩的区域。吃了冻梨，吃了冰糖葫芦，也看了索菲亚大教堂。好多拍写真的，为她们点赞...
+            {{ item.content }}
           </p>
         </div>
       </div>
     </div>
-    <div class="more-btn">
-      <n-button tertiary round> 加载更多 </n-button>
+    <div class="more-btn" v-if="!isClassify">
+      <n-button
+        v-if="photoData.data.length < photoData.deepData.length"
+        tertiary
+        round
+        @click="moreArticle"
+      >
+        加载更多
+      </n-button>
+      <n-gradient-text v-else type="info"> 没有更多了 </n-gradient-text>
     </div>
+    <div v-else class="more-btn"></div>
   </div>
   <footer>
     <FooterNav></FooterNav>
   </footer>
+  <ImageDetail v-model:showModal="showActiveDrawer" :data="articleDetail"></ImageDetail>
 </template>
 
 <script setup lang="ts">
+import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import ClassifyMeun from '@/components/ClassifyMeun.vue'
-import { reactive } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
+import { getPhotoLibraryApi } from '@/http/photoLibrary'
+import { useMessage } from 'naive-ui'
+import _ from 'lodash'
+const showActiveDrawer = ref(false)
+const message = useMessage()
+const isClassify = ref(false)
+interface dataType {
+  title: string
+  content: string
+  photos: string[]
+  category: string
+  updatedAt: string
+}
+const photoData = reactive({
+  data: [] as dataType[],
+  columns: 3,
+  deepData: [],
+})
 const classify = reactive([
   {
     name: '全部',
-    number: 8,
-  },
-  {
-    name: '人像',
-    number: 2,
-  },
-  {
-    name: '动物',
-    number: 1,
-  },
-  {
-    name: '风景',
-    number: 3,
-  },
-  {
-    name: '航拍',
-    number: 2,
+    number: 0,
   },
 ])
+interface photoDataType {
+  category: string
+}
+let articleDetail: dataType = reactive({
+  title: '',
+  content: '',
+  category: '',
+  updatedAt: '',
+  photos: []
+})
+// 查看图库详情
+const handleDetailImage = (data: dataType) => {
+  showActiveDrawer.value = true
+  articleDetail = data
+}
+// 获取所有图片数据
+const getAllPhotoData = async () => {
+  const response = await getPhotoLibraryApi()
+  const res = response.data
+  if (res.code === 200) {
+    const listData = res.data.list
+    photoData.deepData = _.cloneDeep(listData)
+    classify[0].number = res.data.pagination.total
+    for (const key in res.data.stats.categories) {
+      classify.push({
+        name: key,
+        number: res.data.stats.categories[key],
+      })
+    }
+    photoData.data = listData.slice(0, 6)
+  } else {
+    message.error(res.message)
+  }
+}
+// 加载更多图库
+const moreArticle = () => {
+  photoData.data = photoData.deepData.slice(0, photoData.data.length + 6)
+}
+// 过滤分类
+const handleClassify = (name: string) => {
+  const listData = _.cloneDeep(photoData.deepData)
+  const filterData = listData.filter((item: photoDataType) => {
+    return item.category === name
+  })
+  if (name === '全部') {
+    isClassify.value = false
+    photoData.data = listData.slice(0, 6)
+  } else {
+    isClassify.value = true
+    photoData.data = filterData
+  }
+}
+// 初始化图库数据
+onMounted(() => {
+  getAllPhotoData()
+})
 </script>
 
 <style scoped lang="scss">
@@ -64,14 +139,13 @@ const classify = reactive([
   .image-library-box {
     padding-top: 32px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 32px;
     justify-content: center;
     .image-library-box-item {
       width: 100%;
       height: 472px;
       background-color: #fff;
-      background-image: url(@/assets/wallpaper/login-register-item.jpg);
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -99,6 +173,7 @@ const classify = reactive([
       .image-desc {
         gap: 8px;
         position: absolute;
+        width: 100%;
         height: 168px;
         overflow: hidden;
         bottom: -128px;

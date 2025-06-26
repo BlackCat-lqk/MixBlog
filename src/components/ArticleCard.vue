@@ -29,6 +29,7 @@
             :key="idx"
             :bordered="false"
             round
+            type="info"
           >
             {{ tag }}
           </n-tag>
@@ -92,9 +93,6 @@ const articleClick = (data: articleDetailType) => {
   .article-card-box {
     border-radius: 16px;
     padding: 24px;
-    width: 380px;
-    min-width: 380px;
-    max-width: 380px;
     margin-top: 28px;
     cursor: pointer;
     transition: all 0.2s;

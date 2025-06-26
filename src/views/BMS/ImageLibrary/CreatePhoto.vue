@@ -36,8 +36,6 @@
                         </template>
                       </n-select>
                     </n-form-item>
-                    <span>|</span>
-                    <n-button secondary @click="insertTag"> 插入标签 </n-button>
                   </div>
                 </div>
               </div>
@@ -51,10 +49,19 @@
               </div>
               <div class="photos-box">
                 <n-form-item label="上传照片（最多上传10张图片）" path="tempFile">
-                  <n-upload :max="10" list-type="image-card" :custom-request="createCustomUpload"
+                  <!-- <n-upload :max="10" list-type="image-card" :custom-request="createCustomUpload"
                     :finish="createUploadFinish" :error="createUploadError" :headers="{
                       Authorization: `Bearer ${userInfoStore.data.token}`,
-                    }"></n-upload>
+                    }"></n-upload> -->
+                    <n-upload
+            v-model:file-list="createForm.tempFile"
+              :max="10"
+              list-type="image-card"
+              name="files"
+              :headers="{
+                Authorization: `Bearer ${userInfoStore.data.token}`,
+              }"
+            ></n-upload>
                 </n-form-item>
               </div>
             </div>
@@ -69,32 +76,21 @@
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import type { UploadFileInfo, FormInst, FormItemRule } from 'naive-ui'
-import { reactive, ref } from 'vue'
-import { useDialog, useMessage } from 'naive-ui'
+import { reactive, ref, onMounted } from 'vue'
+import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useRouter } from 'vue-router'
 import { createPhotoLibraryApi, uploadPhotoImageApi } from '@/http/photoLibrary'
+import { getCategoryTagsApi,  } from '@/http/categoryTags'
 
 const userInfoStore = useUserInfoStore()
-const dialog = useDialog()
 const message = useMessage()
 const router = useRouter()
 const formRef = ref<FormInst | null>(null)
 // 存储已选择的文件列表
-const selectedFiles = ref<UploadFileInfo[]>([]);
-// const showModalRef = ref(false)
-// const previewImageUrlRef = ref('')
+// const selectedFiles = ref<UploadFileInfo[]>([]);
 
-const classifyOption = [
-  {
-    label: 'Drive My Car',
-    value: 'song1',
-  },
-  {
-    label: 'Norwegian Wood',
-    value: 'song2',
-  },
-]
+const classifyOption = ref([])
 
 const rules = {
   title: [
@@ -163,32 +159,16 @@ const newFileImgageList = reactive([
     status: 'finished',
   },
 ])
-
-const insertTag = () => {
-  dialog.create({
-    title: '警告',
-    content: '你确定？',
-    positiveText: '确定',
-    negativeText: '不确定',
-    draggable: true,
-    onPositiveClick: () => {
-      message.success('确定')
-    },
-    onNegativeClick: () => {
-      message.error('不确定')
-    },
-  })
-}
-// 自定义上传函数（不实际上传）
-const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
-  selectedFiles.value.push(file);
-  createForm.tempFile = selectedFiles.value;
-  console.log(createForm.tempFile);
-}
-// 上传完成后的回调（手动设置 url）
-const createUploadFinish = () => {
-  message.success('文件已选择')
-}
+// // 自定义上传函数（不实际上传）
+// const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
+//   selectedFiles.value.push(file);
+//   createForm.tempFile = selectedFiles.value;
+//   console.log(createForm.tempFile);
+// }
+// // 上传完成后的回调（手动设置 url）
+// const createUploadFinish = () => {
+//   message.success('文件已选择')
+// }
 // 取消新增
 const cancleCreate = () => {
   // 清空表单
@@ -201,6 +181,21 @@ const cancleCreate = () => {
   newFileImgageList[0].url = ''
   createForm.tempFile = []
   router.push('/bms/photo')
+}
+// 获取标签分类
+const getCategoryTags = async () => {
+  const response = await getCategoryTagsApi('photography')
+  const res = response.data
+  if (res.code == 200) {
+    classifyOption.value = res.data.category.map((item: string) => {
+      return {
+        label: item,
+        value: item,
+      }
+    })
+  }else {
+    message.error(res.message)
+  }
 }
 
 // 文件上传
@@ -238,7 +233,6 @@ const uploadFile = async (id: string) => {
 // 发布校验提交
 const confirmPublish = (e: MouseEvent) => {
   e.preventDefault()
-  console.log(createForm)
   formRef.value?.validate(async (errors) => {
     if (!errors) {
       createForm.uid = userInfoStore.data.user._id
@@ -270,9 +264,12 @@ const confirmPublish = (e: MouseEvent) => {
   })
 }
 
-const createUploadError = () => {
-  message.error('文件选择失败')
-}
+// const createUploadError = () => {
+//   message.error('文件选择失败')
+// }
+onMounted(() => {
+  getCategoryTags()
+})
 </script>
 
 <style lang="scss" scoped>

@@ -20,7 +20,7 @@
           <p>记录瞬间</p>
         </div>
       </div>
-      <notes-card></notes-card>
+      <notes-card :notesDetail="notesDetail"></notes-card>
     </div>
     <div class="random-notes-more">
       <n-button tertiary round @click="moreNotes"> 更多 </n-button>
@@ -30,10 +30,11 @@
 
 <script lang="ts" setup>
 import { addDays, isYesterday } from 'date-fns'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import NotesCard from '@/components/NotesCard.vue'
+import { getNotesApi } from '@/http/notes'
 
 const router = useRouter()
 const value = ref(addDays(Date.now(), 1).valueOf())
@@ -42,11 +43,42 @@ const message = useMessage()
 const moreNotes = () => {
   router.push('/random-notes')
 }
+interface NotesType {
+  id: string
+  title: string
+  content: string
+  updatedAt: string
+  weather: string
+  cover: string
+}
+const notesList = ref<NotesType[]>([])
+const notesDetail = ref<NotesType>({
+  id: '',
+  title: '',
+  content: '',
+  updatedAt: '',
+  weather: '',
+  cover: '',
+})
+const isSameDay = (dateStrWithTime: string, dateStr: string): boolean => {
+  const formatDate = (date: Date) =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+
+  const date1 = new Date(dateStrWithTime)
+  const date2 = new Date(dateStr)
+
+  return formatDate(date1) === formatDate(date2)
+}
 const handleUpdateValue = (
   _: number,
   { year, month, date }: { year: number; month: number; date: number },
 ) => {
   message.success(`${year}-${month}-${date}`)
+  notesList.value.filter((item : NotesType) => {
+    if(isSameDay(item.updatedAt, `${year}-${month}-${date}`)){
+      notesDetail.value = item
+    }
+  })
 }
 const isDateDisabled = (timestamp: number) => {
   if (isYesterday(timestamp)) {
@@ -54,6 +86,27 @@ const isDateDisabled = (timestamp: number) => {
   }
   return false
 }
+// 获取所有笔记
+const getAllNotes = async () => {
+  const params = {
+    title: '',
+    weather: '',
+  }
+  const response = await getNotesApi(params)
+  const res = response.data
+  if (res.code == 200) {
+    if(res.data.length > 0){
+      notesList.value = res.data
+      notesDetail.value = res.data[0]
+    }
+  } else {
+    console.log(res.message)
+  }
+}
+
+onMounted(() => {
+  getAllNotes()
+})
 </script>
 
 <style scoped lang="scss">

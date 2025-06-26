@@ -8,19 +8,16 @@
     >
       <n-drawer-content closable>
         <template #header>
-          <div class="article-header-box">
-            <div class="article-header-title">
+          <div class="image-header-box">
+            <div class="image-header-title">
               <h3>{{ props.data.title }}</h3>
             </div>
-            <div class="article-header-info-box">
-              <div class="article-header-info">
-                <n-tag :bordered="false">{{ props.data.category }}</n-tag>
-                <n-tag v-for="(tag, idx) in props.data.tags" :key="idx" type="info" round :bordered="false">{{
-                  tag
-                }}</n-tag>
+            <div class="image-header-info-box">
+              <div class="image-header-info">
+                <n-tag :bordered="false" type="info">{{ props.data.category }}</n-tag>
                 <p>{{ _formatTime(props.data.updatedAt) }}</p>
               </div>
-              <div class="article-header-data-info">
+              <div class="image-header-data-info">
                 <n-icon>
                   <img src="@/assets/images/Like.svg" />
                   <span>0</span>
@@ -37,13 +34,13 @@
             </div>
           </div>
         </template>
-        <div class="article-content-box">
-          <div class="article-intro">
-            <p>{{ props.data.intro }}</p>
+        <div class="image-content-box">
+          <div class="image-intro">
+            <p>{{ props.data.content }}</p>
           </div>
-          <div class="article-content">
-            <div class="article-content-inner">
-              <p>{{ props.data.content }}</p>
+          <div class="image-content">
+            <div class="image-content-inner">
+              <img v-for="(item, idx) in props.data.photos" :key="idx" :src="item" />
             </div>
           </div>
         </div>
@@ -61,10 +58,9 @@ const emits = defineEmits(['update:showModal'])
 interface articleDetailType {
   title: string
   content: string
-  intro: string
   category: string
   updatedAt: string
-  tags: string[]
+  photos: string[]
 }
 
 const props = defineProps({
@@ -107,20 +103,20 @@ watch(
   justify-content: center;
 }
 body {
-    .article-header-box {
+    .image-header-box {
       max-width: 1264px;
       min-width: 1040px;
       padding: 0 120px;
-      .article-header-title {
+      .image-header-title {
         font-size: 28px;
         font-weight: 600;
         line-height: 40px;
       }
-      .article-header-info-box {
+      .image-header-info-box {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .article-header-info {
+        .image-header-info {
           display: flex;
           padding: 16px 0 20px 0;
           align-items: center;
@@ -130,7 +126,7 @@ body {
             color: #0b1926;
           }
         }
-        .article-header-data-info {
+        .image-header-data-info {
           display: flex;
           gap: 24px;
           .n-icon {
@@ -144,11 +140,11 @@ body {
         }
       }
     }
-    .article-content-box {
+    .image-content-box {
       max-width: 1264px;
       min-width: 1040px;
       padding: 0 120px;
-      .article-intro {
+      .image-intro {
         background-color: #f6f6f6;
         padding: 32px;
         display: flex;
@@ -160,12 +156,18 @@ body {
           color: #0b1926;
         }
       }
-      .article-content {
+      .image-content {
         padding-top: 40px;
         display: flex;
         justify-content: center;
-        .article-content-inner {
+        .image-content-inner {
           width: 800px;
+          img {
+            width: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 20px 0;
+          }
           p {
             font-size: 18px;
             line-height: 1.54;

@@ -5,25 +5,21 @@
   <div class="random-notes-main">
     <div class="random-notes-list-box">
       <div class="random-notes-list">
-        <div
-          class="random-notes-list-item"
-          v-for="(item, idx) in notesList"
-          :key="idx"
-          @click="handleNotesDetail(item)"
-        >
+        <div class="random-notes-list-item" v-for="(item, idx) in notesList" :key="idx" @click="handleNotesDetail(item)">
           <div class="random-notes-list-date">
             <div class="note-date">
-              <span>{{ item.date }}</span>
+              <span>{{ _formatTime(item.updatedAt) }}</span>
             </div>
-            <div class="note-whter"><img src="@/assets/images/WeatherSunny.svg" /></div>
+            <div class="note-whter"><img :src="weatherIconsURLs[item.weather]" /></div>
           </div>
           <div class="random-notes-list-content">
             <p>{{ item.title }}</p>
-            <p>{{ item.content }}</p>
+            <p class="note-content-p">{{ item.content }}</p>
+            <img :src="item.cover" />
           </div>
         </div>
       </div>
-      <div class="random-notes-comment"></div>
+      <div class="random-notes-comment">评论暂未开放...</div>
     </div>
     <div class="random-notes-content">
       <notes-card :notesDetail="notesDetail"></notes-card>
@@ -39,28 +35,62 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import NotesCard from '@/components/NotesCard.vue'
 import { ref, onMounted } from 'vue'
-import type { NoteItem } from '@/apiType/note'
-
-const notesList = ref<NoteItem[]>([])
-const notesDetail = ref<NoteItem>({
+import { getNotesApi } from '@/http/notes'
+import { _formatTime } from '@/utils/publickFun'
+interface NotesType {
+  id: string
+  title: string
+  content: string
+  updatedAt: string
+  weather: string
+  cover: string
+}
+const notesList = ref<NotesType[]>([])
+const notesDetail = ref<NotesType>({
   id: '',
   title: '',
   content: '',
-  date: '',
+  updatedAt: '',
+  weather: '',
+  cover: '',
 })
 
-const handleNotesDetail = (item: NoteItem) => {
+const handleNotesDetail = (item: NotesType) => {
   notesDetail.value = item
 }
-
-onMounted(async () => {
-  try {
-    const res = await fetch('/api/notes/list')
-    const data = await res.json()
-    notesList.value = data.data
-  } catch (error) {
-    console.error('请求失败:', error)
+interface WeatherIcons {
+  [key: string]: string
+}
+const weatherIconsURLs: WeatherIcons = {
+  cloudy: new URL('@/assets/images/Weather/cloudy.svg', import.meta.url).href,
+  overcast: new URL('@/assets/images/Weather/overcast.svg', import.meta.url).href,
+  pour: new URL('@/assets/images/Weather/pour.svg', import.meta.url).href,
+  rain: new URL('@/assets/images/Weather/rain.svg', import.meta.url).href,
+  snow: new URL('@/assets/images/Weather/snow.svg', import.meta.url).href,
+  sun: new URL('@/assets/images/Weather/sun.svg', import.meta.url).href,
+  thunderstorm: new URL('@/assets/images/Weather/thunderstorm.svg', import.meta.url).href,
+  wind: new URL('@/assets/images/Weather/wind.svg', import.meta.url).href,
+}
+// 获取所有笔记
+const getAllNotes = async () => {
+  const params = {
+    title: '',
+    weather: '',
   }
+  const response = await getNotesApi(params)
+  const res = response.data
+  if (res.code == 200) {
+    if(res.data.length > 0){
+      notesList.value = res.data
+      notesDetail.value = res.data[0]
+    }
+  } else {
+    console.log(res.message)
+  }
+}
+
+onMounted(() => {
+  getAllNotes()
 })
 </script>
 
@@ -87,7 +117,6 @@ onMounted(async () => {
       gap: 24px;
       overflow: auto;
       grid-template-columns: repeat(auto-fill, minmax(1, 1fr)); /* 每个子元素最小200px，自动换行 */
-      grid-auto-rows: 180px;
       @include g.scrollbarCustom;
       padding-right: 10px;
       .random-notes-list-item {
@@ -104,6 +133,15 @@ onMounted(async () => {
           justify-content: space-between;
           align-items: center;
           padding: 10px;
+          padding-bottom: 0;
+          .note-date {
+            span {
+              display: flex;
+              align-items: center;
+              font-size: 12px;
+              line-height: 1.62;
+            }
+          }
           .note-whter {
             width: 30px;
             img {
@@ -116,19 +154,31 @@ onMounted(async () => {
         .random-notes-list-content {
           flex: 1;
           padding: 10px;
+          padding-top: 0;
+          img {
+            width: 160px;
+            height: 160px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-top: 20px;
+          }
           > p:first-child {
             font-size: 20px;
             line-height: 1.4;
             padding-bottom: 8px;
             font-weight: 600;
           }
-          > p:last-child {
+          .note-content-p {
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             line-clamp: 2;
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
+            font-size: 14px;
+            color: #0b1926;
+            text-rendering: optimizeLegibility;
+            line-height: 1.54;
           }
         }
       }
@@ -138,6 +188,9 @@ onMounted(async () => {
       background-color: #fff;
       margin-right: 16px;
       border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
   .random-notes-content {

@@ -5,9 +5,9 @@
         <div class="random-notes-title">
           <span>{{ props.notesDetail.title }}</span>
           <div class="random-notes-date">
-            <p>{{ props.notesDetail.date }}</p>
+            <p>{{ _formatTime(props.notesDetail.updatedAt) }}</p>
             <n-icon size="20">
-              <img src="@/assets/images/WeatherSunny.svg" alt="" />
+              <img :src="weatherIconsURLs[props.notesDetail.weather]" />
             </n-icon>
           </div>
         </div>
@@ -17,6 +17,7 @@
         <p>
           {{ props.notesDetail.content }}
         </p>
+        <img :src="props.notesDetail.cover" />
       </div>
     </n-card>
   </div>
@@ -31,6 +32,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { _formatTime } from '@/utils/publickFun'
 
 const props = defineProps({
   notesDetail: {
@@ -38,6 +40,20 @@ const props = defineProps({
     default: () => ({}),
   },
 })
+
+interface WeatherIcons {
+  [key: string]: string
+}
+const weatherIconsURLs: WeatherIcons = {
+  cloudy: new URL('@/assets/images/Weather/cloudy.svg', import.meta.url).href,
+  overcast: new URL('@/assets/images/Weather/overcast.svg', import.meta.url).href,
+  pour: new URL('@/assets/images/Weather/pour.svg', import.meta.url).href,
+  rain: new URL('@/assets/images/Weather/rain.svg', import.meta.url).href,
+  snow: new URL('@/assets/images/Weather/snow.svg', import.meta.url).href,
+  sun: new URL('@/assets/images/Weather/sun.svg', import.meta.url).href,
+  thunderstorm: new URL('@/assets/images/Weather/thunderstorm.svg', import.meta.url).href,
+  wind: new URL('@/assets/images/Weather/wind.svg', import.meta.url).href,
+}
 
 const hasNote = ref(true)
 </script>
@@ -88,6 +104,12 @@ const hasNote = ref(true)
       text-decoration-style: dashed;
       text-decoration-color: #ccc;
       text-underline-offset: 10px;
+      img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
     }
   }
 }

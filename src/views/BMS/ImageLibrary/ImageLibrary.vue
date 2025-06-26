@@ -10,30 +10,49 @@
       <div class="main-router-box">
         <header-detail :data="headerData"></header-detail>
         <div style="padding: 20px 0">
-          <classify-manage></classify-manage>
+          <classify-manage :paramsName="classifyParamsName"></classify-manage>
         </div>
         <div class="list-photo-box">
           <div class="photo-box" v-for="(item, idx) in state.photoLibraryData" :key="idx">
             <div class="images-box">
               <div class="top-mix-image">
-                <img class="cover-img" :src="item.photos[0]" />
+                <n-image
+                  class="cover-img"
+                  width="238"
+                  height="160"
+                  object-fit="cover"
+                  :src="item.photos[0]"
+                />
                 <div class="edit-delete-box">
-                  <img src="@/assets/images/EditHover.svg">
-                  <img src="@/assets/images/DeleteHover.svg">
+                  <img src="@/assets/images/EditHover.svg" @click="editImages(item)" />
+                  <n-popconfirm @positive-click="deleteImages(item)">
+                    <template #trigger>
+                      <img src="@/assets/images/DeleteHover.svg" />
+                    </template>
+                    确认删除？删除后数据将无法恢复
+                  </n-popconfirm>
+                </div>
+                <div class="more-images-tip" v-if="item.photos.length > 3">
+                  +{{ item.photos.length - 3 }}
                 </div>
               </div>
               <div class="footer-image-box">
-                <div v-for="(photo, idx) in item.photos.length > 3 ? item.photos.slice(0, 3) : item.photos" :key="idx"
-                  class="footer-image-item">
-                  <img :src="photo" />
+                <div
+                  v-for="(photo, idx) in item.photos.length > 3
+                    ? item.photos.slice(0, 3)
+                    : item.photos"
+                  :key="idx"
+                  class="footer-image-item"
+                >
+                  <n-image width="78" height="78" object-fit="cover" :src="photo" />
                 </div>
                 <template v-if="item.photos.length < 3">
-                  <div v-for="n in (3 - item.photos.length)" :key="'placeholder' + n"
-                    class="footer-image-item placeholder"></div>
+                  <div
+                    v-for="n in 3 - item.photos.length"
+                    :key="'placeholder' + n"
+                    class="footer-image-item placeholder"
+                  ></div>
                 </template>
-                <div v-show="item.photos.length > 3" class="footer-image-item more-overlay">
-                  +{{ item.photos.length - 3 }}
-                </div>
               </div>
             </div>
             <div class="photo-desc">
@@ -59,11 +78,12 @@ import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import HeaderDetail from '@/views/BMS/components/HeaderDetail.vue'
 import ClassifyManage from '@/views/BMS/components/ClassifyManage.vue'
-import { reactive, onMounted } from 'vue'
-import { getPhotoLibraryApi } from '@/http/photoLibrary'
+import { reactive, onMounted, ref } from 'vue'
+import { getPhotoLibraryApi, deletePhotoLibraryApi } from '@/http/photoLibrary'
 import { useMessage } from 'naive-ui'
 import { _formatTime } from '@/utils/publickFun'
 
+const classifyParamsName = ref('photography')
 const message = useMessage()
 const headerData = reactive({
   title: '摄影图库',
@@ -89,18 +109,31 @@ const getPhotoLibraryData = async () => {
   const response = await getPhotoLibraryApi()
   const res = response.data
   if (res.code == 200) {
-    state.photoLibraryData = res.data
+    state.photoLibraryData = res.data.list
     message.success(res.message)
   } else {
     message.error(res.message)
   }
-
+}
+// 删除
+const deleteImages = async (item: PhotoLibraryType) => {
+  const response = await deletePhotoLibraryApi(item._id)
+  const res = response.data
+  if (res.code == 200) {
+    message.success(res.message)
+    getPhotoLibraryData()
+  } else {
+    message.error(res.message)
+  }
+}
+// 编辑图库
+const editImages = (item: PhotoLibraryType) => {
+  message.info('暂未开放该功能....' + item.title)
 }
 
 onMounted(() => {
   getPhotoLibraryData()
 })
-
 </script>
 
 <style lang="scss" scoped>
@@ -137,6 +170,15 @@ onMounted(() => {
             height: 100%;
             object-fit: cover;
           }
+          .more-images-tip {
+            position: absolute;
+            padding: 5px;
+            top: 5px;
+            left: 5px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+          }
           .edit-delete-box {
             position: absolute;
             padding: 5px;
@@ -170,10 +212,12 @@ onMounted(() => {
           .footer-image-item {
             width: 78px;
             height: 78px;
-            img {
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
+            overflow: hidden;
+          }
+          .footer-image-item:last-child {
+            position: relative;
+            .more-overlay {
+              position: absolute;
             }
           }
           .placeholder {
