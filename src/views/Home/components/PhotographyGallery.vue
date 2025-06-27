@@ -21,6 +21,7 @@
     <div
       class="photo-gallery-centent"
       :style="{ backgroundImage: 'url(' + photoItem.photos[0] + ')' }"
+      @click="handleDetailImage(photoItem)"
     >
       <div class="photo-gallery-bg"></div>
       <div class="photo-gallery-desc">
@@ -63,29 +64,41 @@
       <n-button tertiary round @click="morePhotography"> 更多 </n-button>
     </div>
   </div>
+  <ImageDetail v-model:showModal="showActiveDrawer" :data="imagesDetail"></ImageDetail>
 </template>
 
 <script lang="ts" setup>
+import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import { useRouter } from 'vue-router'
 import { reactive, onMounted, ref } from 'vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
 const router = useRouter()
+const showActiveDrawer = ref(false)
 interface photoItemType {
   title: string
   photos: string[]
   content: string
   updatedAt: string
+  category: string
 }
 const photoItem = ref<photoItemType>({
   title: '',
   photos: [],
   content: '',
   updatedAt: '',
+  category: '',
 })
 const state = reactive({
   photoLibrary: [],
   step: 0,
   dataCount: 0,
+})
+let imagesDetail: photoItemType = reactive({
+  title: '',
+  content: '',
+  category: '',
+  updatedAt: '',
+  photos: []
 })
 // 获取图库信息
 const getPhotoLibrary = async () => {
@@ -126,6 +139,11 @@ const getNext = () => {
     }
     photoItem.value = state.photoLibrary[state.step]
   }
+}
+// 查看图片详情
+const handleDetailImage = (data: photoItemType) => {
+  showActiveDrawer.value = true
+  imagesDetail = data
 }
 const morePhotography = () => {
   router.push('/image-library')

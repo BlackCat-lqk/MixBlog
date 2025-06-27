@@ -32,34 +32,6 @@
         </n-popover>
       </div>
     </div>
-    <div class="spatial-box">
-      <div>
-        <div>
-          <span>文件空间</span>
-          <span>1.2MB/20MB</span>
-        </div>
-        <n-progress
-          type="line"
-          :percentage="30"
-          :height="18"
-          :border-radius="4"
-          :fill-border-radius="0"
-        />
-      </div>
-      <div>
-        <div>
-          <span>发布文章</span>
-          <span>1/30篇文章</span>
-        </div>
-        <n-progress
-          type="line"
-          :percentage="10"
-          :height="18"
-          :border-radius="4"
-          :fill-border-radius="0"
-        />
-      </div>
-    </div>
   </div>
   <n-modal v-model:show="state.showModal" :to="personalInfoBox">
     <n-card
@@ -266,7 +238,7 @@ const confirmUpdate = async () => {
   gap: 24px;
   margin-bottom: 24px;
   .personal-box {
-    flex: 0.7;
+    flex: 1;
     display: flex;
     justify-content: space-between;
     background-color: #2e33380d;

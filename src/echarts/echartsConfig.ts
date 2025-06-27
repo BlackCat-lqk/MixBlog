@@ -15,13 +15,13 @@ const lineOptions: EChartsOption = {
   tooltip: {},
   xAxis: {
     type: 'category',
-    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+    data: [],
   },
   yAxis: {},
   series: [
     {
       type: 'line',
-      data: [120, 132, 101, 134, 90, 230, 210],
+      data: [],
     },
   ],
 }
@@ -43,7 +43,7 @@ const pieOptions: EChartsOption = {
   },
   series: [
     {
-      name: 'Access From',
+      name: '使用设备',
       type: 'pie',
       radius: ['40%', '70%'],
       center: ['50%', '60%'],
@@ -62,10 +62,7 @@ const pieOptions: EChartsOption = {
       labelLine: {
         show: false,
       },
-      data: [
-        { value: 1048, name: '移动端' },
-        { value: 735, name: 'PC端' },
-      ],
+      data: [],
     },
   ],
 }

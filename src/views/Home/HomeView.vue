@@ -15,6 +15,35 @@ import ArticleBlog from './components/ArticleBlog.vue'
 import HomeData from './components/HomeData.vue'
 import RandomNotes from './components/RandomNotes.vue'
 import PhotographyGallery from './components/PhotographyGallery.vue'
+import { onMounted } from 'vue'
+import { recordVisitApi, getVisitorIpApi } from '@/http/visit'
+import { getDeviceType } from '@/utils/deviceUtils'
+
+// 记录访问统计
+const recordVisit = async () => {
+  const userAgent = getDeviceType()
+  const res = await getVisitorIpApi()
+  const params= {
+    userAgent,
+    ipAddress: res.data.ip,
+    ...res.data
+  }
+  const response = await recordVisitApi(params)
+  const result = response.data
+  if(result.code === 200){
+    return
+  }else {
+    return
+  }
+
+}
+
+
+onMounted(() => {
+  recordVisit()
+})
+
+
 </script>
 
 <style scoped lang="scss">

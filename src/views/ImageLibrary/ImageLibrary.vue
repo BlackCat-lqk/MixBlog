@@ -39,7 +39,7 @@
   <footer>
     <FooterNav></FooterNav>
   </footer>
-  <ImageDetail v-model:showModal="showActiveDrawer" :data="articleDetail"></ImageDetail>
+  <ImageDetail v-model:showModal="showActiveDrawer" :data="imagesDetail"></ImageDetail>
 </template>
 
 <script setup lang="ts">
@@ -75,7 +75,7 @@ const classify = reactive([
 interface photoDataType {
   category: string
 }
-let articleDetail: dataType = reactive({
+let imagesDetail: dataType = reactive({
   title: '',
   content: '',
   category: '',
@@ -85,7 +85,7 @@ let articleDetail: dataType = reactive({
 // 查看图库详情
 const handleDetailImage = (data: dataType) => {
   showActiveDrawer.value = true
-  articleDetail = data
+  imagesDetail = data
 }
 // 获取所有图片数据
 const getAllPhotoData = async () => {

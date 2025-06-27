@@ -16,7 +16,7 @@
             <n-card :title="item.title" hoverable :style="`background:${item.bgColor}`">
               <div class="gather-cards-content">
                 <h2>{{ item.content }}</h2>
-                <div class="gather-cards-content-icon">
+                <div v-show="idx != 0 && idx != 4" class="gather-cards-content-icon">
                   <n-button strong secondary @click="handleJump(idx)">
                     <img src="@/assets/images/Add.svg" />
                   </n-button>
@@ -29,7 +29,7 @@
           <div class="echarts-view">
             <div>
               <echarts-init
-                :options="lineOptions"
+                :options="lineOptionsData"
                 :dark="isDarkMode"
                 :loading="loading"
                 :isEmpty="isEmptyData"
@@ -53,13 +53,13 @@
 
             <div>
               <echarts-init
-                :options="pieOptions"
+                :options="pieOptionsData"
                 :dark="isDarkMode"
                 :loading="loading"
                 :isEmpty="isEmptyData"
               >
               </echarts-init>
-              <div class="echarts-btns">
+              <div v-show="false" class="echarts-btns">
                 <n-button
                   :color="state.pieBtn == 'Week' ? '#8a2be2' : ''"
                   @click="handlePieDate('Week')"
@@ -111,8 +111,11 @@ import EchartsInit from '@/echarts/EchartsInit.vue'
 import { lineOptions, pieOptions } from '@/echarts/echartsConfig.ts'
 import { useRouter } from 'vue-router'
 import type { DataTableColumns } from 'naive-ui'
+import { getStatisticsApi } from '@/http/statistics'
 
 const message = useMessage()
+const lineOptionsData = ref({})
+const pieOptionsData = ref({})
 interface Comment {
   no: number
   user: string
@@ -120,7 +123,6 @@ interface Comment {
   type: string
   date: string
 }
-
 const createColumns: DataTableColumns<Comment> = [
   {
     title: '序号',
@@ -143,10 +145,7 @@ const createColumns: DataTableColumns<Comment> = [
     key: 'date',
   },
 ]
-
-const data: Comment[] = [
-  { no: 1, user: 'ikun', content: '博客很漂亮！', type: '博客文章', date: '2023-05-01' },
-]
+const data: Comment[] = []
 // 加载状态
 const loading = ref(true)
 const isEmptyData = ref(false)
@@ -154,31 +153,45 @@ const isEmptyData = ref(false)
 const isDarkMode = ref(false)
 const router = useRouter()
 
+interface StatisticsData {
+  visitCount: {
+    weekChartData: {
+      dates: string[]
+      counts: number[]
+    }
+    monthChartData: {
+      dates: string[]
+      counts: number[]
+    }
+  }
+}
+
 const state = reactive({
   lineBtn: 'Week',
   pieBtn: 'Week',
   pagination: false as const,
+  statisticsData: [] as unknown as StatisticsData,
 })
 
-const optionCards = [
+const optionCards = ref([
   {
     title: '本地文件',
-    content: 9,
+    content: 0,
     bgColor: 'linear-gradient(to bottom, #8360c3, #2ebf91)',
   },
   {
     title: '博客文章',
-    content: 93,
+    content: 0,
     bgColor: 'linear-gradient(to bottom, #948e99, #2e1437);',
   },
   {
     title: '摄影图库',
-    content: 29,
+    content: 0,
     bgColor: 'linear-gradient(to bottom, #00b4db, #0083b0);',
   },
   {
     title: '随笔随记',
-    content: 39,
+    content: 0,
     bgColor: 'linear-gradient(to bottom, #e1eec3, #f05053);',
   },
   {
@@ -186,22 +199,39 @@ const optionCards = [
     content: '敬请期待...',
     bgColor: 'linear-gradient(to bottom, #2b5876, #4e4376);',
   },
-]
+])
 
 // 点击折线图时间统计
 const handleLineDate = (value: string) => {
   state.lineBtn = value
+  // 配置echarts数据
+  let xAxisData: string[] = []
+  let seriesData: number[] = []
+  if (value === 'Week') {
+    xAxisData = state.statisticsData.visitCount.weekChartData.dates
+    seriesData = state.statisticsData.visitCount.weekChartData.counts
+  } else {
+    xAxisData = state.statisticsData.visitCount.monthChartData.dates
+    seriesData = state.statisticsData.visitCount.monthChartData.counts
+  }
+  lineOptionsData.value = {
+    ...lineOptions,
+    xAxis: {
+      type: 'category',
+      data: xAxisData,
+    },
+    series: [
+      {
+        type: 'line',
+        data: seriesData,
+      },
+    ],
+  }
 }
 // 点击饼状图时间统计
 const handlePieDate = (value: string) => {
   state.pieBtn = value
 }
-
-// 模拟异步加载数据
-setTimeout(() => {
-  loading.value = false
-}, 1000)
-
 const handleJump = (item: number) => {
   if (item === 1) {
     router.push('/bms/editarticle')
@@ -211,13 +241,76 @@ const handleJump = (item: number) => {
     router.push('/bms/notes')
   }
 }
+
+// 获取统计数据
+const getStatisticsData = async () => {
+  const response = await getStatisticsApi()
+  const res = response.data
+  if (res.code == 200) {
+    // 获取数据成功
+    const data = res.data
+    console.log(data)
+    state.statisticsData = data
+    optionCards.value[0].content = '数量:' + data.totalFiles + ' / Size:' + data.totalSize.formatted
+    optionCards.value[1].content = data.blogArticleCount
+    optionCards.value[2].content = data.photoLibraryCount
+    optionCards.value[3].content = data.noteCount
+    // 配置echarts数据
+    lineOptionsData.value = {
+      ...lineOptions,
+      xAxis: {
+        type: 'category',
+        data: data.visitCount.weekChartData.dates,
+      },
+      series: [
+        {
+          type: 'line',
+          data: data.visitCount.weekChartData.counts,
+        },
+      ],
+    }
+
+    pieOptionsData.value = {
+      ...pieOptions,
+      series: [
+        {
+          name: '使用设备',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          center: ['50%', '60%'],
+          avoidLabelOverlap: false,
+          label: {
+            show: false,
+            position: 'center',
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 24,
+              fontWeight: 'bold',
+            },
+          },
+          labelLine: {
+            show: false,
+          },
+          data: data.userAgentStats,
+        },
+      ],
+    }
+  } else {
+    // 获取数据失败
+    message.error('获取数据失败')
+  }
+}
+
 onMounted(() => {
   // 订阅
-  const channel = new BroadcastChannel('dingyue')
-  // 接收消息
-  channel.onmessage = function (event) {
-    message.success('订阅成功', event.data)
-  }
+  // const channel = new BroadcastChannel('dingyue')
+  // // 接收消息
+  // channel.onmessage = function (event) {
+  //   message.success('订阅成功', event.data)
+  // }
+  getStatisticsData()
 })
 </script>
 

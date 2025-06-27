@@ -3,13 +3,13 @@
     <div class="home-data-detail">
       <div class="total-data">
         <n-statistic tabular-nums>
-          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="99999" />
+          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="state.totalCount" />
         </n-statistic>
         <p>总访问量</p>
       </div>
       <div class="today-data">
         <n-statistic tabular-nums>
-          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="99" />
+          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="state.todayCount" />
         </n-statistic>
         <p>今日访问量</p>
       </div>
@@ -42,6 +42,7 @@
 import { ref, watch, onMounted, reactive } from 'vue'
 import { useScrollStore } from '@/stores/scrollStore'
 import { getAllBanners } from '@/http/banner'
+import { getVisitStatsApi } from '@/http/visit'
 const scrollStore = useScrollStore()
 const homeDataRef = ref()
 interface bannerDataType {
@@ -57,10 +58,24 @@ interface bannerDataType {
 }
 const state = reactive({
   banners: [] as bannerDataType[],
+  totalCount: 0,
+  todayCount: 0,
 })
+// 获取banner图片数据
 const getBannerData = async () => {
   const res = await getAllBanners()
   state.banners = res.data.data
+}
+// 获取统计数据
+const getStatisticsData = async () => {
+  const response = await getVisitStatsApi()
+  const res = response.data
+  if (res.code == 200) {
+    // 获取数据成功
+    const data = res.data
+    state.totalCount = data.totalCount
+    state.todayCount = data.todayCount
+  }
 }
 const redirectToExternal = (url: string) => {
   window.open(url, '_blank')
@@ -77,6 +92,7 @@ watch(
   },
 )
 onMounted(() => {
+  getStatisticsData()
   getBannerData()
 })
 </script>

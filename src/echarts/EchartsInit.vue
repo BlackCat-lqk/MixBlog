@@ -1,8 +1,7 @@
 <template>
   <div class="chart-wrapper" :class="{ 'dark-mode': isDark }">
     <div ref="visitLine" class="chart-container"></div>
-    <div v-if="loading" class="chart-loading">加载中...</div>
-    <div v-else-if="isEmpty" class="chart-empty">暂无数据</div>
+    <div v-if="isEmpty" class="chart-empty">暂无数据</div>
   </div>
 </template>
 

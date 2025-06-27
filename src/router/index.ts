@@ -82,6 +82,11 @@ const router = createRouter({
       path: '/bms/userManagement',
       name: 'BmsUserManagement',
       component: () => import('@/views/BMS/UserManagement/UserManagement.vue'),
+    },
+    {
+      path: '/bms/LogCenter',
+      name: 'LogCenter',
+      component: () => import('@/views/BMS/Logs/LogView.vue'),
     }
   ],
 })
