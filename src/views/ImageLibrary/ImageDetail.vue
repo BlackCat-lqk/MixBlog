@@ -40,7 +40,13 @@
           </div>
           <div class="image-content">
             <div class="image-content-inner">
-              <img v-for="(item, idx) in props.data.photos" :key="idx" :src="item" />
+              <n-image
+                v-for="(item, idx) in props.data.photos"
+                :key="idx"
+                :src="item"
+                object-fit="cover"
+                width="100%"
+              />
             </div>
           </div>
         </div>
@@ -103,78 +109,78 @@ watch(
   justify-content: center;
 }
 body {
-    .image-header-box {
-      max-width: 1264px;
-      min-width: 1040px;
-      padding: 0 120px;
-      .image-header-title {
-        font-size: 28px;
-        font-weight: 600;
-        line-height: 40px;
-      }
-      .image-header-info-box {
+  .image-header-box {
+    max-width: 1264px;
+    min-width: 1040px;
+    padding: 0 120px;
+    .image-header-title {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 40px;
+    }
+    .image-header-info-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .image-header-info {
         display: flex;
-        justify-content: space-between;
+        padding: 16px 0 20px 0;
         align-items: center;
-        .image-header-info {
+        gap: 10px;
+        p {
+          font-size: 14px;
+          color: #0b1926;
+        }
+      }
+      .image-header-data-info {
+        display: flex;
+        gap: 24px;
+        .n-icon {
           display: flex;
-          padding: 16px 0 20px 0;
-          align-items: center;
-          gap: 10px;
-          p {
+          gap: 2px;
+          span {
             font-size: 14px;
             color: #0b1926;
           }
         }
-        .image-header-data-info {
-          display: flex;
-          gap: 24px;
-          .n-icon {
-            display: flex;
-            gap: 2px;
-            span {
-              font-size: 14px;
-              color: #0b1926;
-            }
-          }
-        }
       }
     }
-    .image-content-box {
-      max-width: 1264px;
-      min-width: 1040px;
-      padding: 0 120px;
-      .image-intro {
-        background-color: #f6f6f6;
-        padding: 32px;
-        display: flex;
-        justify-content: center;
-        border-radius: 8px;
+  }
+  .image-content-box {
+    max-width: 1264px;
+    min-width: 1040px;
+    padding: 0 120px;
+    .image-intro {
+      background-color: #f6f6f6;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+      border-radius: 8px;
+      p {
+        font-size: 18px;
+        line-height: 1.54;
+        color: #0b1926;
+      }
+    }
+    .image-content {
+      padding-top: 40px;
+      display: flex;
+      justify-content: center;
+      .image-content-inner {
+        width: 800px;
+        :deep(.n-image) {
+          width: 100%;
+          object-fit: cover;
+          border-radius: 8px;
+          margin: 20px 0;
+        }
         p {
           font-size: 18px;
           line-height: 1.54;
           color: #0b1926;
         }
       }
-      .image-content {
-        padding-top: 40px;
-        display: flex;
-        justify-content: center;
-        .image-content-inner {
-          width: 800px;
-          img {
-            width: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-            margin: 20px 0;
-          }
-          p {
-            font-size: 18px;
-            line-height: 1.54;
-            color: #0b1926;
-          }
-        }
-      }
     }
+  }
 }
 </style>

@@ -17,7 +17,14 @@
                   <h3>{{ item.title }}</h3>
                   <img :src="weatherIconsURLs[item.weather]" />
                 </div>
-                <n-button strong secondary round type="error" class="delete-btn" @click="handleDeleteNote(item._id)">
+                <n-button
+                  strong
+                  secondary
+                  round
+                  type="error"
+                  class="delete-btn"
+                  @click="handleDeleteNote(item._id)"
+                >
                   <img src="@/assets/images/Delete.svg" />
                 </n-button>
               </div>
@@ -28,53 +35,73 @@
           </div>
           <div class="edit-release-box">
             <n-form ref="formRef" inline :label-width="80" :model="createForm" :rules="rules">
-              <div style="width: 100%;">
+              <div style="width: 100%">
                 <div class="title-box">
                   <h3>新建随笔随记</h3>
                   <div class="title-btn-box">
                     <n-button strong secondary @click="clearClick">重置</n-button>
                     <n-button type="info" @click="createValidateClick">发布</n-button>
                   </div>
-
                 </div>
                 <div class="note-title-box">
                   <n-form-item path="title">
-                    <n-input v-model:value="createForm.title" type="text" maxlength="12" show-count clearable
-                      placeholder="请输入标题" />
+                    <n-input
+                      v-model:value="createForm.title"
+                      type="text"
+                      maxlength="20"
+                      show-count
+                      clearable
+                      placeholder="请输入标题"
+                    />
                     <n-popover trigger="hover">
                       <template #trigger>
-                        <img :src="initWeather">
+                        <img :src="initWeather" />
                       </template>
-                      <div style="padding: 20px;">
+                      <div style="padding: 20px">
                         <n-grid :x-gap="24" :y-gap="24" :cols="4">
                           <n-grid-item v-for="(item, idx) in weatherIconData" :key="idx">
-                            <img :src="weatherIconsURLs[item]" style="cursor: pointer;"
-                              @click="changeWeatherIcon(item)">
+                            <img
+                              :src="weatherIconsURLs[item]"
+                              style="cursor: pointer"
+                              @click="changeWeatherIcon(item)"
+                            />
                           </n-grid-item>
                         </n-grid>
                       </div>
                     </n-popover>
-
                   </n-form-item>
                 </div>
                 <div class="note-content-box">
                   <n-form-item path="content">
-                    <n-input v-model:value="createForm.content" type="textarea" maxlength="500" show-count clearable
-                      placeholder="请输入内容" :autosize="{
+                    <n-input
+                      v-model:value="createForm.content"
+                      type="textarea"
+                      maxlength="1500"
+                      show-count
+                      clearable
+                      placeholder="请输入内容"
+                      :autosize="{
                         minRows: 10,
                         maxRows: 30,
-                      }" />
+                      }"
+                    />
                   </n-form-item>
                 </div>
               </div>
               <n-divider />
               <div class="note-img-box">
-                <n-form-item >
-                  <n-upload :default-file-list="newFileImgageList" :max="1" list-type="image-card"
-                    :custom-request="createCustomUpload" :finish="createUploadFinish" :error="createUploadError"
+                <n-form-item>
+                  <n-upload
+                    :default-file-list="newFileImgageList"
+                    :max="1"
+                    list-type="image-card"
+                    :custom-request="createCustomUpload"
+                    :finish="createUploadFinish"
+                    :error="createUploadError"
                     :headers="{
                       Authorization: `Bearer ${userInfoStore.data.token}`,
-                    }"></n-upload>
+                    }"
+                  ></n-upload>
                 </n-form-item>
               </div>
             </n-form>
@@ -119,11 +146,18 @@ interface createFormType {
 }
 
 interface WeatherIcons {
-  [key: string]: string;
+  [key: string]: string
 }
 
 const weatherIconData = [
-  'cloudy', 'overcast', 'pour', 'rain', 'snow', 'sun', 'thunderstorm', 'wind'
+  'cloudy',
+  'overcast',
+  'pour',
+  'rain',
+  'snow',
+  'sun',
+  'thunderstorm',
+  'wind',
 ]
 const weatherIconsURLs: WeatherIcons = {
   cloudy: new URL('@/assets/images/Weather/cloudy.svg', import.meta.url).href,
@@ -182,7 +216,7 @@ const createForm: createFormType = reactive({
   content: '',
   tempFile: null,
   cover: '',
-  weather: ''
+  weather: '',
 })
 const headerData = reactive({
   title: '随笔随记',
@@ -242,7 +276,7 @@ const uploadFile = async (id: string) => {
       const response = await uploadNoteImageApi(formData)
       const res = response.data
       if (res.code === 200) {
-          createForm.cover = res.data.url
+        createForm.cover = res.data.url
         message.success(res.message)
         return true
       } else {
@@ -287,8 +321,7 @@ const createValidateClick = (e: MouseEvent) => {
       } else {
         message.error(res.message)
       }
-    }
-    else {
+    } else {
       console.log(errors)
       message.error('确少必填项')
     }
@@ -305,7 +338,6 @@ const getNotesData = async () => {
     notesData.value = res.data
   } else {
     message.error(res.message)
-
   }
 }
 onMounted(() => {
@@ -375,7 +407,7 @@ onMounted(() => {
         .note-update-time {
           font-size: 14px;
           line-height: 1.54;
-          color: rgba(30, 32, 37, .48);
+          color: rgba(30, 32, 37, 0.48);
         }
         .note-content-detail-box {
           margin-top: 16px;
@@ -423,7 +455,6 @@ onMounted(() => {
           .title-btn-box {
             display: flex;
             gap: 10px;
-
           }
         }
 

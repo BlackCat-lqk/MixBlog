@@ -5,7 +5,12 @@
   <div class="random-notes-main">
     <div class="random-notes-list-box">
       <div class="random-notes-list">
-        <div class="random-notes-list-item" v-for="(item, idx) in notesList" :key="idx" @click="handleNotesDetail(item)">
+        <div
+          class="random-notes-list-item"
+          v-for="(item, idx) in notesList"
+          :key="idx"
+          @click="handleNotesDetail(item)"
+        >
           <div class="random-notes-list-date">
             <div class="note-date">
               <span>{{ _formatTime(item.updatedAt) }}</span>
@@ -80,7 +85,7 @@ const getAllNotes = async () => {
   const response = await getNotesApi(params)
   const res = response.data
   if (res.code == 200) {
-    if(res.data.length > 0){
+    if (res.data.length > 0) {
       notesList.value = res.data
       notesDetail.value = res.data[0]
     }
@@ -105,11 +110,14 @@ onMounted(() => {
   gap: 56px;
   .random-notes-list-box {
     width: 424px;
-    gap: 56px;
+    height: 900px;
+    gap: 72px;
     display: flex;
     flex-direction: column;
     align-items: space-between;
-    padding: 0px 5px;
+    padding: 10px;
+    background-color: #e7e7e7;
+    border-radius: 8px;
     .random-notes-list {
       height: 680px;
       min-height: 640px;
@@ -118,7 +126,6 @@ onMounted(() => {
       overflow: auto;
       grid-template-columns: repeat(auto-fill, minmax(1, 1fr)); /* 每个子元素最小200px，自动换行 */
       @include g.scrollbarCustom;
-      padding-right: 10px;
       .random-notes-list-item {
         width: 100%;
         height: 100%;
@@ -186,7 +193,6 @@ onMounted(() => {
     .random-notes-comment {
       height: 240px;
       background-color: #fff;
-      margin-right: 16px;
       border-radius: 15px;
       display: flex;
       justify-content: center;
@@ -197,6 +203,7 @@ onMounted(() => {
     flex: 1;
     background-color: #fff;
     border-radius: 5px;
+    height: 920px;
   }
 }
 </style>

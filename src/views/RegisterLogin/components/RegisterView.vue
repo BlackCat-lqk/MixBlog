@@ -174,7 +174,7 @@ onMounted(() => {
   :deep(.n-form--inline) {
     display: flex;
     flex-direction: column;
-    padding: 25px;
+    padding: 25px 25px 25px 0;
     justify-content: flex-start;
     & > div {
       width: 100%;

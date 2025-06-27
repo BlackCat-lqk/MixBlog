@@ -111,6 +111,10 @@ const hasNote = ref(true)
         border-radius: 8px;
       }
     }
+    .n-card__content {
+      overflow-y: auto;
+      @include g.scrollbarCustom;
+    }
   }
 }
 .no-note {

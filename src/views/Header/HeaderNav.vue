@@ -190,10 +190,10 @@ const handleAvatarClick = async (key: string | number) => {
   } else if (key === 2) {
     const response = await logOutUserApi()
     const res = response.data
+    //清除有关用户的全部数据
+    userInfoStore.removeUserInfo()
+    router.push('/register-login')
     if (res.code === 200) {
-      //清除有关用户的全部数据
-      userInfoStore.removeUserInfo()
-      router.push('/register-login')
       message.success(res.message)
     } else {
       message.error(res.message)
@@ -366,6 +366,7 @@ onMounted(() => {
         align-items: center;
       }
       .n-avatar {
+        cursor: pointer;
         img {
           object-fit: cover;
           border-radius: 50%;
@@ -374,13 +375,18 @@ onMounted(() => {
       .user-name,
       .has-user-name {
         margin-left: 10px;
-        cursor: pointer;
         color: var(--text-color);
       }
       .user-name {
         &:hover {
+          cursor: pointer;
           color: #409eff;
         }
+      }
+    }
+    .switch-theme-box {
+      :deep(.n-switch__rail) {
+        box-shadow: 0 0 1px 1px #f7f7f7;
       }
     }
   }
