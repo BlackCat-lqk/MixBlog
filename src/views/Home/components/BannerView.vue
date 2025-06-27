@@ -33,12 +33,20 @@
         <div class="relevant-address">
           <p>相关地址</p>
           <div class="address-list">
-            <div class="address-img-box">
+            <div
+              class="address-img-box"
+              @click="redirectToExternal('https://github.com/BlackCat-lqk/MixBlog')"
+            >
               <n-icon size="40">
                 <img src="@/assets/images/Github.svg" alt="" />
               </n-icon>
             </div>
-            <div class="address-img-box">
+            <div
+              class="address-img-box"
+              @click="
+                redirectToExternal('https://space.bilibili.com/154164424?spm_id_from=333.1007.0.0')
+              "
+            >
               <n-icon size="40">
                 <img src="@/assets/images/Blibli.svg" alt="" />
               </n-icon>
@@ -59,6 +67,9 @@ const scrollStore = useScrollStore()
 const handelScrollDown = () => {
   const nowDate = new Date()
   scrollStore.scrollTo('scorll' + nowDate)
+}
+const redirectToExternal = (url: string) => {
+  window.open(url, '_blank')
 }
 </script>
 

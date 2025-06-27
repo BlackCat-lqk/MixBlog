@@ -17,7 +17,12 @@
         >
       </n-form-item>
       <n-form-item label="Password" path="password">
-        <n-input v-model:value="formValue.password" placeholder="Password" />
+        <n-input
+          v-model:value="formValue.password"
+          type="password"
+          show-password-on="mousedown"
+          placeholder="Password"
+        />
       </n-form-item>
       <n-form-item>
         <n-button attr-type="button" type="primary" @click="handleRegister"> Register </n-button>

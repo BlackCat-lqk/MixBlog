@@ -5,7 +5,12 @@
         <n-input v-model:value="formValue.email" placeholder="请输入邮箱..." />
       </n-form-item>
       <n-form-item label="Password" path="password">
-        <n-input v-model:value="formValue.password" placeholder="请输入密码..." />
+        <n-input
+          v-model:value="formValue.password"
+          type="password"
+          show-password-on="mousedown"
+          placeholder="请输入密码..."
+        />
       </n-form-item>
       <div><span>忘记密码?</span></div>
       <n-form-item>

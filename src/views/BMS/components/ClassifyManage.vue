@@ -2,11 +2,9 @@
   <div class="classify-manage-box">
     <div class="classify-box">
       <n-tag size="large" round>
-          全部：<span>{{ state.categoryArray.length }}</span>
+        全部：<span>{{ state.categoryArray.length }}</span>
       </n-tag>
-      <n-tag size="large" round>
-          未分类：<span>0</span>
-      </n-tag>
+      <n-tag size="large" round> 未分类：<span>0</span> </n-tag>
       <n-tag size="large" round v-for="(item, idx) in state.categoryArray" :key="idx">
         {{ item }}：
         <span>0</span>
@@ -63,26 +61,28 @@ const emit = defineEmits(['getCategoryTags'])
 const props = defineProps({
   isUpdateTag: {
     type: Number,
-    default: 0
+    default: 0,
   },
-  paramsName:{
+  paramsName: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
-watch(() => props.isUpdateTag, (newValue) => {
-  if(newValue)(
-    getCategory()
-  )
-})
+watch(
+  () => props.isUpdateTag,
+  (newValue) => {
+    if (newValue) getCategory()
+  },
+  { immediate: true },
+)
 
 const message = useMessage()
 const state = reactive({
   categoryvalue: '',
   categoryArray: [],
   categoryData: [],
-  allData:{}
+  allData: {},
 })
 interface CategoryTagsType {
   uid: string
@@ -186,10 +186,11 @@ const tableColumns = createColumns({
   operateDelete: (row) => {
     params.uid = row._id
     params.email = row.email
+    params.type = props.paramsName
     const delData = state.categoryArray.filter((item) => {
-      if(item !== row.category){
+      if (item !== row.category) {
         return true
-      }else {
+      } else {
         return false
       }
     })
@@ -205,18 +206,16 @@ const getCategory = async () => {
   if (res.code == 200) {
     state.allData = res.data
     emit('getCategoryTags', state.allData)
-    if (res.data.category.length > 0) {
-      state.categoryArray = res.data.category
-      state.categoryData = res.data.category.map((item: string) => {
-        return {
-          email: res.data.email,
-          type: res.data.type,
-          category: item,
-          createdAt: res.data.createdAt,
-          updatedAt: res.data.updatedAt,
-        }
-      })
-    }
+    state.categoryArray = res.data.category
+    state.categoryData = res.data.category.map((item: string) => {
+      return {
+        email: res.data.email,
+        type: res.data.type,
+        category: item,
+        createdAt: res.data.createdAt,
+        updatedAt: res.data.updatedAt,
+      }
+    })
   } else {
     message.error(res.message)
   }
@@ -233,6 +232,7 @@ const upsertCategory = async (params: object) => {
   if (res.code === 200) {
     closeAddCategory()
     getCategory()
+    showModal.value = false
     message.success(res.message)
   } else {
     message.error(res.message)

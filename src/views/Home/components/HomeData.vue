@@ -15,18 +15,23 @@
       </div>
     </div>
     <div class="home-data-banner">
-      <n-carousel autoplay show-arrow>
+      <n-carousel autoplay show-arrow dot-type="line" interval="3000">
         <div v-for="(item, idx) in state.banners" :key="idx" class="carousel-box">
+          <div class="mask-box"></div>
           <div class="banner-config-box">
             <h3>{{ item.title }}</h3>
             <h4>{{ item.sub }}</h4>
-            <n-button type="primary">{{ item.mainBtnName }}</n-button>
-            <n-button strong secondary type="info">{{ item.childBtnName }}</n-button>
+            <p>{{ item.introduction }}</p>
+            <n-button type="primary" @click="redirectToExternal(item.mainBtnUrl)">{{
+              item.mainBtnName
+            }}</n-button>
+            <n-button strong secondary type="info" @click="redirectToExternal(item.childBtnUrl)">{{
+              item.childBtnName
+            }}</n-button>
           </div>
           <div class="carousel-img">
             <img :src="item.cover" />
           </div>
-
         </div>
       </n-carousel>
     </div>
@@ -49,7 +54,6 @@ interface bannerDataType {
   mainBtnUrl: string
   childBtnUrl: string
   cover: string
-
 }
 const state = reactive({
   banners: [] as bannerDataType[],
@@ -57,6 +61,9 @@ const state = reactive({
 const getBannerData = async () => {
   const res = await getAllBanners()
   state.banners = res.data.data
+}
+const redirectToExternal = (url: string) => {
+  window.open(url, '_blank')
 }
 watch(
   () => scrollStore.targetId,
@@ -95,7 +102,7 @@ onMounted(() => {
       color: var(--text-color);
     }
 
-    &>div {
+    & > div {
       flex: 0.44;
       background-image: var(--box-bg-color);
       @include g.borderRadius(24px);
@@ -116,27 +123,58 @@ onMounted(() => {
     flex: 1;
     @include g.borderRadius(24px);
     overflow: hidden;
-
+    box-shadow: 0 0 10px rgba(46, 46, 46, 0.1);
+    :deep(.n-carousel__arrow) {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
     .carousel-box {
       width: 100%;
       height: 100%;
       position: relative;
-
+      .mask-box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          rgba(201, 214, 255, 1) 0%,
+          rgba(226, 226, 226, 0) 40%,
+          rgb(182, 251, 255, 0) 60%,
+          rgba(182, 251, 255, 0.5) 100%
+        );
+        z-index: 1;
+      }
       .banner-config-box {
         position: absolute;
         left: 2%;
-        top: 50%;
-        color: #fff;
-        z-index: 1;
+        top: 30%;
+        z-index: 2;
         margin-top: 20px;
-
-        h3,
+        h3 {
+          font-size: 32px;
+          color: #0b1926;
+          line-height: 1.34;
+          font-weight: 600;
+        }
         h4 {
-          margin-bottom: 16px;
+          font-size: 16px;
+          line-height: 1.5;
+          font-weight: 600;
+          color: #0b1926;
+          padding-top: 8px;
+        }
+        p {
+          padding-top: 16px;
+          color: #0b1926b8;
+          font-size: 14px;
         }
 
         .n-button {
+          width: 84px;
           margin-right: 16px;
+          margin-top: 50px;
         }
       }
 
@@ -144,11 +182,10 @@ onMounted(() => {
         position: absolute;
         width: 100%;
         height: 100%;
-
         img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
         }
       }
     }
