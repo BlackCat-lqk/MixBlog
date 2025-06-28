@@ -8,12 +8,22 @@
       <div class="photo-gallery-switch">
         <n-button tertiary round @click="getPrevious" :disabled="state.step <= 0">
           <n-icon>
-            <img src="@/assets/images/ArrowLeft.svg" alt="left" />
+            <img
+              v-if="themeStore.currentTheme == 'light'"
+              src="@/assets/images/ArrowLeft.svg"
+              alt="prove"
+            />
+            <img v-else src="@/assets/images/ArrowLeftWhite.svg" alt="prove" />
           </n-icon>
         </n-button>
-        <n-button tertiary round  @click="getNext" :disabled="state.step >= state.dataCount">
+        <n-button tertiary round @click="getNext" :disabled="state.step >= state.dataCount">
           <n-icon>
-            <img src="@/assets/images/ArrowRight.svg" alt="left" />
+            <img
+              v-if="themeStore.currentTheme == 'light'"
+              src="@/assets/images/ArrowRight.svg"
+              alt="next"
+            />
+            <img v-else src="@/assets/images/ArrowRightWhite.svg" alt="next" />
           </n-icon>
         </n-button>
       </div>
@@ -28,17 +38,22 @@
         <div class="photo-gallery-title">
           <h1>{{ photoItem.title }}</h1>
           <div class="photo-gallery-title-data">
-            <p>{{ photoItem.updatedAt }}</p>
+            <p>{{ _formatTime(photoItem.updatedAt) }}</p>
             <div>
               <span>
                 <n-icon size="small">
-                  <img src="@/assets/images/CommentOutlined.svg" />
+                  <img
+                    v-if="themeStore.currentTheme == 'light'"
+                    src="@/assets/images/CommentOutlined.svg"
+                  />
+                  <img v-else src="@/assets/images/CommentWhite.svg" />
                 </n-icon>
                 12
               </span>
               <span>
                 <n-icon size="small">
-                  <img src="@/assets/images/View.svg" />
+                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/View.svg" />
+                  <img v-else src="@/assets/images/ViewWhite.svg" />
                 </n-icon>
                 24
               </span>
@@ -51,12 +66,11 @@
       </div>
       <div v-if="photoItem.photos.length > 0" class="photo-gallery-preview">
         <n-marquee auto-fill>
-            <div style="display: flex">
-              <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
-                <img :src="item" />
-              </div>
+          <div style="display: flex">
+            <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
+              <img :src="item" />
             </div>
-
+          </div>
         </n-marquee>
       </div>
     </div>
@@ -72,6 +86,9 @@ import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import { useRouter } from 'vue-router'
 import { reactive, onMounted, ref } from 'vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
+import { useThemeStore } from '@/stores/themeStore'
+import { _formatTime } from '@/utils/publickFun'
+const themeStore = useThemeStore()
 const router = useRouter()
 const showActiveDrawer = ref(false)
 interface photoItemType {
@@ -98,7 +115,7 @@ let imagesDetail: photoItemType = reactive({
   content: '',
   category: '',
   updatedAt: '',
-  photos: []
+  photos: [],
 })
 // 获取图库信息
 const getPhotoLibrary = async () => {
@@ -172,12 +189,13 @@ onMounted(() => {
       display: flex;
       align-items: center;
       h1 {
+        color: var(--text-color);
         font-size: 32px;
         line-height: 1.34;
         font-weight: 600;
       }
       p {
-        color: #0b1926b8;
+        color: var(--sub-text-color);
         font-size: 14px;
         padding-left: 20px;
       }
@@ -189,7 +207,6 @@ onMounted(() => {
     overflow: hidden;
     border-radius: 8px 0 0 8px;
     position: relative;
-    // background-image: url('@/assets/wallpaper/login-register-item.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -200,7 +217,7 @@ onMounted(() => {
       right: 0;
       height: 100%;
       width: 100%;
-      background-image: linear-gradient(90deg, rgba(244, 242, 236, 0) 0%, #f4f2ec 100%);
+      background-image: var(--box-bg-color3);
       backdrop-filter: blur(1px);
     }
     .photo-gallery-desc {
@@ -214,12 +231,14 @@ onMounted(() => {
         justify-content: space-between;
         flex-direction: column;
         h1 {
+          color: var(--text-color);
           font-size: 32px;
           line-height: 1.34;
           font-weight: 600;
           margin: 4px 0px;
         }
         p {
+          color: var(--sub-text-color);
           font-size: 16px;
           line-height: 32px;
           text-align: justify;
@@ -230,21 +249,23 @@ onMounted(() => {
           justify-content: space-between;
           > div {
             display: flex;
+            margin-right: 20px;
           }
           p {
             font-size: 14px;
             line-height: 1.54;
-            color: #0b1926;
+            color: var(--sub-text-color);
           }
           span {
             font-size: 14px;
             line-height: 1.54;
-            color: #0b19267a;
+            color: var(--sub-text-color);
             margin-left: 15px;
           }
         }
       }
       .photo-gallery-desc-p {
+        color: var(--text-color);
         padding-top: 10px;
         font-size: 16px;
         line-height: 32px;

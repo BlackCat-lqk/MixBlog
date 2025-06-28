@@ -15,22 +15,33 @@
             <div class="article-header-info-box">
               <div class="article-header-info">
                 <n-tag :bordered="false">{{ props.data.category }}</n-tag>
-                <n-tag v-for="(tag, idx) in props.data.tags" :key="idx" type="info" round :bordered="false">{{
-                  tag
-                }}</n-tag>
+                <n-tag
+                  v-for="(tag, idx) in props.data.tags"
+                  :key="idx"
+                  type="info"
+                  round
+                  :bordered="false"
+                  >{{ tag }}</n-tag
+                >
                 <p>{{ _formatTime(props.data.updatedAt) }}</p>
               </div>
               <div class="article-header-data-info">
                 <n-icon>
-                  <img src="@/assets/images/Like.svg" />
+                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/Like.svg" />
+                  <img v-else src="@/assets/images/LikeWhite.svg" />
                   <span>0</span>
                 </n-icon>
                 <n-icon>
-                  <img src="@/assets/images/View.svg" />
+                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/View.svg" />
+                  <img v-else src="@/assets/images/ViewWhite.svg" />
                   <span>0</span>
                 </n-icon>
                 <n-icon>
-                  <img src="@/assets/images/CommentOutlined.svg" />
+                  <img
+                    v-if="themeStore.currentTheme == 'light'"
+                    src="@/assets/images/CommentOutlined.svg"
+                  />
+                  <img v-else src="@/assets/images/CommentWhite.svg" />
                   <span>0</span>
                 </n-icon>
               </div>
@@ -55,6 +66,8 @@
 <script setup lang="ts">
 import { defineProps, watch, ref, defineEmits } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
+import { useThemeStore } from '@/stores/themeStore'
+const themeStore = useThemeStore()
 
 const activeDrawer = ref(false)
 const emits = defineEmits(['update:showModal'])
@@ -105,74 +118,76 @@ watch(
 :deep(.n-drawer-body-content-wrapper) {
   display: flex;
   justify-content: center;
+  @include g.scrollbarCustom;
 }
 body {
-    .article-header-box {
-      max-width: 1264px;
-      min-width: 1040px;
-      padding: 0 120px;
-      .article-header-title {
-        font-size: 28px;
-        font-weight: 600;
-        line-height: 40px;
-      }
-      .article-header-info-box {
+  .article-header-box {
+    max-width: 1264px;
+    min-width: 1040px;
+    padding: 0 120px;
+    .article-header-title {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 40px;
+      color: var(--sub-text-color);
+    }
+    .article-header-info-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .article-header-info {
         display: flex;
-        justify-content: space-between;
+        padding: 16px 0 20px 0;
         align-items: center;
-        .article-header-info {
-          display: flex;
-          padding: 16px 0 20px 0;
-          align-items: center;
-          gap: 10px;
-          p {
-            font-size: 14px;
-            color: #0b1926;
-          }
+        gap: 10px;
+        p {
+          font-size: 14px;
+          color: var(--sub-text-color);
         }
-        .article-header-data-info {
+      }
+      .article-header-data-info {
+        display: flex;
+        gap: 24px;
+        .n-icon {
           display: flex;
-          gap: 24px;
-          .n-icon {
-            display: flex;
-            gap: 2px;
-            span {
-              font-size: 14px;
-              color: #0b1926;
-            }
+          gap: 2px;
+          span {
+            font-size: 14px;
+            color: var(--sub-text-color);
           }
         }
       }
     }
-    .article-content-box {
-      max-width: 1264px;
-      min-width: 1040px;
-      padding: 0 120px;
-      .article-intro {
-        background-color: #f6f6f6;
-        padding: 32px;
-        display: flex;
-        justify-content: center;
-        border-radius: 8px;
+  }
+  .article-content-box {
+    max-width: 1264px;
+    min-width: 1040px;
+    padding: 0 120px;
+    .article-intro {
+      background-color: var(--box-bg-color1);
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+      border-radius: 8px;
+      p {
+        font-size: 18px;
+        line-height: 1.54;
+        color: var(--text-color);
+      }
+    }
+    .article-content {
+      padding-top: 40px;
+      display: flex;
+      justify-content: center;
+      .article-content-inner {
+        width: 800px;
         p {
           font-size: 18px;
           line-height: 1.54;
-          color: #0b1926;
-        }
-      }
-      .article-content {
-        padding-top: 40px;
-        display: flex;
-        justify-content: center;
-        .article-content-inner {
-          width: 800px;
-          p {
-            font-size: 18px;
-            line-height: 1.54;
-            color: #0b1926;
-          }
+          color: var(--text-color);
         }
       }
     }
+  }
 }
 </style>

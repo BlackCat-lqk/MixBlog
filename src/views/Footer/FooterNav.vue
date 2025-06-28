@@ -8,7 +8,7 @@
       </a>
     </div>
     <n-divider />
-    <div>Mix Blog 1.0.0 · Made by LQK</div>
+    <div class="footer-bottom-text">Mix Blog 1.0.0 · Made by LQK</div>
   </div>
 </template>
 
@@ -64,20 +64,19 @@ const supportData = [
 
 <style scoped lang="scss">
 .footer-main-box {
-  border-top: 1px solid #ccc;
-  background-color: rgb(255, 255, 255, 0.5);
+  background-color: var(--box-bg-color4);
   @include g.flexCenter;
   flex-direction: column;
   padding: 10px 30vw;
   padding-bottom: 4vh;
   span {
     display: inline-block;
-    color: #474646;
+    color: var(--sub-text-color);
     margin: 20px 0;
     &:nth-child(1) {
       font-size: 16px;
       font-weight: 600;
-      color: #000;
+      color: var(--text-color);
     }
   }
   .technical-support {
@@ -86,7 +85,7 @@ const supportData = [
     gap: 15px;
     .technical-support-item-box {
       height: 84px;
-      background-color: #dfdfdf;
+      background-color: #fff;
       margin: 0 5px;
       border-radius: 2px;
       padding: 10px;
@@ -96,6 +95,9 @@ const supportData = [
         object-fit: contain;
       }
     }
+  }
+  .footer-bottom-text {
+    color: var(--text-color);
   }
 }
 </style>

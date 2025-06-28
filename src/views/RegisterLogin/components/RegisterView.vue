@@ -1,22 +1,23 @@
 <template>
   <div class="Register-main-box">
     <n-form ref="formRef" inline label-width="100%" :model="formValue" :rules="rules" size="medium">
-      <n-form-item label="UserName" path="userName">
+      <n-form-item label="用户名" path="userName">
         <n-input v-model:value="formValue.userName" placeholder="userName" />
       </n-form-item>
-      <n-form-item label="Email" path="email">
+      <n-form-item label="邮箱" path="email">
         <n-input v-model:value="formValue.email" placeholder="email" />
       </n-form-item>
-      <n-form-item label="Code" path="code">
+      <n-form-item label="验证码" path="code">
         <n-input v-model:value="formValue.code" placeholder="code" />
         <n-button
+          type="info"
           :disabled="!isEmailValid || isCounting"
-          style="height: 46px; margin-left: 10px"
+          style="height: 46px; width: 120px; margin-left: 10px"
           @click="handleGetCode"
           >{{ isCounting ? `${countdown}s 后重新获取` : '获取验证码' }}</n-button
         >
       </n-form-item>
-      <n-form-item label="Password" path="password">
+      <n-form-item label="密码" path="password">
         <n-input
           v-model:value="formValue.password"
           type="password"
@@ -25,7 +26,14 @@
         />
       </n-form-item>
       <n-form-item>
-        <n-button attr-type="button" type="primary" @click="handleRegister"> Register </n-button>
+        <n-button
+          style="height: 46px; width: 120px"
+          attr-type="button"
+          type="primary"
+          @click="handleRegister"
+        >
+          注册
+        </n-button>
       </n-form-item>
     </n-form>
   </div>

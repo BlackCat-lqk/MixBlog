@@ -67,11 +67,35 @@ export function registerUserApi(params: {
 }
 
 /**
- * 用户获取邮箱验证码
+ * 用户获取邮箱验证码（注册）
  * @returns {Promise}
  */
 export function getEmailCodeApi(params: { email: string }) {
   return request.post('/getEmailCode', params)
+}
+
+/**
+ * 用户获取邮箱验证码（找回密码）
+ * @returns {Promise}
+ */
+export function getResetEmailCodeApi(params: { email: string }) {
+  return request.post('/getResetEmailCode', params)
+}
+
+/**
+ * 校验邮箱和验证码（找回密码）
+ * @returns {Promise}
+ */
+export function getVerifyEmailCodeApi(params: { email: string; code: string }) {
+  return request.post('/verifyEmailCode', params)
+}
+
+/**
+ * 重置密码接口
+ * @returns {Promise}
+ */
+export function resetPasswordApi(params: { email: string; code: string; newPassword: string }) {
+  return request.post('/resetPassword', params)
 }
 
 /**

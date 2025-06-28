@@ -1,10 +1,10 @@
 <template>
   <div class="Login-main-box">
     <n-form ref="formRef" inline :label-width="80" :model="formValue" :rules="rules" :size="size">
-      <n-form-item label="Email" path="email">
+      <n-form-item label="邮箱" path="email">
         <n-input v-model:value="formValue.email" placeholder="请输入邮箱..." />
       </n-form-item>
-      <n-form-item label="Password" path="password">
+      <n-form-item label="密码" path="password">
         <n-input
           v-model:value="formValue.password"
           type="password"
@@ -12,12 +12,18 @@
           placeholder="请输入密码..."
         />
       </n-form-item>
-      <div><span>忘记密码?</span></div>
+      <div @click="handelforgotPwd"><span>忘记密码?</span></div>
       <n-form-item>
-        <n-button attr-type="button" type="primary" @click="handleLogin"> Login </n-button>
+        <n-button style="height: 46px; width: 120px" type="primary" @click="handleLogin">
+          登录
+        </n-button>
       </n-form-item>
     </n-form>
   </div>
+  <ForgotPwd
+    v-model:show="showForgotPwdModal"
+    @update:show="showForgotPwdModal = $event"
+  ></ForgotPwd>
 </template>
 
 <script lang="ts" setup>
@@ -29,12 +35,14 @@ import { validateEmail, validatePassword } from '@/utils/validate'
 import { loginUserApi } from '@/http/user'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { _debounce } from '@/utils/publickFun'
+import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
 const router = useRouter()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 const formRef = ref<FormInst | null>(null)
 const size = ref<'samll' | 'medium' | 'large'>('medium')
 
+const showForgotPwdModal = ref(false)
 interface FormType {
   email: string
   password: string
@@ -76,6 +84,11 @@ const handleLogin = _debounce(() => {
     }
   })
 }, 300)
+
+// 忘记密码
+const handelforgotPwd = () => {
+  showForgotPwdModal.value = true
+}
 </script>
 
 <style scoped lang="scss">

@@ -38,7 +38,8 @@
               @click="redirectToExternal('https://github.com/BlackCat-lqk/MixBlog')"
             >
               <n-icon size="40">
-                <img src="@/assets/images/Github.svg" alt="" />
+                <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/Github.svg" />
+                <img v-else src="@/assets/images/GithubWhite.svg" />
               </n-icon>
             </div>
             <div
@@ -48,7 +49,8 @@
               "
             >
               <n-icon size="40">
-                <img src="@/assets/images/Blibli.svg" alt="" />
+                <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/Blibli.svg" />
+                <img v-else src="@/assets/images/BlibliWhite.svg" />
               </n-icon>
             </div>
           </div>
@@ -61,6 +63,8 @@
 <script lang="ts" setup>
 import { useScrollStore } from '@/stores/scrollStore'
 import { useSloganInfoStore } from '@/stores/configInfo'
+import { useThemeStore } from '@/stores/themeStore'
+const themeStore = useThemeStore()
 const sloganStore = useSloganInfoStore()
 
 const scrollStore = useScrollStore()

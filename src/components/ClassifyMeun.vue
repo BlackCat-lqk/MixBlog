@@ -2,7 +2,12 @@
   <div class="classify-box">
     <div class="classify-item-box">
       <div class="classify-item-box-bg">
-        <div :class="isSelected == item.name ? 'active-classify-item' : 'classify-item'" v-for="(item, idx) in props.classify" :key="idx" @click="classifyClick(item.name)">
+        <div
+          :class="isSelected == item.name ? 'active-classify-item' : 'classify-item'"
+          v-for="(item, idx) in props.classify"
+          :key="idx"
+          @click="classifyClick(item.name)"
+        >
           <span>{{ item.name }}{{ item.number }}</span>
         </div>
       </div>
@@ -41,7 +46,7 @@ const props = defineProps<{
     @include g.flexCenter;
     flex: 1;
     .classify-item-box-bg {
-      background-color: #fff;
+      background-color: var(--box-bg-color1);
       @include g.flexCenter;
       @include g.borderRadius(8px);
     }
@@ -51,10 +56,13 @@ const props = defineProps<{
     @include g.flexCenter;
     height: 50px;
     margin: 5px 10px;
-    background-color: #fff;
+    background-color: var(--box-bg-color1);
     @include g.borderRadius(8px);
+    span {
+      color: var(--text-color);
+    }
     &:hover {
-      background-color: #d6d5d5;
+      background-color: var(--box-bg-color5);
       cursor: pointer;
     }
   }
@@ -63,9 +71,9 @@ const props = defineProps<{
     @include g.flexCenter;
     height: 50px;
     margin: 5px 10px;
-    background-color: #fff;
+    background-color: var(--box-bg-color1);
     @include g.borderRadius(8px);
-    background-color: #bab8b8;
+    background-color: var(--box-bg-color6);
     cursor: pointer;
   }
 }

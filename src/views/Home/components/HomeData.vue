@@ -153,13 +153,7 @@ onMounted(() => {
         top: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-          to right,
-          rgba(201, 214, 255, 1) 0%,
-          rgba(226, 226, 226, 0) 40%,
-          rgb(182, 251, 255, 0) 60%,
-          rgba(182, 251, 255, 0.5) 100%
-        );
+        background: var(--box-bg-color2);
         z-index: 1;
       }
       .banner-config-box {
@@ -170,7 +164,7 @@ onMounted(() => {
         margin-top: 20px;
         h3 {
           font-size: 32px;
-          color: #0b1926;
+          color: var(--text-color1);
           line-height: 1.34;
           font-weight: 600;
         }
@@ -178,12 +172,12 @@ onMounted(() => {
           font-size: 16px;
           line-height: 1.5;
           font-weight: 600;
-          color: #0b1926;
+          color: var(--text-color1);
           padding-top: 8px;
         }
         p {
           padding-top: 16px;
-          color: #0b1926b8;
+          color: var(--text-color2);
           font-size: 14px;
         }
 

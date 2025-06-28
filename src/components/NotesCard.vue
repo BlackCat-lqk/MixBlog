@@ -62,7 +62,7 @@ const hasNote = ref(true)
 .random-notes-right-box {
   height: 100%;
   flex: 1;
-  background-color: #fff;
+  background-color: var(--box-bg-color1);
   border-radius: 15px;
   @include g.borderRadius(10px);
   box-shadow: -4px 4px 8px 2px rgba(147, 146, 146, 0.5);

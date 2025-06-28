@@ -74,13 +74,12 @@
               v-model:value="item.content"
               type="textarea"
               placeholder="请输入内容..."
-              maxlength="500"
               show-count
               clearable
               :autosize="{ minRows: 5, maxRows: 20 }"
             />
             <n-upload
-            v-model:file-list="formValue.modules[index].tempFile"
+              v-model:file-list="formValue.modules[index].tempFile"
               :max="3"
               list-type="image-card"
               name="files"

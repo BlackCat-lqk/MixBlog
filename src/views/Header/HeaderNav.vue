@@ -7,7 +7,9 @@
         <img v-if="state.switchTheme" :src="sloganStore.sloganConfig.logoPicture" alt="" />
         <img v-else src="@/assets/images/logo-transparent-night.png" alt="" />
       </div>
-      <span style="padding-right: 10px">{{ sloganStore.sloganConfig.logoName }}</span>
+      <span class="logo-name-text" style="padding-right: 10px">{{
+        sloganStore.sloganConfig.logoName
+      }}</span>
       <div class="search-box">
         <n-popselect
           v-model:value="state.searchQuery"
@@ -53,7 +55,7 @@
       </div>
     </div>
     <div class="oprate-box">
-      <n-button type="primary" @click="dingyue">订阅</n-button>
+      <!-- <n-button type="primary" @click="dingyue">订阅</n-button> -->
       <n-button type="info" @click="jumpPage('/bms/overview')">管理后台</n-button>
       <div class="user-info-box">
         <div v-if="state.userInfo.userName">
@@ -87,6 +89,7 @@
       </div>
     </div>
   </div>
+  <setUserInfo v-model:show="showSetUserModal"></setUserInfo>
 </template>
 
 <script lang="ts" setup>
@@ -99,6 +102,7 @@ import { useGlobalSearchStore } from '@/stores/globalSearch'
 import { useMessage } from 'naive-ui'
 import { logOutUserApi } from '@/http/user'
 import { useSloganInfoStore } from '@/stores/configInfo'
+import setUserInfo from './components/setUserInfo.vue'
 const sloganStore = useSloganInfoStore()
 
 const router = useRouter()
@@ -131,7 +135,7 @@ const routerPage = [
     title: '关于',
   },
 ]
-
+const showSetUserModal = ref(false)
 const state = reactive({
   activeRouter: 0,
   searchQuery: '',
@@ -184,7 +188,7 @@ const clearHistory = () => {
 // 用户头像菜单select回调
 const handleAvatarClick = async (key: string | number) => {
   if (key === 0) {
-    console.log('个人设置')
+    showSetUserModal.value = true
   } else if (key === 1) {
     router.push('/register-login')
   } else if (key === 2) {
@@ -211,13 +215,13 @@ const initUserData = () => {
   }
 }
 // 订阅
-const dingyue = () => {
-  const channel = new BroadcastChannel('dingyue')
-  channel.postMessage({ greeting: 'Hello from page 1!' })
-  channel.onmessage = (event) => {
-    message.success('订阅成功', event.data)
-  }
-}
+// const dingyue = () => {
+//   const channel = new BroadcastChannel('dingyue')
+//   channel.postMessage({ greeting: 'Hello from page 1!' })
+//   channel.onmessage = (event) => {
+//     message.success('订阅成功', event.data)
+//   }
+// }
 const jumpPage = (path: string, idx?: number | undefined) => {
   router.push(path)
   if (idx != undefined) {
@@ -301,6 +305,9 @@ onMounted(() => {
         width: 100%;
         height: 100%;
       }
+    }
+    .logo-name-text {
+      color: var(--text-color);
     }
 
     .search-box {

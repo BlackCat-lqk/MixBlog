@@ -19,15 +19,21 @@
               </div>
               <div class="image-header-data-info">
                 <n-icon>
-                  <img src="@/assets/images/Like.svg" />
+                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/Like.svg" />
+                  <img v-else src="@/assets/images/LikeWhite.svg" />
                   <span>0</span>
                 </n-icon>
                 <n-icon>
-                  <img src="@/assets/images/View.svg" />
+                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/View.svg" />
+                  <img v-else src="@/assets/images/ViewWhite.svg" />
                   <span>0</span>
                 </n-icon>
                 <n-icon>
-                  <img src="@/assets/images/CommentOutlined.svg" />
+                  <img
+                    v-if="themeStore.currentTheme == 'light'"
+                    src="@/assets/images/CommentOutlined.svg"
+                  />
+                  <img v-else src="@/assets/images/CommentWhite.svg" />
                   <span>0</span>
                 </n-icon>
               </div>
@@ -58,6 +64,8 @@
 <script setup lang="ts">
 import { defineProps, watch, ref, defineEmits } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
+import { useThemeStore } from '@/stores/themeStore'
+const themeStore = useThemeStore()
 
 const activeDrawer = ref(false)
 const emits = defineEmits(['update:showModal'])
@@ -107,6 +115,7 @@ watch(
 :deep(.n-drawer-body-content-wrapper) {
   display: flex;
   justify-content: center;
+  @include g.scrollbarCustom;
 }
 body {
   .image-header-box {
@@ -129,7 +138,7 @@ body {
         gap: 10px;
         p {
           font-size: 14px;
-          color: #0b1926;
+          color: var(--sub-text-color);
         }
       }
       .image-header-data-info {
@@ -140,7 +149,7 @@ body {
           gap: 2px;
           span {
             font-size: 14px;
-            color: #0b1926;
+            color: var(--sub-text-color);
           }
         }
       }
@@ -151,7 +160,7 @@ body {
     min-width: 1040px;
     padding: 0 120px;
     .image-intro {
-      background-color: #f6f6f6;
+      background-color: var(--box-bg-color1);
       padding: 32px;
       display: flex;
       justify-content: center;
@@ -159,7 +168,7 @@ body {
       p {
         font-size: 18px;
         line-height: 1.54;
-        color: #0b1926;
+        color: var(--text-color);
       }
     }
     .image-content {

@@ -7,16 +7,15 @@
     <div class="random-notes-content-box">
       <div class="random-notes-left-box">
         <div class="calendar">
-          <n-calendar
-            v-model:value="value"
-            :is-date-disabled="isDateDisabled"
-            @update:value="handleUpdateValue"
-          >
+          <n-calendar v-model:value="value" @update:value="handleUpdateValue">
+            <template #default="{ year, month, date }">
+              <div :class="isHighlighted(year, month, date) ? 'highlighted' : ''"></div>
+            </template>
           </n-calendar>
         </div>
         <div class="random-notes-text">
           <p>记录生活</p>
-          <p>记录美好</p>
+          <p>记录奇怪的东西</p>
           <p>记录瞬间</p>
         </div>
       </div>
@@ -29,16 +28,16 @@
 </template>
 
 <script lang="ts" setup>
-import { addDays, isYesterday } from 'date-fns'
+import { addDays } from 'date-fns'
 import { ref, onMounted } from 'vue'
-import { useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import NotesCard from '@/components/NotesCard.vue'
 import { getNotesApi } from '@/http/notes'
+import { _formatTime } from '@/utils/publickFun'
 
 const router = useRouter()
 const value = ref(addDays(Date.now(), 1).valueOf())
-const message = useMessage()
+const articleUpdateAt = ref<string[]>([])
 
 const moreNotes = () => {
   router.push('/random-notes')
@@ -60,6 +59,13 @@ const notesDetail = ref<NotesType>({
   weather: '',
   cover: '',
 })
+
+// 判断是否需要高亮
+const isHighlighted = (year: number, month: number, date: number) => {
+  const formatted = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`
+  return formatted && articleUpdateAt.value.includes(formatted)
+}
+
 const isSameDay = (dateStrWithTime: string, dateStr: string): boolean => {
   const formatDate = (date: Date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -73,19 +79,13 @@ const handleUpdateValue = (
   _: number,
   { year, month, date }: { year: number; month: number; date: number },
 ) => {
-  message.success(`${year}-${month}-${date}`)
-  notesList.value.filter((item : NotesType) => {
-    if(isSameDay(item.updatedAt, `${year}-${month}-${date}`)){
+  notesList.value.filter((item: NotesType) => {
+    if (isSameDay(item.updatedAt, `${year}-${month}-${date}`)) {
       notesDetail.value = item
     }
   })
 }
-const isDateDisabled = (timestamp: number) => {
-  if (isYesterday(timestamp)) {
-    return true
-  }
-  return false
-}
+
 // 获取所有笔记
 const getAllNotes = async () => {
   const params = {
@@ -95,10 +95,15 @@ const getAllNotes = async () => {
   const response = await getNotesApi(params)
   const res = response.data
   if (res.code == 200) {
-    if(res.data.length > 0){
+    if (res.data.length > 0) {
       notesList.value = res.data
       notesDetail.value = res.data[0]
+      articleUpdateAt.value = res.data.map((item: NotesType) => {
+        const res = _formatTime(item.updatedAt)
+        return res.split(' ')[0]
+      })
     }
+    console.log(articleUpdateAt.value)
   } else {
     console.log(res.message)
   }
@@ -138,6 +143,12 @@ onMounted(() => {
         padding: 10px;
         border-radius: 10px;
         background-color: var(--box-bg-color1);
+        .highlighted {
+          background-color: #2080f0; /* 高亮背景色 */
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+        }
       }
       :deep(.n-calendar) {
         height: auto;
@@ -146,6 +157,7 @@ onMounted(() => {
         }
       }
       .random-notes-text {
+        color: var(--text-color);
         p {
           padding: 20px 0;
         }
@@ -155,10 +167,10 @@ onMounted(() => {
           font-weight: 600;
         }
         & > p:nth-child(2) {
-          font-size: 64px;
+          font-size: 48px;
           line-height: 90px;
           font-weight: 600;
-          color: #0b19263d;
+          color: var(--sub-text-color);
         }
         & > p:nth-child(3) {
           font-size: 32px;

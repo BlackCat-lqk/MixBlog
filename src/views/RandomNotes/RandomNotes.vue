@@ -116,7 +116,7 @@ onMounted(() => {
     flex-direction: column;
     align-items: space-between;
     padding: 10px;
-    background-color: #e7e7e7;
+    background-color: var(--box-bg-color4);
     border-radius: 8px;
     .random-notes-list {
       height: 680px;
@@ -129,7 +129,7 @@ onMounted(() => {
       .random-notes-list-item {
         width: 100%;
         height: 100%;
-        background-color: #fff;
+        background-color: var(--box-bg-color1);
         border-radius: 15px;
         display: flex;
         flex-direction: column;
@@ -147,6 +147,7 @@ onMounted(() => {
               align-items: center;
               font-size: 12px;
               line-height: 1.62;
+              color: var(--sub-text-color);
             }
           }
           .note-whter {
@@ -174,6 +175,7 @@ onMounted(() => {
             line-height: 1.4;
             padding-bottom: 8px;
             font-weight: 600;
+            color: var(--text-color);
           }
           .note-content-p {
             overflow: hidden;
@@ -183,7 +185,7 @@ onMounted(() => {
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             font-size: 14px;
-            color: #0b1926;
+            color: var(--text-color);
             text-rendering: optimizeLegibility;
             line-height: 1.54;
           }
@@ -192,16 +194,17 @@ onMounted(() => {
     }
     .random-notes-comment {
       height: 240px;
-      background-color: #fff;
+      background-color: var(--box-bg-color1);
       border-radius: 15px;
       display: flex;
       justify-content: center;
       align-items: center;
+      color: var(--text-color);
     }
   }
   .random-notes-content {
     flex: 1;
-    background-color: #fff;
+    background-color: var(--box-bg-color1);
     border-radius: 5px;
     height: 920px;
   }

@@ -3,7 +3,12 @@
     class="article-cards-box"
     :style="{ gridTemplateColumns: 'repeat(' + props.articleData.columns + ', 1fr)' }"
   >
-    <div class="article-card-box" v-for="(item, idx) in props.articleData.data" :key="idx" @click="articleClick(item)">
+    <div
+      class="article-card-box"
+      v-for="(item, idx) in props.articleData.data"
+      :key="idx"
+      @click="articleClick(item)"
+    >
       <div class="article-card-header">
         <div class="article-card-header-img">
           <img :src="item.cover" />
@@ -37,13 +42,18 @@
         <div>
           <span>
             <n-icon>
-              <img src="@/assets/images/CommentOutlined.svg" />
+              <img
+                v-if="themeStore.currentTheme == 'light'"
+                src="@/assets/images/CommentOutlined.svg"
+              />
+              <img v-else src="@/assets/images/CommentWhite.svg" />
             </n-icon>
             0
           </span>
           <span>
             <n-icon>
-              <img src="@/assets/images/View.svg" />
+              <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/View.svg" />
+              <img v-else src="@/assets/images/ViewWhite.svg" />
             </n-icon>
             {{ item.views }}
           </span>
@@ -57,6 +67,8 @@
 import { defineProps, reactive, ref } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import ArticleDetail from '@/views/Article/ArticleDetail.vue'
+import { useThemeStore } from '@/stores/themeStore'
+const themeStore = useThemeStore()
 const showActiveDrawer = ref(false)
 interface articleDetailType {
   title: string
@@ -72,7 +84,7 @@ let articleDetail: articleDetailType = reactive({
   intro: '',
   category: '',
   updatedAt: '',
-  tags: []
+  tags: [],
 })
 const props = defineProps({
   articleData: {
@@ -96,8 +108,8 @@ const articleClick = (data: articleDetailType) => {
     margin-top: 28px;
     cursor: pointer;
     transition: all 0.2s;
-    background-color: #fff;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    background-color: var(--box-bg-color1);
+    box-shadow: 0 0 10px 0 var(--border-color);
     &:hover {
       .article-card-header-title h3 {
         color: #0aa9db;
@@ -128,9 +140,10 @@ const articleClick = (data: articleDetailType) => {
           line-height: 1.4;
           font-weight: 600;
           transition: all 0.2s;
+          color: var(--text-color);
         }
         p {
-          color: #0b19267a;
+          color: var(--text-color2);
           font-size: 14px;
           line-height: 1.54;
         }
@@ -147,7 +160,7 @@ const articleClick = (data: articleDetailType) => {
         text-overflow: ellipsis;
         font-size: 14px;
         line-height: 1.54;
-        color: #0b1926;
+        color: var(--text-color1);
       }
     }
     .article-card-footer {
@@ -157,7 +170,7 @@ const articleClick = (data: articleDetailType) => {
       span {
         font-size: 14px;
         line-height: 1.54;
-        color: #0b1926b8;
+        color: var(--text-color2);
       }
     }
   }
