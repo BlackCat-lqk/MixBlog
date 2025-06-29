@@ -1,22 +1,7 @@
 <template>
-  <div>H5 Home</div>
-  <van-button type="default" @click="testGetData">笔记列表</van-button>
+  <div>H5、移动端正在适配开发中... 请使用PC端打开</div>
 </template>
 
-<script lang="ts" setup>
-import { apiNotesList } from '@/http/randomNotes'
-import { reactive } from 'vue'
-
-const state = reactive({
-  list: [],
-  loading: false,
-  finished: false,
-})
-// 请求本地模拟数据
-const testGetData = async () => {
-  const res = await apiNotesList()
-  state.list = res.data
-}
-</script>
+<script lang="ts" setup></script>
 
 <style scoped lang="scss"></style>
