@@ -4,8 +4,7 @@
     <div class="background-blur" :style="{ filter: `blur(${opacity}px)` }"></div>
     <div class="header-logo-search-box">
       <div class="header-logo-box">
-        <img v-if="state.switchTheme" :src="sloganStore.sloganConfig.logoPicture" alt="" />
-        <img v-else src="@/assets/images/logo-transparent-night.png" alt="" />
+        <img :src="sloganStore.sloganConfig.logoPicture" />
       </div>
       <span class="logo-name-text" style="padding-right: 10px">{{
         sloganStore.sloganConfig.logoName
@@ -67,7 +66,8 @@
           <n-dropdown :options="state.avatarOptions" @select="handleAvatarClick">
             <n-avatar round :size="40">
               <n-icon>
-                <img :src="state.userInfo.avatar" />
+                <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" />
+                <img v-else src="@/assets/images/UserAvatarFilled.svg" />
               </n-icon>
             </n-avatar>
           </n-dropdown>
@@ -76,7 +76,8 @@
         <div v-else>
           <n-avatar round :size="40">
             <n-icon>
-              <img :src="state.userInfo.avatar" />
+              <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" />
+              <img v-else :src="defaultAvatar" />
             </n-icon>
           </n-avatar>
           <span class="user-name" @click="jumpPage('/register-login')">去登录</span>
@@ -110,7 +111,7 @@ import { useSloganInfoStore } from '@/stores/configInfo'
 import SetUserInfo from './components/SetUserInfo.vue'
 // import { clearDynamicRoutes } from '@/router'
 const sloganStore = useSloganInfoStore()
-
+const defaultAvatar = new URL('/uploads/defalut/UserAvatarFilled.svg', import.meta.url).href
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
 const themeStore = useThemeStore()

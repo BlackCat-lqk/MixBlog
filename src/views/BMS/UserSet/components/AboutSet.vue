@@ -236,15 +236,14 @@ const getAboutConfig = async () => {
   const res = response.data
   if (res.code === 200) {
     formValue._id = res.data._id
-    formValue.uId = res.data.uId
-    formValue.email = res.data.email
+    formValue.uId = userInfoStore.data.user._id
+    formValue.email = userInfoStore.data.user.email
     formValue.intro = res.data.intro
     formValue.tags = res.data.tags
     formValue.cover = res.data.cover
     formValue.audio = res.data.audio
     aboutBgImage[0].url = formValue.cover
     formValue.modules = res.data.modules
-    console.log(formValue)
   } else {
     message.error(res.message)
   }

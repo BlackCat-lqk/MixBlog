@@ -1,7 +1,8 @@
 <template>
   <div class="banner">
     <div class="banner-pic">
-      <img :src="sloganStore.sloganConfig.cover" alt="" srcset="" />
+      <img v-if="sloganStore.sloganConfig.cover" :src="sloganStore.sloganConfig.cover" />
+      <img v-else src="@/assets/images/logo2024.png" />
     </div>
     <div class="banner-left">
       <div>
