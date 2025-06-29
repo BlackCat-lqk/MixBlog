@@ -26,7 +26,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const res = response.data
-    console.log('success', response)
     if (res.data.code === 200) {
       return res
     } else {

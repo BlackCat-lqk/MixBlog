@@ -5,7 +5,6 @@
     <article-blog></article-blog>
     <random-notes></random-notes>
     <photography-gallery></photography-gallery>
-    <n-back-top style="z-index: 99" :left="50" />
   </div>
 </template>
 
@@ -23,27 +22,23 @@ import { getDeviceType } from '@/utils/deviceUtils'
 const recordVisit = async () => {
   const userAgent = getDeviceType()
   const res = await getVisitorIpApi()
-  const params= {
+  const params = {
     userAgent,
     ipAddress: res.data.ip,
-    ...res.data
+    ...res.data,
   }
   const response = await recordVisitApi(params)
   const result = response.data
-  if(result.code === 200){
+  if (result.code === 200) {
     return
-  }else {
+  } else {
     return
   }
-
 }
-
 
 onMounted(() => {
   recordVisit()
 })
-
-
 </script>
 
 <style scoped lang="scss">

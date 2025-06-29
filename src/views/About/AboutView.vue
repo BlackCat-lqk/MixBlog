@@ -140,7 +140,6 @@ const getAboutConfig = async () => {
     aboutData.cover = res.data.cover
     aboutData.intro = res.data.intro
     aboutData.modules = res.data.modules
-    console.log(aboutData)
   } else {
     console.log(res.message)
   }

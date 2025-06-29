@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 // 定义 User 接口
 interface User {
+  isLogin: boolean
   avatar: string
   email: string
   role: string
@@ -24,6 +25,7 @@ export const useUserInfoStore = defineStore('userInfo', {
     data: {
       token: '',
       user: {
+        isLogin: false,
         avatar: '',
         email: '',
         role: '',
@@ -44,6 +46,12 @@ export const useUserInfoStore = defineStore('userInfo', {
     },
     setUserAvatar(val: string) {
       this.data.user.avatar = val
+    },
+    setAuthStatus(status: boolean) {
+      this.data.user.isLogin = status
+    },
+    setAdminStatus(status: string) {
+      this.data.user.role = status
     },
     removeUserInfo() {
       this.$reset()

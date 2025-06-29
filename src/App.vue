@@ -11,6 +11,7 @@
       </n-message-provider>
     </main>
   </n-config-provider>
+  <n-back-top :right="100" />
 </template>
 
 <script setup lang="ts">

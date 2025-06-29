@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import axios from 'axios'
 
 /**
  * 新增用户
@@ -104,4 +105,9 @@ export function resetPasswordApi(params: { email: string; code: string; newPassw
  */
 export function logOutUserApi() {
   return request.post('/logOutUser')
+}
+
+// 校验用户身份
+export function verifyUserApi() {
+  return request.get('/verifyIdentity')
 }

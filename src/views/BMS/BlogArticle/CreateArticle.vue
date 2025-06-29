@@ -228,8 +228,6 @@ const getCategoryTags = async () => {
 
 // 保存/发布博客文章
 const saveArticle = async (status: string) => {
-  console.log(status)
-  // createParams.cover = tempFile.value
   // 先保存文章内容，如果有上传图片再保存图片
   createParams.content = state.tiptapEditorValue
   createParams.email = userInfoStore.data.user.email

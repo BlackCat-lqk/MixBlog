@@ -56,9 +56,14 @@
     </div>
     <div class="oprate-box">
       <!-- <n-button type="primary" @click="dingyue">订阅</n-button> -->
-      <n-button type="info" @click="jumpPage('/bms/overview')">管理后台</n-button>
+      <n-button
+        v-if="state.userInfo.role === 'admin' && state.userInfo.isLogin"
+        type="info"
+        @click="jumpPage('/bms/overview')"
+        >管理后台</n-button
+      >
       <div class="user-info-box">
-        <div v-if="state.userInfo.userName">
+        <div v-if="state.userInfo.isLogin">
           <n-dropdown :options="state.avatarOptions" @select="handleAvatarClick">
             <n-avatar round :size="40">
               <n-icon>
@@ -89,7 +94,7 @@
       </div>
     </div>
   </div>
-  <setUserInfo v-model:show="showSetUserModal"></setUserInfo>
+  <SetUserInfo v-model:show="showSetUserModal"></SetUserInfo>
 </template>
 
 <script lang="ts" setup>
@@ -102,7 +107,8 @@ import { useGlobalSearchStore } from '@/stores/globalSearch'
 import { useMessage } from 'naive-ui'
 import { logOutUserApi } from '@/http/user'
 import { useSloganInfoStore } from '@/stores/configInfo'
-import setUserInfo from './components/setUserInfo.vue'
+import SetUserInfo from './components/SetUserInfo.vue'
+// import { clearDynamicRoutes } from '@/router'
 const sloganStore = useSloganInfoStore()
 
 const router = useRouter()
@@ -146,6 +152,8 @@ const state = reactive({
   userInfo: {
     avatar: '',
     userName: '',
+    role: '',
+    isLogin: false,
   },
   avatarOptions: [
     {
@@ -194,10 +202,12 @@ const handleAvatarClick = async (key: string | number) => {
   } else if (key === 2) {
     const response = await logOutUserApi()
     const res = response.data
-    //清除有关用户的全部数据
-    userInfoStore.removeUserInfo()
-    router.push('/register-login')
     if (res.code === 200) {
+      //清除有关用户的全部数据
+      userInfoStore.removeUserInfo()
+      router.push('/register-login')
+      // 清理动态路由
+      // clearDynamicRoutes()
       message.success(res.message)
     } else {
       message.error(res.message)
@@ -307,7 +317,10 @@ onMounted(() => {
       }
     }
     .logo-name-text {
+      font-size: 16px;
+      font-weight: 600;
       color: var(--text-color);
+      font-family: 'Courier New', Courier, monospace;
     }
 
     .search-box {

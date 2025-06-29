@@ -27,7 +27,11 @@
       <div class="scroll-down-box">
         <div class="scroll-down" @click="handelScrollDown">
           <n-icon size="40">
-            <img src="@/assets/images/AngleDoubleDown.svg" alt="" />
+            <img
+              v-if="themeStore.currentTheme == 'light'"
+              src="@/assets/images/AngleDoubleDown.svg"
+            />
+            <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" />
           </n-icon>
         </div>
         <div class="relevant-address">
@@ -122,6 +126,7 @@ const redirectToExternal = (url: string) => {
       font-weight: 600;
       letter-spacing: 0.44em;
       padding-top: 30px;
+      font-family: 'Courier New', Courier, monospace;
       span {
         display: inline;
       }
@@ -131,6 +136,7 @@ const redirectToExternal = (url: string) => {
       font-size: 78px;
       font-weight: 600;
       letter-spacing: 0.1em;
+      font-family: 'Courier New', Courier, monospace;
     }
     .relevant-address {
       display: flex;
@@ -140,6 +146,7 @@ const redirectToExternal = (url: string) => {
         font-size: 24px;
         line-height: 36px;
         font-weight: normal;
+        font-family: 'Courier New', Courier, monospace;
         color: var(--text-color);
       }
       .address-list {

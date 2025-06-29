@@ -45,9 +45,10 @@ const isLogin = ref(true)
   position: relative;
   width: 100%;
   height: 100%;
-  background: linear-gradient(120deg, #aa4b6b, #6b6b83, #3b8d99, #c6ffdd, #fbd786, #f7797d);
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
-  animation: smoothGradientFlow 25s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  animation: smoothGradientFlow 15s ease infinite;
   @include g.flexCenter;
   .register-login-box {
     display: flex;
@@ -57,9 +58,9 @@ const isLogin = ref(true)
     min-height: 700px;
     height: auto;
     @include g.borderRadius(10px);
-    box-shadow: 0 0 5px 2px rgba(75, 75, 75, 0.3);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+    box-shadow: 0 0 5px 2px rgba(75, 75, 75, 0.1);
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
     background-color: rgba(255, 255, 255, 0.2);
     .left-info-box {
       @include g.borderRadius(10px);

@@ -31,7 +31,16 @@
                   </div>
                   <div class="footer-box">
                     <p>分类：{{ item.category }}</p>
-                    <p><n-tag type="info" size="small" round v-for="(tag, idx) in item.tags" :key="idx">{{ tag }}</n-tag></p>
+                    <p>
+                      <n-tag
+                        type="info"
+                        size="small"
+                        round
+                        v-for="(tag, idx) in item.tags"
+                        :key="idx"
+                        >{{ tag }}</n-tag
+                      >
+                    </p>
                     <p>{{ _formatTime(item.updatedAt) }}</p>
                     <div>
                       <img src="@/assets/images/View.svg" />
@@ -52,16 +61,28 @@
                 <div class="option-btn">
                   <n-tooltip trigger="hover">
                     <template #trigger>
-                      <img @click="publishStatus(item)" :src="getRollbackIcon(item.isHovered1, 1, item.status)" @mouseenter="item.isHovered1 = true" @mouseleave="item.isHovered1 = false" />
+                      <img
+                        @click="publishStatus(item)"
+                        :src="getRollbackIcon(item.isHovered1, 1, item.status)"
+                        @mouseenter="item.isHovered1 = true"
+                        @mouseleave="item.isHovered1 = false"
+                      />
                     </template>
                     {{ item.status === 'published' ? '取消发布' : '发布' }}
                   </n-tooltip>
-                  <img @click="editArticle(item)" :src="getRollbackIcon(item.isHovered2, 2)" @mouseenter="item.isHovered2 = true" @mouseleave="item.isHovered2 = false" />
-                  <n-popconfirm
-                    @positive-click="deleteArticle(item._id)"
-                  >
+                  <img
+                    @click="editArticle(item)"
+                    :src="getRollbackIcon(item.isHovered2, 2)"
+                    @mouseenter="item.isHovered2 = true"
+                    @mouseleave="item.isHovered2 = false"
+                  />
+                  <n-popconfirm @positive-click="deleteArticle(item._id)">
                     <template #trigger>
-                      <img :src="getRollbackIcon(item.isHovered3, 3)" @mouseenter="item.isHovered3 = true" @mouseleave="item.isHovered3 = false" />
+                      <img
+                        :src="getRollbackIcon(item.isHovered3, 3)"
+                        @mouseenter="item.isHovered3 = true"
+                        @mouseleave="item.isHovered3 = false"
+                      />
                     </template>
                     确认删除？删除后的数据将无法恢复
                   </n-popconfirm>
@@ -97,7 +118,11 @@
         </div>
       </div>
     </div>
-    <edit-article-form v-model:showModal="state.isModalVisible" :editData="editArticleData" @updateArticleList="getArticleData"></edit-article-form>
+    <edit-article-form
+      v-model:showModal="state.isModalVisible"
+      :editData="editArticleData"
+      @updateArticleList="getArticleData"
+    ></edit-article-form>
   </div>
 </template>
 
@@ -111,7 +136,11 @@ import EditArticleForm from './EditArticleForm.vue'
 import { ref, reactive, onMounted } from 'vue'
 import { upsertCategoryTags } from '@/http/categoryTags'
 import { NButton, useMessage } from 'naive-ui'
-import { getAllBlogArticleApi, deleteBlogArticleApi, updateBlogArticleApi } from '@/http/blogArticle'
+import {
+  getAllBlogArticleApi,
+  deleteBlogArticleApi,
+  updateBlogArticleApi,
+} from '@/http/blogArticle'
 import { _formatTime } from '@/utils/publickFun'
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
@@ -142,7 +171,7 @@ interface State {
   tagsArray: string[]
   tagsData: string[]
   updateTagCount: number
-  articleData: ArticleItemType[],
+  articleData: ArticleItemType[]
   isModalVisible: boolean
 }
 const state = reactive<State>({
@@ -151,7 +180,7 @@ const state = reactive<State>({
   tagsData: [],
   updateTagCount: 0,
   articleData: [],
-  isModalVisible: false
+  isModalVisible: false,
 })
 interface CategoryTagsType {
   _id: string
@@ -185,7 +214,6 @@ interface editArticleDataType {
   tags: string[]
   cover: string
   count: number
-
 }
 // 编辑窗口的数据
 const editArticleData: editArticleDataType = reactive({
@@ -200,24 +228,24 @@ const editArticleData: editArticleDataType = reactive({
   count: 0,
 })
 const getRollbackIcon = (isHovered: boolean, type: number, status?: string) => {
-  if(type === 1){
-    if(status === 'published'){
+  if (type === 1) {
+    if (status === 'published') {
       return !isHovered
-    ? new URL('@/assets/images/Rollback.svg', import.meta.url).href
-    : new URL('@/assets/images/RollbackHover.svg', import.meta.url).href
-    }else {
+        ? new URL('@/assets/images/Rollback.svg', import.meta.url).href
+        : new URL('@/assets/images/RollbackHover.svg', import.meta.url).href
+    } else {
       return !isHovered
-    ? new URL('@/assets/images/Publish.svg', import.meta.url).href
-    : new URL('@/assets/images/PublishHover.svg', import.meta.url).href
+        ? new URL('@/assets/images/Publish.svg', import.meta.url).href
+        : new URL('@/assets/images/PublishHover.svg', import.meta.url).href
     }
-  }else if(type === 2){
+  } else if (type === 2) {
     return !isHovered
-    ? new URL('@/assets/images/Edit.svg', import.meta.url).href
-    : new URL('@/assets/images/EditHover.svg', import.meta.url).href
-  }else{
+      ? new URL('@/assets/images/Edit.svg', import.meta.url).href
+      : new URL('@/assets/images/EditHover.svg', import.meta.url).href
+  } else {
     return !isHovered
-    ? new URL('@/assets/images/Delete.svg', import.meta.url).href
-    : new URL('@/assets/images/DeleteHover.svg', import.meta.url).href
+      ? new URL('@/assets/images/Delete.svg', import.meta.url).href
+      : new URL('@/assets/images/DeleteHover.svg', import.meta.url).href
   }
 }
 // 添加或更新标签接口
@@ -233,10 +261,10 @@ const upsertCategory = async (params: object) => {
   }
 }
 // 更新文章的发布状态
-const publishStatus = async(val: ArticleItemType) => {
+const publishStatus = async (val: ArticleItemType) => {
   val.status = val.status === 'published' ? 'unpublished' : 'published'
   const response = await updateBlogArticleApi(val)
-  const res= response.data
+  const res = response.data
   if (res.code === 200) {
     message.success(res.message)
     getArticleData()
@@ -246,15 +274,15 @@ const publishStatus = async(val: ArticleItemType) => {
 }
 // 编辑文章
 const editArticle = (val: ArticleItemType) => {
- state.isModalVisible = !state.isModalVisible
- // 拿到文章数据到编辑窗口
- editArticleData.title = val.title
- editArticleData.intro = val.intro
- editArticleData._id = val._id
- editArticleData.cover = val.cover
- editArticleData.selectCategory = val.category
- editArticleData.selectTags = val.tags
- editArticleData.count++
+  state.isModalVisible = !state.isModalVisible
+  // 拿到文章数据到编辑窗口
+  editArticleData.title = val.title
+  editArticleData.intro = val.intro
+  editArticleData._id = val._id
+  editArticleData.cover = val.cover
+  editArticleData.selectCategory = val.category
+  editArticleData.selectTags = val.tags
+  editArticleData.count++
 }
 // 删除文章
 const deleteArticle = async (id: string) => {
@@ -279,7 +307,6 @@ const confirmAddTag = () => {
 }
 // 拿到分类标签数据
 const getCategoryTags = (val: CategoryTagsType) => {
-  console.log('tags', val)
   state.tagsArray = val.tags
   editArticleData.tags = val.tags
   editArticleData.category = val.category
@@ -345,24 +372,24 @@ onMounted(() => {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          .list-content-title{
+          .list-content-title {
             h3 {
-            font-size: 18px;
-            font-weight: 600;
-            line-height: 1.34;
-          }
-          p {
-            margin-top: 12px;
-            font-size: 14px;
-            color: #666;
-            height: 84px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            word-break: break-all;
-            line-height: 1.5;
-          }
+              font-size: 18px;
+              font-weight: 600;
+              line-height: 1.34;
+            }
+            p {
+              margin-top: 12px;
+              font-size: 14px;
+              color: #666;
+              height: 84px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              word-break: break-all;
+              line-height: 1.5;
+            }
           }
 
           .footer-box {
@@ -370,7 +397,8 @@ onMounted(() => {
             gap: 18px;
             align-items: center;
             flex: 1;
-            div, p {
+            div,
+            p {
               display: flex;
               align-items: center;
               text-wrap: nowrap;

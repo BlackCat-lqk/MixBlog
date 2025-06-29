@@ -249,7 +249,6 @@ const getStatisticsData = async () => {
   if (res.code == 200) {
     // 获取数据成功
     const data = res.data
-    console.log(data)
     state.statisticsData = data
     optionCards.value[0].content = '数量:' + data.totalFiles + ' / Size:' + data.totalSize.formatted
     optionCards.value[1].content = data.blogArticleCount

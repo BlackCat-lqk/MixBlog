@@ -36,6 +36,7 @@ import { loginUserApi } from '@/http/user'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { _debounce } from '@/utils/publickFun'
 import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
+// import { addAdminRoutes } from '@/router'
 const router = useRouter()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
@@ -75,6 +76,11 @@ const handleLogin = _debounce(() => {
       if (res.code === 200) {
         message.success(`欢迎您：${res.data.user.userName}`)
         userInfoStore.setUserInfo(res.data)
+        userInfoStore.setAuthStatus(true)
+        // 如果是管理员则注入后台路由
+        // if (res.data.user.role === 'admin') {
+        //   addAdminRoutes()
+        // }
         router.push({ path: '/' })
       } else {
         message.error('登录失败,请检查账号邮箱或密码')

@@ -66,11 +66,13 @@
       </div>
       <div v-if="photoItem.photos.length > 0" class="photo-gallery-preview">
         <n-marquee auto-fill>
-          <div style="display: flex">
-            <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
-              <img :src="item" />
+          <template #default>
+            <div style="display: flex">
+              <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
+                <img :src="item" />
+              </div>
             </div>
-          </div>
+          </template>
         </n-marquee>
       </div>
     </div>
@@ -135,7 +137,6 @@ const getPhotoLibrary = async () => {
 }
 // 切换上一页
 const getPrevious = () => {
-  console.log(state.step)
   if (state.step > 0) {
     state.step--
     photoItem.value = {
@@ -147,7 +148,6 @@ const getPrevious = () => {
 }
 // 切换下一页
 const getNext = () => {
-  console.log(state.step)
   if (state.step < state.dataCount) {
     state.step++
     photoItem.value = {

@@ -188,9 +188,7 @@ const updateInfo = () => {
 }
 // 初始化表单
 const initEditForm = () => {
-  console.log(userInfoStore.data.user)
   Object.assign(editFormValue, _.cloneDeep(userInfoStore.data.user))
-  console.log(editFormValue)
   defaultFileList.value = [
     {
       id: 'default',

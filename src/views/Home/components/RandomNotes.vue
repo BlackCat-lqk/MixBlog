@@ -103,7 +103,6 @@ const getAllNotes = async () => {
         return res.split(' ')[0]
       })
     }
-    console.log(articleUpdateAt.value)
   } else {
     console.log(res.message)
   }

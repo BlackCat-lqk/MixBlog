@@ -37,7 +37,6 @@ import { useMessage } from 'naive-ui'
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
 const avatar = userInfoStore.data.user.avatar
-console.log(avatar)
 const router = useRouter()
 const theme = ref('light')
 const changeTheme = () => {
@@ -47,7 +46,7 @@ const timeDisplay = ref<HTMLElement | null>(null)
 
 const updateClock = () => {
   const now = new Date()
-  if(timeDisplay.value){
+  if (timeDisplay.value) {
     timeDisplay.value.textContent = now.toLocaleTimeString()
   }
   requestAnimationFrame(() => {
@@ -57,20 +56,19 @@ const updateClock = () => {
 // 退出登录
 const exitLogin = async () => {
   const response = await logOutUserApi()
-    const res = response.data
-    if (res.code === 200) {
-      //清除有关用户的全部数据
-      userInfoStore.removeUserInfo()
-      router.push('/register-login')
-      message.success(res.message)
-    } else {
-      message.error(res.message)
-    }
+  const res = response.data
+  if (res.code === 200) {
+    //清除有关用户的全部数据
+    userInfoStore.removeUserInfo()
+    router.push('/register-login')
+    message.success(res.message)
+  } else {
+    message.error(res.message)
+  }
 }
 onMounted(() => {
   updateClock()
 })
-
 </script>
 
 <style lang="scss" scoped>

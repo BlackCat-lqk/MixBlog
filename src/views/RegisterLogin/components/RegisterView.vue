@@ -53,6 +53,7 @@ import {
 import { _debounce } from '@/utils/publickFun'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useRouter } from 'vue-router'
+// import { addAdminRoutes } from '@/router'
 const message = useMessage()
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
@@ -100,15 +101,20 @@ const rules = {
 const handleRegister = () => {
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const res = await registerUserApi(formValue)
-      console.log(res)
-      if (res.data.code == 200) {
+      const response = await registerUserApi(formValue)
+      const res = response.data
+      if (res.code == 200) {
         message.success('注册成功')
         // 注册成功后跳转到首页并注入用户信息和token
-        userInfoStore.setUserInfo(res.data.data)
+        userInfoStore.setUserInfo(res.data)
+        userInfoStore.setAuthStatus(true)
         router.push({ path: '/' })
+        // 如果是管理员则注入后台路由
+        // if (res.data.role === 'admin') {
+        //   addAdminRoutes()
+        // }
       } else {
-        message.error(res.data.message)
+        message.error(res.message)
       }
     } else {
       message.error('请检查输入合法性')

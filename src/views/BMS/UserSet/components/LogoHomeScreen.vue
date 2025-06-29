@@ -221,7 +221,6 @@ const getSloganConfig = async () => {
 const updateSlogan = _debounce(async () => {
   const response = await upsertSloganApi(formValue)
   const res = response.data
-  console.log(res)
   if (res.code == 200) {
     message.success('更新成功')
   } else {
