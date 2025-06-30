@@ -78,3 +78,11 @@ npm install postcss-pxtorem autoprefixer --save-dev
 使用了@vueup/vue-quill组件进行富文本编辑
 
 使用 npx node-modules-inspector命令生成依赖可视化
+
+1.0.5 预计完善功能：
+1. 登录页增加是否记住密码选项
+2. 文章内容支持副文本显示
+3. 集成小说和音乐模块
+4. 支持点赞、查看
+5. 其它性能优化和问题修改
+6. h5页面前期UI开发
