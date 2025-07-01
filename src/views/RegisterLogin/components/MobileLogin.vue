@@ -74,9 +74,7 @@ const onSubmit = ( async (values: FormValues) => {
     showNotify({ type: 'primary', message: `欢迎您：${res.data.user.userName}` });
     userInfoStore.setUserInfo(res.data)
     userInfoStore.setAuthStatus(true)
-     console.log('开始跳转到首页')
     router.push({ path: '/' })
-     console.log('跳转完成')
   } else {
     showNotify({ type: 'danger', message: '登录失败,请检查账号邮箱或密码' });
   }
