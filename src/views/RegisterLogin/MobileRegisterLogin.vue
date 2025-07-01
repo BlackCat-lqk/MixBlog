@@ -45,17 +45,18 @@ const isLogin = ref(true)
   width: 100%;
   height: 100%;
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 200% 200%;
+  background-size: 400% 400%;
   backdrop-filter: blur(10px);
   animation: smoothGradientFlow 15s ease infinite;
   @include g.flexCenter;
   .register-login-box {
     display: flex;
-    width: 200px;
-    min-width: 200px;
-    max-width: 300px;
-    min-height: 400px;
+    width: 80%;
+    min-width: 80%;
+    max-width: 80%;
+    min-height: 60%;
     height: auto;
+    padding: 20px 15px;
     @include g.borderRadius(10px);
     box-shadow: 0 0 5px 2px rgba(75, 75, 75, 0.1);
     -webkit-backdrop-filter: blur(30px);
@@ -64,14 +65,16 @@ const isLogin = ref(true)
     .left-info-box {
       @include g.borderRadius(10px);
       flex: 1;
-      padding: 100px 20px 20px 50px;
       .content-box {
         height: 100%;
         display: flex;
         flex-direction: column;
+        align-items: center;
         .title-box {
-          margin-bottom: 30px;
+          flex: .2;
+          @include g.flexCenter;
           span {
+            font-size: 1rem;
             display: inline-block;
             &:hover {
               cursor: pointer;
@@ -79,16 +82,19 @@ const isLogin = ref(true)
           }
         }
         .form-box {
-          flex: 1;
+          flex: .8;
+          width: 100%;
+          display: flex;
+          align-items: center;
         }
       }
       .defalt {
         color: rgb(81, 81, 81);
-        font-size: 14px;
+        font-size: 0.8rem;
       }
       .active {
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 1.1rem;
+        font-weight: 400;
         color: #000;
       }
     }

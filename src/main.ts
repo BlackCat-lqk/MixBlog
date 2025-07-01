@@ -2,13 +2,14 @@ import './assets/style/main.scss'
 import naive from 'naive-ui'
 import Vant from 'vant'
 import 'vant/lib/index.css'
-
 import { createApp } from 'vue'
 import pinia from './stores/index'
 import { useThemeStore } from '@/stores/themeStore'
-
+import { setRem } from '@/utils/deviceUtils'
 import App from './App.vue'
 import router from './router'
+
+setRem()
 
 const app = createApp(App)
 

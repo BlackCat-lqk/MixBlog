@@ -17,3 +17,13 @@ export function getDeviceType() {
     return 'Unknown';
   }
 }
+
+// 设置移动端设备的字体尺寸
+export function setRem() {
+  if(!isMobileDevice()) return
+  const baseSize = 16
+  const scale = document.documentElement.clientWidth / 375 // 以 iPhone 6 为基准
+  document.documentElement.style.fontSize = baseSize * Math.min(scale, 2) + 'px'
+}
+window.addEventListener('resize', setRem)
+setRem()
