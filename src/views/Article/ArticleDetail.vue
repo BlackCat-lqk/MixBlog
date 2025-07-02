@@ -54,7 +54,7 @@
           </div>
           <div class="article-content">
             <div class="article-content-inner">
-              <p>{{ props.data.content }}</p>
+              <quill-view :content="props.data.content"></quill-view>
             </div>
           </div>
         </div>
@@ -66,9 +66,9 @@
 <script setup lang="ts">
 import { defineProps, watch, ref, defineEmits } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
+import QuillView from '@/components/QuillView.vue'
 import { useThemeStore } from '@/stores/themeStore'
 const themeStore = useThemeStore()
-
 const activeDrawer = ref(false)
 const emits = defineEmits(['update:showModal'])
 interface articleDetailType {
@@ -90,7 +90,6 @@ const props = defineProps({
     default: false,
   },
 })
-
 watch(
   () => props.showModal,
   (newVal) => {
@@ -120,6 +119,13 @@ watch(
   justify-content: center;
   @include g.scrollbarCustom;
 }
+:deep(.ql-toolbar) {
+  display: none;
+}
+:deep(.ql-container) {
+  border: none;
+}
+
 body {
   .article-header-box {
     max-width: 1264px;

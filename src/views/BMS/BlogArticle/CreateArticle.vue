@@ -100,6 +100,7 @@
                 />
               </div>
             </div>
+            <n-button type="info" @click="getsubData">获取副文本数据</n-button>
             <tiptap-editor v-model:content="state.tiptapEditorValue"></tiptap-editor>
           </div>
         </div>
@@ -122,7 +123,9 @@ const message = useMessage()
 
 const userInfoStore = useUserInfoStore()
 const tempFile = ref<UploadFileInfo | null>(null)
-
+const getsubData = () => {
+  console.log(state.tiptapEditorValue)
+}
 const state = reactive({
   showModal: false,
   classifyOptions: [],
