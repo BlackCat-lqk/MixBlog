@@ -1,28 +1,29 @@
 <template>
   <div class="Register-main-box">
     <n-form ref="formRef" inline label-width="100%" :model="formValue" :rules="rules" size="medium">
-      <n-form-item label="用户名" path="userName">
-        <n-input v-model:value="formValue.userName" placeholder="userName" />
+      <n-form-item :label="$t('common.username')" path="userName">
+        <n-input v-model:value="formValue.userName" clearable :placeholder="$t('common.usernamePlaceholder')" />
       </n-form-item>
-      <n-form-item label="邮箱" path="email">
-        <n-input v-model:value="formValue.email" placeholder="email" />
+      <n-form-item :label="$t('common.email')" path="email">
+        <n-input v-model:value="formValue.email" clearable :placeholder="$t('common.emailPlaceholder')" />
       </n-form-item>
-      <n-form-item label="验证码" path="code">
-        <n-input v-model:value="formValue.code" placeholder="code" />
+      <n-form-item :label="$t('common.code')" path="code">
+        <n-input v-model:value="formValue.code" clearable :placeholder="$t('common.codePlaceholder')" />
         <n-button
           type="info"
           :disabled="!isEmailValid || isCounting"
           style="height: 46px; width: 120px; margin-left: 10px"
           @click="handleGetCode"
-          >{{ isCounting ? `${countdown}s 后重新获取` : '获取验证码' }}</n-button
+          >{{ isCounting ? `${countdown}s` + $t('common.getCode') : $t('common.resetCode') }}</n-button
         >
       </n-form-item>
-      <n-form-item label="密码" path="password">
+      <n-form-item :label="$t('common.pwd')" path="password">
         <n-input
           v-model:value="formValue.password"
           type="password"
+          clearable
           show-password-on="mousedown"
-          placeholder="Password"
+          :placeholder="$t('common.pwdPlaceholder')"
         />
       </n-form-item>
       <n-form-item>
@@ -32,7 +33,7 @@
           type="primary"
           @click="handleRegister"
         >
-          注册
+          {{ $t('common.register') }}
         </n-button>
       </n-form-item>
     </n-form>
@@ -53,6 +54,8 @@ import {
 import { _debounce } from '@/utils/publickFun'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 // import { addAdminRoutes } from '@/router'
 const message = useMessage()
 const router = useRouter()
@@ -104,7 +107,7 @@ const handleRegister = () => {
       const response = await registerUserApi(formValue)
       const res = response.data
       if (res.code == 200) {
-        message.success('注册成功')
+        message.success(t('register.success'))
         // 注册成功后跳转到首页并注入用户信息和token
         userInfoStore.setUserInfo(res.data)
         userInfoStore.setAuthStatus(true)
@@ -117,7 +120,7 @@ const handleRegister = () => {
         message.error(res.message)
       }
     } else {
-      message.error('请检查输入合法性')
+      message.error(t('register.error'))
     }
   })
 }

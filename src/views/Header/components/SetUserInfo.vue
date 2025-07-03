@@ -3,7 +3,7 @@
   <n-modal v-model:show="state.showModal" :to="personalInfoBox" :mask-closable="false">
     <n-card
       style="width: 600px"
-      title="个人资料设置"
+      :title="$t('header.personSet.title')"
       :bordered="false"
       size="huge"
       role="dialog"
@@ -11,10 +11,10 @@
     >
       <div>
         <n-form ref="editFormRef" inline :model="editFormValue" :rules="rules">
-          <n-form-item :span="12" style="width: 100%" label="邮箱" path="email">
+          <n-form-item :span="12" style="width: 100%" :label="$t('header.personSet.email')" path="email">
             <n-input v-model:value="editFormValue.email" disabled />
           </n-form-item>
-          <n-form-item style="width: 100%" label="上传头像">
+          <n-form-item style="width: 100%" :label="$t('header.personSet.avatar')">
             <div class="logo-from-box">
               <n-upload
                 action="/api/upload-avatar"
@@ -33,35 +33,35 @@
               />
             </div>
           </n-form-item>
-          <n-form-item style="width: 100%" :span="12" label="用户名" path="userName">
-            <n-input v-model:value="editFormValue.userName" placeholder="输入用户名" />
+          <n-form-item style="width: 100%" :span="12" :label="$t('header.personSet.username')" path="userName">
+            <n-input v-model:value="editFormValue.userName" :placeholder="$t('header.personSet.usernamePlaceholder')" />
           </n-form-item>
-          <n-form-item style="width: 100%" :span="12" label="个人简介">
+          <n-form-item style="width: 100%" :span="12" :label="$t('header.personSet.intro')">
             <n-input
               type="textarea"
               rows="4"
               v-model:value="editFormValue.desc"
-              placeholder="输入个人简介"
+              :placeholder="$t('header.personSet.introPlaceholder')"
             />
           </n-form-item>
-          <n-form-item style="width: 100%" :span="12" label="性别">
+          <n-form-item style="width: 100%" :span="12" :label="$t('header.personSet.sex')">
             <n-space>
               <n-radio :checked="editFormValue.sex === '男'" value="男" @change="handleChangeSex">
-                男
+                {{ t('header.personSet.sexOption') }}
               </n-radio>
               <n-radio :checked="editFormValue.sex === '女'" value="女" @change="handleChangeSex">
-                女
+                {{ t('header.personSet.sexOption1') }}
               </n-radio>
               <n-radio
                 :checked="editFormValue.sex === '保密'"
                 value="保密"
                 @change="handleChangeSex"
               >
-                保密
+                {{ t('header.personSet.sexOption2') }}
               </n-radio>
             </n-space>
           </n-form-item>
-          <n-form-item style="width: 100%" :span="12" label="生日">
+          <n-form-item style="width: 100%" :span="12" :label="$t('header.personSet.birthday')">
             <n-date-picker
               style="width: 100%"
               v-model:value="editFormValue.birthday"
@@ -73,8 +73,8 @@
       </div>
       <template #footer>
         <n-space style="display: flex; justify-content: flex-end">
-          <n-button @click="cancelUpdate">取消</n-button>
-          <n-button type="info" @click="confirmUpdate">应用</n-button>
+          <n-button @click="cancelUpdate">{{ t('header.personSet.cancelBtn') }}</n-button>
+          <n-button type="info" @click="confirmUpdate">{{ t('header.personSet.saveBtn') }}</n-button>
         </n-space>
       </template>
     </n-card>
@@ -89,6 +89,8 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { validateEmail, validateUsername } from '@/utils/validate'
 import { updateUsers } from '@/http/user'
 import _ from 'lodash'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const personalInfoBox = ref(null)
 const editFormRef = ref<FormInst | null>(null)

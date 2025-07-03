@@ -26,6 +26,7 @@ import { ref } from 'vue'
 import LoginView from './components/LoginView.vue'
 import RegisterView from './components/RegisterView.vue'
 
+
 const isLogin = ref(true)
 </script>
 

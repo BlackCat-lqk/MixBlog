@@ -16,7 +16,7 @@
           trigger="click"
         >
           <n-input
-            placeholder="文章/图库/日记/资源..."
+            :placeholder="$t('header.search.placeholder')"
             clearable
             size="large"
             v-model:value="state.searchQuery"
@@ -29,16 +29,16 @@
             </template>
           </n-input>
           <template #header>
-            <div v-if="state.searchHistory.length > 0" class="search-history">历史搜索记录</div>
+            <div v-if="state.searchHistory.length > 0" class="search-history">{{ t('header.search.tip1') }}</div>
             <p v-for="(item, idx) in state.searchHistory" :key="idx">{{ item }}</p>
           </template>
           <template #empty>
-            <n-empty description="暂无数据">
+            <n-empty :description="$t('header.search.tip2')">
               <template #extra> </template>
             </n-empty>
           </template>
           <template #action>
-            <div><n-button @click="clearHistory">清除历史记录</n-button></div>
+            <div><n-button @click="clearHistory">{{ t('header.search.tip3') }}</n-button></div>
           </template>
         </n-popselect>
       </div>
@@ -59,7 +59,7 @@
         v-if="state.userInfo.role === 'admin' && state.userInfo.isLogin"
         type="info"
         @click="jumpPage('/bms/overview')"
-        >管理后台</n-button
+        >{{ t('header.btnText') }}</n-button
       >
       <div class="user-info-box">
         <div v-if="state.userInfo.isLogin">
@@ -80,8 +80,11 @@
               <img v-else :src="defaultAvatar" />
             </n-icon>
           </n-avatar>
-          <span class="user-name" @click="jumpPage('/register-login')">去登录</span>
+          <span class="user-name" @click="jumpPage('/register-login')">{{ t('header.text') }}</span>
         </div>
+      </div>
+      <div class="language-select-box">
+        <n-select v-model:value="locale" :options="languages" @update:value="changeLanguage" />
       </div>
       <div class="switch-theme-box">
         <n-switch v-model:value="state.switchTheme" size="large" @update:value="handleChangeTheme">
@@ -99,7 +102,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, reactive, onMounted, onBeforeMount } from 'vue'
+import { watch, ref, reactive, onMounted, onBeforeMount, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScroll } from '@vueuse/core'
 import { useThemeStore } from '@/stores/themeStore'
@@ -109,6 +112,8 @@ import { useMessage } from 'naive-ui'
 import { logOutUserApi } from '@/http/user'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import SetUserInfo from './components/SetUserInfo.vue'
+import { useI18n } from 'vue-i18n'
+const { locale, t } = useI18n()
 // import { clearDynamicRoutes } from '@/router'
 const sloganStore = useSloganInfoStore()
 const defaultAvatar = new URL('/uploads/defalut/UserAvatarFilled.svg', import.meta.url).href
@@ -120,28 +125,36 @@ const message = useMessage()
 const { y } = useScroll(window)
 const opacity = ref(0)
 const bgColor = ref('transparent')
-const routerPage = [
+const languages = [
+  { label: 'English', value: 'en-US' },
+  { label: '中文', value: 'zh-CN' },
+]
+const changeLanguage = (lang: string) => {
+  locale.value = lang
+  localStorage.setItem('locale', lang)
+}
+const routerPage = reactive([
   {
     path: '/',
-    title: '首页',
+    title: computed(() => t('header.navigation1')),
   },
   {
     path: '/articles',
-    title: '文章',
+    title: computed(() => t('header.navigation2')),
   },
   {
     path: '/image-library',
-    title: '图库',
+    title: computed(() => t('header.navigation3')),
   },
   {
     path: '/random-notes',
-    title: '随记',
+    title: computed(() => t('header.navigation4')),
   },
   {
     path: '/about',
-    title: '关于',
+    title: computed(() => t('header.navigation5')),
   },
-]
+])
 const showSetUserModal = ref(false)
 const state = reactive({
   activeRouter: 0,
@@ -158,16 +171,20 @@ const state = reactive({
   },
   avatarOptions: [
     {
-      label: '个人设置',
+      label: computed(() => t('header.person.menu1')),
       key: 0,
     },
     {
-      label: '切换账号',
+      label: computed(() => t('header.person.menu2')),
       key: 1,
     },
     {
-      label: '退出登录',
+      label: computed(() => t('header.person.menu3')),
       key: 2,
+    },
+    {
+      label: computed(() => t('header.person.menu4')),
+      key: 3,
     },
   ],
 })
@@ -192,15 +209,17 @@ const handleGlobalSearch = async () => {
 const clearHistory = () => {
   state.searchHistory = []
   localStorage.removeItem('globalSearch')
-  message.success('已清空搜索记录')
+  const tip = computed(() => t('header.search.tip4'))
+  message.success(tip.value)
 }
 // 用户头像菜单select回调
 const handleAvatarClick = async (key: string | number) => {
   if (key === 0) {
     showSetUserModal.value = true
   } else if (key === 1) {
-    router.push('/register-login')
   } else if (key === 2) {
+    router.push('/register-login')
+  } else {
     const response = await logOutUserApi()
     const res = response.data
     if (res.code === 200) {
@@ -403,6 +422,12 @@ onMounted(() => {
           cursor: pointer;
           color: #409eff;
         }
+      }
+    }
+    .language-select-box {
+      margin-right: 10px;
+      .n-select{
+        width: 100px;
       }
     }
     .switch-theme-box {

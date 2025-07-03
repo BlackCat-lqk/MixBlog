@@ -3,7 +3,7 @@
     <n-modal v-model:show="showModal" :mask-closable="false">
       <n-card
         style="width: 600px"
-        title="找回密码"
+        :title="$t('login.retrievePwd')"
         :bordered="false"
         size="huge"
         role="dialog"
@@ -13,60 +13,62 @@
           <div class="forget-main-box">
             <div class="steps-box">
               <n-steps :current="current" :status="currentStatus">
-                <n-step title="身份验证" />
-                <n-step title="密码重置" />
-                <n-step title="重置完成" />
+                <n-step :title="$t('login.authentication')" />
+                <n-step :title="$t('login.resetPwd')" />
+                <n-step :title="$t('login.finish')" />
               </n-steps>
             </div>
             <div class="form-content-box">
               <div class="content-input-box" v-show="current === 1">
-                <n-form-item label="邮箱" path="email">
-                  <n-input v-model:value="formValue.email" placeholder="输入邮箱" />
+                <n-form-item :label="$t('common.email')" path="email">
+                  <n-input v-model:value="formValue.email" clearable :placeholder="$t('common.emailPlaceholder')" />
                 </n-form-item>
-                <n-form-item label="验证码" path="code">
-                  <n-input v-model:value="formValue.code" placeholder="输入验证码" />
+                <n-form-item :label="$t('common.code')" path="code">
+                  <n-input v-model:value="formValue.code" clearable :placeholder="$t('common.codePlaceholder')" />
                   <n-button
                     type="info"
                     :disabled="!isEmailValid || isCounting"
                     style="height: 46px; width: 120px; margin-left: 10px"
                     @click="handleGetCode"
-                    >{{ isCounting ? `${countdown}s 后重新获取` : '获取验证码' }}</n-button
+                    >{{ isCounting ? `${countdown}s` + $t('common.getCode') : $t('common.resetCode') }}</n-button
                   >
                 </n-form-item>
               </div>
               <div class="content-input-box" v-show="current === 2">
-                <n-form-item label="密码" path="newPassword">
+                <n-form-item :label="$t('common.pwd')" path="newPassword">
                   <n-input
                     v-model:value="formValue.newPassword"
                     type="password"
+                    clearable
                     show-password-on="mousedown"
-                    placeholder="输入密码"
+                    :placeholder="$t('common.pwdPlaceholder')"
                   />
                 </n-form-item>
-                <n-form-item label="再次输入密码" path="confirmPassword">
+                <n-form-item :label="$t('common.confirmPwd')" path="confirmPassword">
                   <n-input
                     v-model:value="formValue.confirmPassword"
                     type="password"
+                    clearable
                     show-password-on="mousedown"
-                    placeholder="再次确认密码"
+                    :placeholder="$t('common.confirmPwdPlaceholder')"
                   />
                 </n-form-item>
               </div>
               <div class="content-input-box finsh-input" v-show="current === 3">
-                重置完成, 去登录！
+                {{ $t('login.finishTip') }}
               </div>
             </div>
           </div>
         </n-form>
         <template #footer>
           <n-button type="info" @click="onNegativeClick" strong secondary v-show="current !== 3">
-            取消
+            {{ $t('common.cancel') }}
           </n-button>
-          <n-button type="info" @click="prev" v-show="current == 2"> 上一步 </n-button>
+          <n-button type="info" @click="prev" v-show="current == 2"> {{ $t('login.lastStep') }} </n-button>
           <n-button type="info" @click="next" v-show="current == 1 || current == 2">
-            下一步
+            {{ $t('login.nextStep') }}
           </n-button>
-          <n-button type="info" @click="onNegativeClick" v-show="current === 3"> 完成 </n-button>
+          <n-button type="info" @click="onNegativeClick" v-show="current === 3"> {{ $t('login.finish1') }} </n-button>
         </template>
       </n-card>
     </n-modal>
@@ -80,6 +82,8 @@ import { getResetEmailCodeApi, getVerifyEmailCodeApi, resetPasswordApi } from '@
 import { ref, defineProps, defineEmits, watch, reactive, computed } from 'vue'
 import { validateEmail, validatePassword, validateCode } from '@/utils/validate'
 import { _debounce } from '@/utils/publickFun'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const message = useMessage()
 const formRef = ref<FormInst | null>(null)
@@ -105,7 +109,7 @@ const formValue = reactive({
 })
 // 再次输入密码验证
 const confirmPassword = (rule: FormItemRule, value: string): boolean | Error => {
-  return value === formValue.newPassword ? true : new Error('密码不一致')
+  return value === formValue.newPassword ? true : new Error(t('login.confirmPwdError'))
 }
 const rules = {
   email: {

@@ -1,21 +1,22 @@
 <template>
   <div class="Login-main-box">
     <n-form ref="formRef" inline :label-width="80" :model="formValue" :rules="rules" :size="size">
-      <n-form-item label="邮箱" path="email">
-        <n-input v-model:value="formValue.email" placeholder="请输入邮箱..." />
+      <n-form-item :label="$t('common.email')" path="email">
+        <n-input v-model:value="formValue.email" clearable :placeholder="$t('common.emailPlaceholder')" />
       </n-form-item>
-      <n-form-item label="密码" path="password">
+      <n-form-item :label="$t('common.pwd')" path="password">
         <n-input
           v-model:value="formValue.password"
           type="password"
+          clearable
           show-password-on="mousedown"
-          placeholder="请输入密码..."
+          :placeholder="$t('common.pwdPlaceholder')"
         />
       </n-form-item>
-      <div @click="handelforgotPwd"><span>忘记密码?</span></div>
+      <div @click="handelforgotPwd"><span>{{ $t('login.forgotPwd') }}</span></div>
       <n-form-item>
         <n-button style="height: 46px; width: 120px" type="primary" @click="handleLogin">
-          登录
+          {{ $t('common.login') }}
         </n-button>
       </n-form-item>
     </n-form>
@@ -36,6 +37,8 @@ import { loginUserApi } from '@/http/user'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { _debounce } from '@/utils/publickFun'
 import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 // import { addAdminRoutes } from '@/router'
 const router = useRouter()
 const message = useMessage()
@@ -74,7 +77,7 @@ const handleLogin = _debounce(() => {
       const response = await loginUserApi(formValue)
       const res = response.data
       if (res.code === 200) {
-        message.success(`欢迎您：${res.data.user.userName}`)
+        message.success(t('login.loginSuccess')+`${res.data.user.userName}`)
         userInfoStore.setUserInfo(res.data)
         userInfoStore.setAuthStatus(true)
         // 如果是管理员则注入后台路由
@@ -83,10 +86,10 @@ const handleLogin = _debounce(() => {
         // }
         router.push({ path: '/' })
       } else {
-        message.error('登录失败,请检查账号邮箱或密码')
+        message.error(t('login.loginError'))
       }
     } else {
-      message.error('请检查账号邮箱或密码')
+      message.error(t('login.loginError1'))
     }
   })
 }, 300)
