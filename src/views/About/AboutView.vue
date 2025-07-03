@@ -69,6 +69,8 @@ import { onMounted, reactive, ref, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAboutConfigApi } from '@/http/about'
 const router = useRouter()
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const audio = ref<HTMLAudioElement | null>(null)
 const isPlaying = ref(false)
@@ -95,20 +97,7 @@ const aboutData: aboutDataType = reactive({
   modules: [{ title: '', content: '', image: [] }],
 })
 // 标语
-const tagsList = [
-  '富强',
-  '民主',
-  '文明',
-  '和谐',
-  '自由',
-  '平等',
-  '公正',
-  '法治',
-  '爱国',
-  '敬业',
-  '诚信',
-  '友善',
-]
+const tagsList = t('about.tagsList').split(',')
 // 音频播放
 const toggleMusic = () => {
   if (!audio.value) {
@@ -120,7 +109,7 @@ const toggleMusic = () => {
   } else {
     audio.value.loop = true
     audio.value.play().catch((err) => {
-      console.error('播放失败:', err)
+      console.error(err)
     })
   }
 

@@ -12,9 +12,9 @@ export default {
     finishTip: '重置完成, 去登录！',
     nextStep: '下一步',
     lastStep: '上一步',
-    confirmPwdError:'密码不一致'
+    confirmPwdError: '密码不一致',
   },
-  register:{
+  register: {
     success: '注册成功',
     error: '请检查输入合法性',
   },
@@ -25,7 +25,7 @@ export default {
     emailPlaceholder: '请输入邮箱...',
     pwd: '密码',
     pwdPlaceholder: '请输入密码...',
-    confirmPwd:'确认密码',
+    confirmPwd: '确认密码',
     confirmPwdPlaceholder: '请再次输入密码...',
     username: '用户名',
     usernamePlaceholder: '请输入用户名...',
@@ -35,6 +35,10 @@ export default {
     register: '注册',
     getCode: '获取验证码',
     resetCode: '重新获取',
+    more: '更多',
+    noMore: '没有更多了',
+    loadMore: '加载更多',
+    all: '全部',
   },
   header: {
     search: {
@@ -86,5 +90,39 @@ export default {
     pwdError2: '密码为数字、字母、符号',
     pwdError3: '密码长度为：6-16位！',
     codeError: '请输入6位验证码',
+  },
+  banner: {
+    content: '相关地址',
+  },
+  homeData: {
+    total1: '总访问量',
+    total2: '今日访问量',
+  },
+  article: {
+    title: '博客文章',
+    subTitle: '我的所思、所想，像模像样的文章...',
+    classify: '分类',
+    tag: '标签',
+  },
+  notes: {
+    title: '随笔随记',
+    subTitle: '我的日常记录...',
+    content: '记录生活',
+    content1: '记录奇怪的东西',
+    content2: '记录瞬间',
+    content3: '评论暂未开放...',
+    noData: '暂无内容',
+    newNote: '去写文章',
+  },
+  photo: {
+    title: '摄影图库',
+    subTitle: '将美好的回忆和漂亮的相片留下来...',
+  },
+  footer: {
+    title: '技术支持',
+    content: 'Mix Blog 1.0.0 · Made by LQK',
+  },
+  about: {
+    tagsList: "富强, 民主, 文明, 和谐, 自由,, 平等, 公正, 法治, 爱国, 敬业, 诚信, 友善",
   },
 }

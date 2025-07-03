@@ -132,7 +132,7 @@ const getPhotoLibrary = async () => {
       state.dataCount = res.data.list.length - 1
     }
   } else {
-    console.log('获取图库列表失败')
+    console.log('error')
   }
 }
 // 切换上一页

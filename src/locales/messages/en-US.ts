@@ -12,9 +12,9 @@ export default {
     finishTip: 'Reset completed, go to login!',
     nextStep: 'Next Step',
     lastStep: 'Previous Step',
-    confirmPwdError:'Entered passwords differ'
+    confirmPwdError: 'Entered passwords differ',
   },
-  register:{
+  register: {
     success: 'Registration successful',
     error: 'Please check the input validity',
   },
@@ -25,7 +25,7 @@ export default {
     emailPlaceholder: 'Please enter your email...',
     pwd: 'Password',
     pwdPlaceholder: 'Please enter your password...',
-    confirmPwd:'Confirm Password',
+    confirmPwd: 'Confirm Password',
     confirmPwdPlaceholder: 'Please re-enter your password...',
     username: 'Username',
     usernamePlaceholder: 'Please enter your username...',
@@ -35,6 +35,10 @@ export default {
     register: 'Register',
     getCode: 'Get Verification Code',
     resetCode: 'Resend',
+    more: 'More',
+    noMore: 'No more data',
+    loadMore: 'Load More',
+    all: 'All',
   },
   header: {
     search: {
@@ -86,5 +90,39 @@ export default {
     pwdError2: 'Password must contain letters, numbers, and symbols',
     pwdError3: 'Password length must be between 6-16 characters!',
     codeError: 'Please enter a 6-digit verification code',
+  },
+  banner: {
+    content: 'Related Links',
+  },
+  homeData: {
+    total1: 'Total Visits',
+    total2: "Today's Visits",
+  },
+  article: {
+    title: 'Article',
+    subTitle: 'My thoughts and ideas, well-crafted articles...',
+    classify: 'Category',
+    tag: 'Tag',
+  },
+  notes: {
+    title: 'Daily Notes',
+    subTitle: 'My daily log...',
+    content: 'Record strange things',
+    content1: 'Record life',
+    content2: 'Record moments',
+    content3: 'Comments are not yet open...',
+    noData: 'No content available',
+    newNote: 'Write a Note',
+  },
+  photo: {
+    title: 'Photography Gallery',
+    subTitle: 'Leave beautiful memories and lovely photos...',
+  },
+  footer: {
+    title: 'technical support',
+    content: 'Mix Blog 1.0.0 · Made by LQK',
+  },
+  about: {
+    tagsList: "Prosperity, Democracy, Civilization, Harmony, Freedom, Equality, Justice, Rule of Law, Patriotism, Dedication, Integrity, Friendship",
   },
 }
