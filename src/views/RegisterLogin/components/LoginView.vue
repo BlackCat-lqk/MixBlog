@@ -21,8 +21,7 @@
         <span @click="handelforgotPwd">{{ $t('login.forgotPwd') }}</span>
         <div>
           <n-checkbox
-            checked-value="true"
-            unchecked-value="false"
+            v-model:checked="formValue.rememberMe"
             @update:checked="handleRemeberPwd"
           >
             记住我
@@ -82,16 +81,21 @@ const fetchEncryptionKey = async () => {
 }
 // 检查已保存的凭据
 const checkSavedCredentials = () => {
-  if (!encryptionKey.value) return
-
+  const hasKey = localStorage.getItem('key_remrber')
+  if (!hasKey) return
   const saved = localStorage.getItem('blog_credentials')
   if (saved) {
-    const credentials = decodeCredentials(saved, encryptionKey.value)
+    const credentials = decodeCredentials(saved, hasKey)
     if (credentials) {
       formValue.email = credentials.email
       formValue.password = credentials.password
       formValue.rememberMe = true
+      console.log(formValue)
     }
+  }else {
+    // 如果没有保存的凭据，则清空表单
+    formValue.password = ''
+    formValue.rememberMe = false
   }
 }
 interface FormType {
@@ -135,13 +139,22 @@ const handleLogin = _debounce(() => {
         userInfoStore.setUserInfo(res.data)
         userInfoStore.setAuthStatus(true)
         // 处理记住我选项
-        if (formValue.rememberMe && encryptionKey.value) {
-          const encoded = encodeCredentials(
-            formValue.email,
-            formValue.password,
-            encryptionKey.value,
-          )
-          localStorage.setItem('blog_credentials', encoded)
+        if (formValue.rememberMe) {
+          // 先检查localStorage中是否有加密密钥
+          const saved = localStorage.getItem('key_remrber')
+          if (!saved) {
+            const encoded = encodeCredentials(
+              formValue.email,
+              formValue.password,
+              encryptionKey.value,
+            )
+            localStorage.setItem('key_remrber', encryptionKey.value)
+            localStorage.setItem('blog_credentials', encoded)
+          } else {
+            // 如果有则直接使用
+            const encoded = encodeCredentials(formValue.email, formValue.password, saved)
+            localStorage.setItem('blog_credentials', encoded)
+          }
         } else {
           localStorage.removeItem('blog_credentials')
         }
@@ -163,7 +176,6 @@ const handleLogin = _debounce(() => {
 const handelforgotPwd = () => {
   showForgotPwdModal.value = true
 }
-// 初始化获取加密密钥
 onMounted(() => {
   fetchEncryptionKey()
 })
