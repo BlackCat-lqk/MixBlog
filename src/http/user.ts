@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import axios from 'axios'
 
 /**
  * 新增用户
@@ -111,3 +110,8 @@ export function logOutUserApi() {
 export function verifyUserApi() {
   return request.get('/verifyIdentity')
 }
+
+// 获取密钥api
+export const getEncryptionKey = () => {
+  return request.get('/encryption-key')
+};

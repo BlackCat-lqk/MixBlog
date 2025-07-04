@@ -99,6 +99,10 @@
     </div>
   </div>
   <SetUserInfo v-model:show="showSetUserModal"></SetUserInfo>
+  <ForgotPwd
+    v-model:show="showForgotPwdModal"
+    @update:show="showForgotPwdModal = $event"
+  ></ForgotPwd>
 </template>
 
 <script lang="ts" setup>
@@ -112,6 +116,7 @@ import { useMessage } from 'naive-ui'
 import { logOutUserApi } from '@/http/user'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import SetUserInfo from './components/SetUserInfo.vue'
+import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
 import { useI18n } from 'vue-i18n'
 const { locale, t } = useI18n()
 // import { clearDynamicRoutes } from '@/router'
@@ -129,6 +134,7 @@ const languages = [
   { label: 'English', value: 'en-US' },
   { label: '中文', value: 'zh-CN' },
 ]
+const showForgotPwdModal = ref(false)
 const changeLanguage = (lang: string) => {
   locale.value = lang
   localStorage.setItem('locale', lang)
@@ -217,6 +223,7 @@ const handleAvatarClick = async (key: string | number) => {
   if (key === 0) {
     showSetUserModal.value = true
   } else if (key === 1) {
+    showForgotPwdModal.value = true
   } else if (key === 2) {
     router.push('/register-login')
   } else {

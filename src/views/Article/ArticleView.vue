@@ -6,8 +6,8 @@
     <classify-meun :classify="classify" @classifyEmit="handleClassify"></classify-meun>
     <article-card :articleData="articleData"></article-card>
     <div class="more-btn" v-if="!isClassify">
-      <n-button v-if="articleData.data.length < articleData.deepData.length" tertiary round @click="moreArticle"> 加载更多 </n-button>
-      <n-gradient-text v-else type="info"> 没有更多了 </n-gradient-text>
+      <n-button v-if="articleData.data.length < articleData.deepData.length" tertiary round @click="moreArticle"> {{ $t('common.more') }} </n-button>
+      <n-gradient-text v-else type="info"> {{ $t('common.loadMore') }} </n-gradient-text>
     </div>
     <div v-else class="more-btn"></div>
   </div>
@@ -21,9 +21,11 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import ClassifyMeun from '@/components/ClassifyMeun.vue'
 import ArticleCard from '@/components/ArticleCard.vue'
-import { reactive, onMounted, ref } from 'vue'
+import { reactive, onMounted, ref, computed } from 'vue'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import _ from 'lodash';
 const message = useMessage()
 const isClassify = ref(false)
@@ -32,12 +34,14 @@ const articleData = reactive({
   columns: 3,
   deepData: []
 })
+const classifyAll = computed(() => t('common.all'))
 const classify = reactive([
   {
-    name: '全部',
+    name: classifyAll.value,
     number: 0,
   }
 ])
+
 interface articelDataType {
   status: string,
   category: string
@@ -73,7 +77,7 @@ const handleClassify = (name: string) => {
   const filterData = listData.filter((item: articelDataType) => {
     return item.category === name
   })
-  if(name === '全部'){
+  if(name === classifyAll.value){
     isClassify.value = false
     articleData.data = listData.slice(0, 6)
   }else {

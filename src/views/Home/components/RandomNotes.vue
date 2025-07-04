@@ -1,8 +1,8 @@
 <template>
   <div class="random-notes-box">
     <div class="random-notes-title-box">
-      <h1>随笔随记</h1>
-      <p>我的日常记录...</p>
+      <h1>{{ $t('notes.title') }}</h1>
+      <p>{{ $t('notes.subTitle') }}</p>
     </div>
     <div class="random-notes-content-box">
       <div class="random-notes-left-box">
@@ -14,15 +14,15 @@
           </n-calendar>
         </div>
         <div class="random-notes-text">
-          <p>记录生活</p>
-          <p>记录奇怪的东西</p>
-          <p>记录瞬间</p>
+          <p>{{ $t('notes.content') }}</p>
+          <p>{{ $t('notes.content1') }}</p>
+          <p>{{ $t('notes.content2') }}</p>
         </div>
       </div>
       <notes-card :notesDetail="notesDetail"></notes-card>
     </div>
     <div class="random-notes-more">
-      <n-button tertiary round @click="moreNotes"> 更多 </n-button>
+      <n-button tertiary round @click="moreNotes"> {{ $t('common.more') }} </n-button>
     </div>
   </div>
 </template>

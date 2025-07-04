@@ -2,8 +2,8 @@
   <div class="photo-gallery-box">
     <div class="photo-gallery-switch-box">
       <div class="photo-gallery-title">
-        <h1>摄影图库</h1>
-        <p>将美好的回忆和漂亮的相片留下来...</p>
+        <h1>{{ $t('photo.title') }}</h1>
+        <p>{{ $t('photo.subTitle') }}</p>
       </div>
       <div class="photo-gallery-switch">
         <n-button tertiary round @click="getPrevious" :disabled="state.step <= 0">
@@ -77,7 +77,7 @@
       </div>
     </div>
     <div class="more-box">
-      <n-button tertiary round @click="morePhotography"> 更多 </n-button>
+      <n-button tertiary round @click="morePhotography"> {{ $t('common.more') }} </n-button>
     </div>
   </div>
   <ImageDetail v-model:showModal="showActiveDrawer" :data="imagesDetail"></ImageDetail>

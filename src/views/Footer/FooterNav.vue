@@ -1,6 +1,6 @@
 <template>
   <div class="footer-main-box">
-    <span>技术支持</span>
+    <span>{{ $t('footer.title') }}</span>
     <n-divider />
     <div class="technical-support" v-for="item in 1" :key="item">
       <a class="technical-support-item-box" v-for="(item, idx) in supportData" :key="idx">
@@ -8,7 +8,7 @@
       </a>
     </div>
     <n-divider />
-    <div class="footer-bottom-text">Mix Blog 1.0.0 · Made by LQK</div>
+    <div class="footer-bottom-text">{{ $t('footer.content') }}</div>
   </div>
 </template>
 

@@ -1,12 +1,12 @@
 <template>
   <div class="article-box">
     <div class="article-title-box">
-      <h1>博客文章</h1>
-      <p>我的所思、所想，像模像样的文章...</p>
+      <h1>{{ $t('article.title') }}</h1>
+      <p>{{ $t('article.subTitle') }}</p>
     </div>
     <article-card :articleData="articleData"></article-card>
     <div class="article-more">
-      <n-button tertiary round @click="moreArticle"> 更多 </n-button>
+      <n-button tertiary round @click="moreArticle"> {{ $t('common.more') }} </n-button>
     </div>
   </div>
 </template>

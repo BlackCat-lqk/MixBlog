@@ -170,14 +170,16 @@ body {
     min-width: 1040px;
     padding: 0 120px;
     .article-intro {
-      background-color: var(--box-bg-color1);
+      background-color: var(--box-bg-color5);
       padding: 32px;
       display: flex;
       justify-content: center;
+      align-items: center;
       border-radius: 8px;
       p {
         font-size: 18px;
         line-height: 1.54;
+        text-align: center;
         color: var(--text-color);
       }
     }

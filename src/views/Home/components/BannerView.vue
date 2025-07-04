@@ -36,7 +36,7 @@
           </n-icon>
         </div>
         <div class="relevant-address">
-          <p>相关地址</p>
+          <p>{{ $t('banner.content') }}</p>
           <div class="address-list">
             <div
               class="address-img-box"

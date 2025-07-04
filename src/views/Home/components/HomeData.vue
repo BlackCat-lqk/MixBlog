@@ -5,13 +5,13 @@
         <n-statistic tabular-nums>
           <n-number-animation ref="numberAnimationInstRef" :from="0" :to="state.totalCount" />
         </n-statistic>
-        <p>总访问量</p>
+        <p>{{ $t('homeData.total1') }}</p>
       </div>
       <div class="today-data">
         <n-statistic tabular-nums>
           <n-number-animation ref="numberAnimationInstRef" :from="0" :to="state.todayCount" />
         </n-statistic>
-        <p>今日访问量</p>
+        <p>{{ $t('homeData.total2') }}</p>
       </div>
     </div>
     <div class="home-data-banner">

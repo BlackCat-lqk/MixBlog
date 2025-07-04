@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="random-notes-comment">评论暂未开放...</div>
+      <div class="random-notes-comment">{{ $t('notes.content3') }}</div>
     </div>
     <div class="random-notes-content">
       <notes-card :notesDetail="notesDetail"></notes-card>

@@ -3,7 +3,6 @@
     <n-modal v-model:show="showModal" :mask-closable="false">
       <n-card
         style="width: 600px"
-        :title="$t('login.retrievePwd')"
         :bordered="false"
         size="huge"
         role="dialog"
