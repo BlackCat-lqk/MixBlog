@@ -40,6 +40,11 @@ const router = createRouter({
       name: 'About',
       component: () => import('@/views/About/AboutView.vue'),
     },
+    {
+      path: '/book-doc',
+      name: 'BookDoc',
+      component: () => import('@/views/BookDoc/DocumentView.vue'),
+    },
     // {
     //   path: '/bms/LogCenter',
     //   name: 'LogCenter',
