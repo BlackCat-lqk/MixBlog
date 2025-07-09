@@ -29,7 +29,9 @@
             </template>
           </n-input>
           <template #header>
-            <div v-if="state.searchHistory.length > 0" class="search-history">{{ t('header.search.tip1') }}</div>
+            <div v-if="state.searchHistory.length > 0" class="search-history">
+              {{ t('header.search.tip1') }}
+            </div>
             <p v-for="(item, idx) in state.searchHistory" :key="idx">{{ item }}</p>
           </template>
           <template #empty>
@@ -38,7 +40,9 @@
             </n-empty>
           </template>
           <template #action>
-            <div><n-button @click="clearHistory">{{ t('header.search.tip3') }}</n-button></div>
+            <div>
+              <n-button @click="clearHistory">{{ t('header.search.tip3') }}</n-button>
+            </div>
           </template>
         </n-popselect>
       </div>
@@ -50,6 +54,13 @@
           @click="jumpPage(item.path, idx)"
         >
           {{ item.title }}
+        </div>
+      </div>
+      <div class="menu-item-box">
+        <div class="menu-item-text">
+          <n-dropdown trigger="hover" :options="moreData" @select="handleMoreSelect">
+            <img src="@/assets/images/More.svg" />
+          </n-dropdown>
         </div>
       </div>
     </div>
@@ -138,6 +149,20 @@ const showForgotPwdModal = ref(false)
 const changeLanguage = (lang: string) => {
   locale.value = lang
   localStorage.setItem('locale', lang)
+}
+const moreData = [
+  {
+    label: '书籍文档',
+    key: 'doc',
+  },
+  {
+    label: '集成网站',
+    key: 'web',
+  },
+]
+// 选择更多选项
+const handleMoreSelect = (key: string | number) => {
+  console.log(key)
 }
 const routerPage = reactive([
   {
@@ -377,6 +402,11 @@ onMounted(() => {
         padding-bottom: 10px;
         cursor: pointer;
         color: var(--text-color);
+        display: flex;
+        align-items: center;
+        img {
+          width: 32px;
+        }
       }
 
       .active {
@@ -433,7 +463,7 @@ onMounted(() => {
     }
     .language-select-box {
       margin-right: 10px;
-      .n-select{
+      .n-select {
         width: 100px;
       }
     }
