@@ -109,6 +109,12 @@ const router = createRouter({
       component: () => import('@/views/BMS/UserManagement/UserManagement.vue'),
       meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
     },
+    {
+      path: '/bms/book-doc',
+      name: 'BookDoc',
+      component: () => import('@/views/BMS/BookDoc/BookDoc.vue'),
+      meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
+    },
     // 通配符路由必须放在最后
     {
       path: '/:pathMatch(.*)*',
