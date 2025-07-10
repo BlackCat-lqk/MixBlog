@@ -10,10 +10,19 @@
       <div class="main-router-box">
         <div class="book-doc-list-box">
           <n-button
+            type="info"
             v-for="(item, idx) in fileListData"
             :key="idx"
-            @click="handleDownload(item.path)"
-            >{{ item.filename }}</n-button
+            >{{ item.filename }}
+            <template #icon>
+            <n-icon @click="deleteBookDoc(item)">
+              <img style="width: 18px;" src="@/assets/images/DeleteHover.svg">
+            </n-icon>
+            <n-icon @click="handleDownload(item)">
+              <img style="width: 18px;" src="@/assets/images/Download.svg">
+            </n-icon>
+          </template>
+            </n-button
           >
         </div>
         <div class="upload-box">
@@ -34,12 +43,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import type { UploadFileInfo } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import { uploadBookDocApi, getBookDocApi } from '@/http/uploadFile'
+import { uploadBookDocApi, getBookDocApi, deleteBookDocApi } from '@/http/uploadFile'
 import { useMessage } from 'naive-ui'
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
@@ -66,13 +75,34 @@ const fileForm: formType = reactive({
   tempFile: null,
 })
 
+interface bookDocType {
+  filename: string
+  path: string
+  _id: string
+}
+
 // 自定义上传函数（不实际上传）
 const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
   fileForm.tempFile = file
 }
 // 下载文件
-const handleDownload = (url: string) => {
-  window.open(url, '_blank')
+const handleDownload = (data: bookDocType) => {
+  const link = document.createElement('a');
+  link.href = data.path;
+  link.download = data.filename;
+  link.click();
+}
+
+// 删除文件
+const deleteBookDoc = async (data: bookDocType) => {
+  const response = await deleteBookDocApi(data._id)
+  const res = response.data
+  if (res.code === 200) {
+    message.success(res.message)
+    getBookDocList()
+  } else {
+    message.error(res.message)
+  }
 }
 
 // 开始上传
@@ -94,13 +124,12 @@ const handleUploadFile = async () => {
 }
 
 // 获取文档列表
-let fileListData = reactive([])
+const fileListData = ref([] as bookDocType[])
 const getBookDocList = async () => {
   const response = await getBookDocApi()
   const res = response.data
   if (res.code === 200) {
-    fileListData = res.data
-    console.log(fileListData)
+    fileListData.value = res.data
   } else {
     message.error(res.message)
   }
@@ -119,5 +148,9 @@ a
   padding: 10px;
   gap: 12px;
   display: flex;
+  .book-doc-list-box{
+    display: flex;
+    gap: 24px;
+  }
 }
 </style>

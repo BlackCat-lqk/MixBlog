@@ -111,7 +111,7 @@ const router = createRouter({
     },
     {
       path: '/bms/book-doc',
-      name: 'BookDoc',
+      name: 'BmsBookDoc',
       component: () => import('@/views/BMS/BookDoc/BookDoc.vue'),
       meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
     },

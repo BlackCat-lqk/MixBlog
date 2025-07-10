@@ -16,3 +16,13 @@ export function uploadBookDocApi(params: unknown) {
 export function getBookDocApi() {
   return request.get('/files')
 }
+
+/**
+ * 删除书籍文件
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function deleteBookDocApi(params: unknown) {
+  return request.delete(`/files/${params}`)
+}
+

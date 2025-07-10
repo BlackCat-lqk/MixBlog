@@ -10,18 +10,18 @@
       <div class="classify-box"></div>
       <div class="doc-list-box">
         <n-grid :x-gap="12" :y-gap="12" :cols="4">
-          <n-grid-item v-for="(item, idx) in 10" :key="idx">
-            <n-card hoverable>
-              <h3>文件名称:{{ item }}</h3>
-              <p>文件描述:{{ idx }}</p>
+          <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
+            <n-card hoverable :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 60%; background-position: center center;`">
+              <h3>{{ item.filename }}</h3>
+              <p>描述：{{ item.description }}</p>
               <div class="doc-info">
-                <span>类型：PDF</span>
-                <span>大小：2.4MB</span>
-                <span>时间：2023-11-15</span>
+                <span>类型：{{ item.suffix }}</span>
+                <span>大小：{{ item.size }}</span>
+                <span>时间：{{ item.updatedAt }}</span>
               </div>
               <div class="btn-box">
-                <n-button type="primary" @click="downloadFile">下载</n-button>
-                <n-button @click="showPreview = true">在线预览</n-button>
+                <n-button type="primary" @click="downloadFile(item)">下载</n-button>
+                <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
               </div>
             </n-card>
           </n-grid-item>
@@ -29,31 +29,73 @@
       </div>
     </div>
   </div>
-  <GeneralPreview v-if="showPreview" :fileUrl="data.fileUrl" :fileName="data.fileName"></GeneralPreview>
+  <GeneralPreview v-if="showPreview" :fileUrl="previewData.path" :fileName="previewData.filename"></GeneralPreview>
   <footer>
     <FooterNav></FooterNav>
   </footer>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import GeneralPreview from '@/views/PreviewComponent/GeneralPreview.vue'
+import { getBookDocApi } from '@/http/uploadFile'
+import { useMessage } from 'naive-ui'
+const message = useMessage()
 
+interface BookDocData {
+  filename: string
+  category: string
+  path: string
+  size: number
+  updatedAt: string
+  suffix: string
+  description: string
+}
+const previewData = ref({
+  path: '',
+  filename: ''
+})
+const bookDocData = ref([] as BookDocData[] )
 
 const showPreview = ref(false);
-const data = {
-  fileUrl: '/uploads/fileList/充电.docx',
-  fileName: '充电.docx'
-}
+
+// 根据文件后缀改变背景
+const changeBg = {
+  pdf: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
+  doc: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
+  docx: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
+} as Record<string, string>;
+
 // 下载文件
-const downloadFile = () => {
+const downloadFile = (data: BookDocData) => {
   const link = document.createElement('a');
-  link.href = data.fileUrl;
-  link.download = data.fileName;
+  link.href = data.path;
+  link.download = data.filename;
   link.click();
 };
+// 获取预览信息
+const getPreviewDetail = (data: BookDocData) => {
+  showPreview.value = true
+  previewData.value.path = data.path
+  previewData.value.filename = data.filename
+}
+// 获取文件列表
+const getBookDocDataList = async () => {
+  const response = await getBookDocApi()
+  const res = response.data
+  if (res.code === 200) {
+    bookDocData.value = res.data
+  } else {
+    message.error(res.message)
+  }
+}
+
+onMounted(() => {
+  getBookDocDataList()
+});
+
 </script>
 
 <style lang="scss" scoped>
@@ -76,14 +118,11 @@ const downloadFile = () => {
       flex: 1;
       display: flex;
       :deep(.n-card){
-        height: 100%;
         border-radius: 5px;
-        background: url("@/assets/images/file/pdf.svg") no-repeat;
-        background-size: 100%;
-        background-position: center center;
         .n-card__content{
-          backdrop-filter: blur(15px);
           border-radius: 5px;
+          background-color: var(--box-bg-color7);
+          backdrop-filter: blur(2px);
         }
         h3 {
           font-size: 14px;
