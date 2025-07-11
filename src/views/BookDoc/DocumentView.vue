@@ -4,6 +4,7 @@
   </header>
   <div class="document-box">
     <div class="search-box">
+      <h3>书籍文档</h3>
       <n-input round placeholder="搜索"> </n-input>
     </div>
     <div class="content-box">
@@ -11,7 +12,10 @@
       <div class="doc-list-box">
         <n-grid :x-gap="12" :y-gap="12" :cols="4">
           <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
-            <n-card hoverable :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 60%; background-position: center center;`">
+            <n-card
+              hoverable
+              :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 60%; background-position: center center;`"
+            >
               <h3>{{ item.filename }}</h3>
               <p>描述：{{ item.description }}</p>
               <div class="doc-info">
@@ -29,7 +33,11 @@
       </div>
     </div>
   </div>
-  <GeneralPreview v-if="showPreview" :fileUrl="previewData.path" :fileName="previewData.filename"></GeneralPreview>
+  <GeneralPreview
+    v-if="showPreview"
+    :fileUrl="previewData.path"
+    :fileName="previewData.filename"
+  ></GeneralPreview>
   <footer>
     <FooterNav></FooterNav>
   </footer>
@@ -55,26 +63,26 @@ interface BookDocData {
 }
 const previewData = ref({
   path: '',
-  filename: ''
+  filename: '',
 })
-const bookDocData = ref([] as BookDocData[] )
+const bookDocData = ref([] as BookDocData[])
 
-const showPreview = ref(false);
+const showPreview = ref(false)
 
 // 根据文件后缀改变背景
 const changeBg = {
   pdf: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
   doc: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
   docx: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-} as Record<string, string>;
+} as Record<string, string>
 
 // 下载文件
 const downloadFile = (data: BookDocData) => {
-  const link = document.createElement('a');
-  link.href = data.path;
-  link.download = data.filename;
-  link.click();
-};
+  const link = document.createElement('a')
+  link.href = data.path
+  link.download = data.filename
+  link.click()
+}
 // 获取预览信息
 const getPreviewDetail = (data: BookDocData) => {
   showPreview.value = true
@@ -94,8 +102,7 @@ const getBookDocDataList = async () => {
 
 onMounted(() => {
   getBookDocDataList()
-});
-
+})
 </script>
 
 <style lang="scss" scoped>
@@ -104,9 +111,25 @@ onMounted(() => {
   max-width: 1480px;
   margin-top: calc(2vh + 64px);
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .search-box {
+    width: 640px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h3 {
+      color: var(--text-color1);
+      line-height: 1.34;
+      font-size: 18px;
+      padding-bottom: 10px;
+    }
+  }
   .content-box {
     display: flex;
-    margin:40px 0;
+    margin: 40px 0;
     gap: 24px;
     .classify-box {
       width: 280px;
@@ -117,9 +140,9 @@ onMounted(() => {
     .doc-list-box {
       flex: 1;
       display: flex;
-      :deep(.n-card){
+      :deep(.n-card) {
         border-radius: 5px;
-        .n-card__content{
+        .n-card__content {
           border-radius: 5px;
           background-color: var(--box-bg-color7);
           backdrop-filter: blur(2px);
@@ -128,10 +151,10 @@ onMounted(() => {
           font-size: 14px;
           font-weight: 600;
         }
-        p{
+        p {
           font-size: 12px;
         }
-        .doc-info{
+        .doc-info {
           display: flex;
           flex-direction: column;
         }

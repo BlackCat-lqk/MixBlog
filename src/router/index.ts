@@ -45,6 +45,11 @@ const router = createRouter({
       name: 'BookDoc',
       component: () => import('@/views/BookDoc/DocumentView.vue'),
     },
+    {
+      path: '/cover-illustration',
+      name: 'CoverIllustration',
+      component: () => import('@/views/CoverIllustration/CoverIllustration.vue'),
+    },
     // {
     //   path: '/bms/LogCenter',
     //   name: 'LogCenter',

@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/require-default-prop -->
 <template>
-  <div class="header-main-box" :style="{ background: bgColor }">
-    <div class="background-blur" :style="{ filter: `blur(${opacity}px)` }"></div>
+  <div class="header-main-box">
+    <div class="background-blur"></div>
     <div class="header-logo-search-box">
       <div class="header-logo-box">
         <img :src="sloganStore.sloganConfig.logoPicture" />
@@ -59,7 +59,9 @@
       <div class="menu-item-box">
         <div class="menu-item-text">
           <n-dropdown trigger="hover" :options="moreData" @select="handleMoreSelect">
-            <img src="@/assets/images/More.svg" />
+            <div class="more-item-box">
+              <img src="@/assets/images/More.svg" />
+            </div>
           </n-dropdown>
         </div>
       </div>
@@ -117,7 +119,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, reactive, onMounted, onBeforeMount, computed } from 'vue'
+import { ref, reactive, onMounted, onBeforeMount, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScroll } from '@vueuse/core'
 import { useThemeStore } from '@/stores/themeStore'
@@ -139,8 +141,6 @@ const themeStore = useThemeStore()
 const globalSearchStore = useGlobalSearchStore()
 const message = useMessage()
 const { y } = useScroll(window)
-const opacity = ref(0)
-const bgColor = ref('transparent')
 const languages = [
   { label: 'English', value: 'en-US' },
   { label: '中文', value: 'zh-CN' },
@@ -153,16 +153,21 @@ const changeLanguage = (lang: string) => {
 const moreData = [
   {
     label: '书籍文档',
-    key: 'doc',
+    key: '/book-doc',
   },
   {
-    label: '集成网站',
-    key: 'web',
+    label: '站点收录',
+    key: '/site-nav',
+  },
+  {
+    label: '封面立绘',
+    key: '/cover-illustration',
   },
 ]
 // 选择更多选项
-const handleMoreSelect = (key: string | number) => {
-  console.log(key)
+const handleMoreSelect = (key: string) => {
+  router.push(key)
+  state.activeRouter = -1
 }
 const routerPage = reactive([
   {
@@ -188,7 +193,7 @@ const routerPage = reactive([
 ])
 const showSetUserModal = ref(false)
 const state = reactive({
-  activeRouter: 0,
+  activeRouter: -1,
   searchQuery: '',
   switchTheme: false,
   searchHistory: [],
@@ -226,7 +231,6 @@ const handleChangeTheme = (value: boolean) => {
     state.headerColorTheme = '#000'
   }
   themeStore.setTheme(value ? 'light' : 'dark')
-  bgColorInit(y.value)
 }
 
 const handleGlobalSearch = async () => {
@@ -316,20 +320,6 @@ const initTheme = () => {
     state.headerColorTheme = '#000'
   }
 }
-
-const bgColorInit = (value: number) => {
-  const maxOpacityScroll = 100
-  if (value >= maxOpacityScroll) {
-    opacity.value = Math.min(value / maxOpacityScroll, 30)
-    bgColor.value = state.headerColorTheme
-  } else {
-    bgColor.value = 'transparent'
-  }
-}
-
-watch(y, (newVal) => {
-  bgColorInit(newVal)
-})
 onBeforeMount(() => {
   y.value = 0
   initTheme()
@@ -353,7 +343,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-
+  backdrop-filter: blur(50px);
   .header-logo-search-box {
     z-index: 1;
     @include g.flexCenter;
@@ -404,8 +394,13 @@ onMounted(() => {
         color: var(--text-color);
         display: flex;
         align-items: center;
-        img {
-          width: 32px;
+        .more-item-box {
+          display: flex;
+          align-items: center;
+          border-radius: 10px;
+          img {
+            width: 32px;
+          }
         }
       }
 

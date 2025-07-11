@@ -11,7 +11,12 @@
     >
       <div>
         <n-form ref="editFormRef" inline :model="editFormValue" :rules="rules">
-          <n-form-item :span="12" style="width: 100%" :label="$t('header.personSet.email')" path="email">
+          <n-form-item
+            :span="12"
+            style="width: 100%"
+            :label="$t('header.personSet.email')"
+            path="email"
+          >
             <n-input v-model:value="editFormValue.email" disabled />
           </n-form-item>
           <n-form-item style="width: 100%" :label="$t('header.personSet.avatar')">
@@ -33,8 +38,16 @@
               />
             </div>
           </n-form-item>
-          <n-form-item style="width: 100%" :span="12" :label="$t('header.personSet.username')" path="userName">
-            <n-input v-model:value="editFormValue.userName" :placeholder="$t('header.personSet.usernamePlaceholder')" />
+          <n-form-item
+            style="width: 100%"
+            :span="12"
+            :label="$t('header.personSet.username')"
+            path="userName"
+          >
+            <n-input
+              v-model:value="editFormValue.userName"
+              :placeholder="$t('header.personSet.usernamePlaceholder')"
+            />
           </n-form-item>
           <n-form-item style="width: 100%" :span="12" :label="$t('header.personSet.intro')">
             <n-input
@@ -74,7 +87,9 @@
       <template #footer>
         <n-space style="display: flex; justify-content: flex-end">
           <n-button @click="cancelUpdate">{{ t('header.personSet.cancelBtn') }}</n-button>
-          <n-button type="info" @click="confirmUpdate">{{ t('header.personSet.saveBtn') }}</n-button>
+          <n-button type="info" @click="confirmUpdate">{{
+            t('header.personSet.saveBtn')
+          }}</n-button>
         </n-space>
       </template>
     </n-card>
@@ -221,7 +236,7 @@ onMounted(() => {
 .personal-info-box {
   display: flex;
   gap: 24px;
-  margin-bottom: 24px;
+  // margin-bottom: 24px;
   .personal-box {
     flex: 1;
     display: flex;
