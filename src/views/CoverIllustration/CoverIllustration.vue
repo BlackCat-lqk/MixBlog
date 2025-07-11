@@ -3,33 +3,14 @@
     <HeaderNav></HeaderNav>
   </header>
   <div class="i-cover-image-box">
-    <!-- <n-marquee>
-        <n-image width="192" height="108" src="@/assets/wallpaper/juequ2.png" />
-      </n-marquee> -->
     <div class="cover-face-bg-box">
-      <div class="marquee-box">
-        <n-marquee auto-fill speed="24">
-          <template #default>
-            <div style="display: flex">
-              <div class="photo-item">
-                <n-image width="384" height="216" src="/uploads/fileList/juequ3.png" />
-              </div>
-            </div>
-          </template>
-        </n-marquee>
-      </div>
+      <MarqueeView :items="imageArray"
+      direction="left"
+      :speed="160"></MarqueeView>
 
-      <div class="marquee2-box">
-        <n-marquee auto-fill speed="24">
-          <template #default>
-            <div style="display: flex">
-              <div class="photo-item">
-                <n-image width="384" height="216" src="/uploads/fileList/juequ6.png" />
-              </div>
-            </div>
-          </template>
-        </n-marquee>
-      </div>
+      <MarqueeView :items="imageArray"
+      direction="right"
+      :speed="60"></MarqueeView>
     </div>
   </div>
   <footer>
@@ -40,6 +21,12 @@
 <script lang="ts" setup>
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
+import MarqueeView from '@/views/CoverIllustration/MarqueeView.vue'
+
+const imageArray = [
+  '/uploads/fileList/juequ6.png',
+  '/uploads/fileList/juequ3.png',
+]
 </script>
 
 <style lang="scss" scoped>
