@@ -9,10 +9,13 @@ import { setRem } from '@/utils/deviceUtils'
 import App from './App.vue'
 import router from './router'
 import i18n from './locales'
+// 注册指令
+import vPreventScrollPassthrough from './directives/preventScrollPassthrough'
 
 setRem()
 
 const app = createApp(App)
+app.directive('prevent-scroll-passthrough', vPreventScrollPassthrough)
 app.use(i18n)
 app.use(pinia)
 app.use(router)

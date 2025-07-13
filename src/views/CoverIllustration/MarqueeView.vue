@@ -1,10 +1,5 @@
 <template>
-  <div
-    ref="containerRef"
-    class="marquee-container"
-    @mouseenter="pause"
-    @mouseleave="play"
-  >
+  <div ref="containerRef" class="marquee-container" @mouseenter="pause" @mouseleave="play">
     <div
       class="marquee-content"
       :class="{ 'is-paused': !isPlaying }"
@@ -41,7 +36,7 @@ const props = withDefaults(defineProps<MarqueeProps>(), {
   direction: 'left',
   speed: 30,
   itemWidth: 384,
-  itemHeight: 216
+  itemHeight: 216,
 })
 
 const isPlaying = ref(true)
@@ -64,12 +59,16 @@ const marqueeStyle = computed<CSSProperties>(() => {
     animation: `${animationName.value} ${duration}s linear infinite` as string,
     animationPlayState: isPlaying.value ? 'running' : 'paused',
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   }
 })
 
-const play = () => { isPlaying.value = true }
-const pause = () => { isPlaying.value = false }
+const play = () => {
+  isPlaying.value = true
+}
+const pause = () => {
+  isPlaying.value = false
+}
 
 function injectKeyframes() {
   const distance = animationDistance.value
@@ -113,7 +112,7 @@ onMounted(() => {
   watch(
     () => props.items,
     () => nextTick(updateSizes),
-    { immediate: true }
+    { immediate: true },
   )
 })
 </script>
@@ -122,17 +121,18 @@ onMounted(() => {
 .marquee-container {
   overflow: hidden;
   position: relative;
-  width: 100%;
+  // width: 100%;
   height: 236px;
   border-radius: 10px;
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(30, 30, 30, 0.25));
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  margin: 25px 10px;
   &:hover {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.25), rgba(40, 40, 40, 0.3));
     .marquee-image {
-      transform: scale(1.03);
+      transform: scale(1.02);
       box-shadow: 0 12px 25px rgba(0, 0, 0, 0.7);
       border-color: rgba(255, 255, 255, 0.3);
     }
@@ -149,9 +149,9 @@ onMounted(() => {
 .marquee-item {
   flex-shrink: 0;
   /* width/height 由 :style 绑定 */
-  padding: 15px;
   transition: transform 0.3s ease-out;
   box-sizing: border-box;
+  margin: 0 15px;
 }
 .marquee-image {
   width: 100%;
@@ -160,7 +160,7 @@ onMounted(() => {
   object-fit: cover;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   transition: all 0.3s ease;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 @keyframes marquee-scroll-left {
   0% {
