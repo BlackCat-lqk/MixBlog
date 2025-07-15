@@ -46,6 +46,11 @@ const router = createRouter({
       component: () => import('@/views/BookDoc/DocumentView.vue'),
     },
     {
+      path: '/site-navigation',
+      name: 'SiteNav',
+      component: () => import('@/views/SiteNav/SiteNav.vue'),
+    },
+    {
       path: '/cover-illustration',
       name: 'CoverIllustration',
       component: () => import('@/views/CoverIllustration/CoverIllustration.vue'),
