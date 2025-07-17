@@ -1,14 +1,12 @@
 <template>
-  <div class="site-nav-main">
-    <div class="favicon-box">
-      <img :src="targetUrl" alt="favicon" />
-    </div>
+  <div class="favicon-box">
+    <img :src="targetUrl" alt="favicon" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { getFavicon } from '../../utils/getFavicon'
+import { getFavicon } from '@/utils/getFavicon'
 
 const targetUrl = ref('' as string)
 
@@ -29,7 +27,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.site-nav-main {
+.favicon-box {
   width: 30px;
 }
 

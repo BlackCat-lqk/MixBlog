@@ -62,6 +62,11 @@ const menu = reactive(
       icon: new URL('@/assets/images/file/file.svg', import.meta.url).href,
     },
     {
+      name: '站点收录',
+      path: '/bms/site-nav',
+      icon: new URL('@/assets/images/Site.svg', import.meta.url).href,
+    },
+    {
       name: '日志中心',
       path: '/bms/LogCenter',
       icon: new URL('@/assets/images/LogCenter.svg', import.meta.url).href,

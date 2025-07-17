@@ -55,15 +55,16 @@ const router = createRouter({
       name: 'CoverIllustration',
       component: () => import('@/views/CoverIllustration/CoverIllustration.vue'),
     },
-    // {
-    //   path: '/bms/LogCenter',
-    //   name: 'LogCenter',
-    //   component: () => import('@/views/BMS/Logs/LogView.vue'),
-    // }
     {
       path: '/unauthorized',
       name: 'Unauthorized',
       component: () => import('@/views/UnAuthorized.vue'),
+    },
+    {
+      path: '/bms/LogCenter',
+      name: 'LogCenter',
+      component: () => import('@/views/BMS/Logs/LogView.vue'),
+      meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
     },
     {
       path: '/bms/overview',
@@ -123,6 +124,12 @@ const router = createRouter({
       path: '/bms/book-doc',
       name: 'BmsBookDoc',
       component: () => import('@/views/BMS/BookDoc/BookDoc.vue'),
+      meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
+    },
+    {
+      path: '/bms/site-nav',
+      name: 'BmsSiteNav',
+      component: () => import('@/views/BMS/SiteNav/SiteNav.vue'),
       meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
     },
     // 通配符路由必须放在最后

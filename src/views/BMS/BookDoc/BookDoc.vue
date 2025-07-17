@@ -20,7 +20,11 @@
         </div>
         <div>
           <div class="doc-list-box">
-            <n-grid :x-gap="12" :y-gap="12" :cols="4">
+            <n-grid
+              :x-gap="12"
+              :y-gap="12"
+              :cols="7"
+            >
               <n-grid-item v-for="(item, idx) in fileListData" :key="idx">
                 <n-card
                   hoverable
@@ -136,9 +140,9 @@ interface bookDocType {
 
 const handleInputCategory = _.debounce((val: string) => {
   console.log(val)
-  if(val){
+  if (val) {
     btnStatus.value = false
-  }else {
+  } else {
     btnStatus.value = true
   }
 }, 300)
@@ -176,7 +180,7 @@ const deleteBookDoc = async (data: bookDocType) => {
 
 // 开始上传
 const handleUploadFile = async () => {
-  if(!fileForm.category) return
+  if (!fileForm.category) return
   // 调用文件上传接口
   if (fileForm.tempFile && fileForm.tempFile.file) {
     const formData = new FormData()
@@ -232,10 +236,9 @@ a
     gap: 24px;
     .category-item {
       width: auto;
-      height: 40px;
-      border: 1px solid #d8dce0;
-      border-radius: 8px;
-      box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.1);
+      height: 32px;
+      border: 1px solid #67737c;
+      border-radius: 5px;
       display: flex;
       align-items: center;
       padding: 5px 10px;
@@ -258,8 +261,11 @@ a
   .doc-list-box {
     flex: 1;
     display: flex;
+    padding: 10px;
     :deep(.n-card) {
       border-radius: 5px;
+      min-width: 220px;
+      box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
       .n-card__content {
         border-radius: 5px;
         background-color: var(--box-bg-color7);
