@@ -9,6 +9,9 @@
     </div>
     <n-divider />
     <div class="footer-bottom-text">{{ $t('footer.content') }}</div>
+    <div class="icp-filing-text">
+      <span>备案/许可证</span>
+      <span><a href="https://beian.miit.gov.cn/#/Integrated/index">桂ICP备2025066402号</a></span></div>
   </div>
 </template>
 
@@ -98,6 +101,23 @@ const supportData = [
   }
   .footer-bottom-text {
     color: var(--text-color);
+  }
+  .icp-filing-text {
+    span{
+      color: rgba(11, 25, 38, .72);
+      font-size: 14px;
+      line-height: 1.54;
+      font-weight: 400;
+      a{
+        padding-left: 10px;
+        color: rgba(11, 25, 38, .72);
+        &:hover{
+          color: #0AA9DB;
+          text-decoration-line: underline;
+        }
+      }
+    }
+
   }
 }
 </style>

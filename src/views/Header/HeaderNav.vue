@@ -157,7 +157,7 @@ const moreData = [
   },
   {
     label: '站点收录',
-    key: '/site-nav',
+    key: '/site-navigation',
   },
   {
     label: '封面立绘',
