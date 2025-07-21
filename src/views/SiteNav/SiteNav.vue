@@ -88,8 +88,7 @@
               class="card-item"
               v-for="(item, idx) in f.data"
               :key="idx"
-              :href="item.url"
-              target="_blank"
+              @click.prevent="handleLinkClick(item.url)"
             >
               <h3>
                 <div class="link-logo">
@@ -111,9 +110,11 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
+import { useMessage } from 'naive-ui'
 // import { getFavicon } from '../../utils/getFavicon'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
+const message = useMessage()
 
 // const targetUrl = ref('' as string)
 const showCreateUrl = ref(false)
@@ -163,6 +164,14 @@ const rules = {
 // 展开触发
 const handleUpdateExpanded = (expandedNames: Array<string | number> | string | number | null) => {
   console.log('handleUpdateExpanded', expandedNames)
+}
+
+// 外部网站跳转
+const handleLinkClick = (url: string) => {
+  message.info('3秒后即将跳转到外部网站', { duration: 3000 })
+  setTimeout(() => {
+    window.open(url, '_blank')
+  }, 3000)
 }
 
 // 获取网站图标

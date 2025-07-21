@@ -63,7 +63,7 @@ const router = createRouter({
     {
       path: '/bms/LogCenter',
       name: 'LogCenter',
-      component: () => import('@/views/BMS/Logs/LogView.vue'),
+      component: () => import('@/views/BMS/LogsCenter/LogView.vue'),
       meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
     },
     {
