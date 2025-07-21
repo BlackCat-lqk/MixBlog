@@ -1,6 +1,14 @@
 <template>
   <n-config-provider style="width: 100%; height: 100%" :theme="null">
     <div class="register-login-main-box">
+      <Aurora
+        :color-stops="['#7cff67', '#171D22', '#7cff67']"
+        :amplitude="1.0"
+        :blend="0.5"
+        :speed="1.0"
+        :intensity="1.0"
+        class="w-full h-full"
+      />
       <div class="register-login-box">
         <div class="left-info-box">
           <div class="content-box">
@@ -25,7 +33,7 @@
 import { ref } from 'vue'
 import LoginView from './components/LoginView.vue'
 import RegisterView from './components/RegisterView.vue'
-
+import Aurora from '@/views/VueBits/BitsAurora.vue'
 
 const isLogin = ref(true)
 </script>
@@ -51,6 +59,12 @@ const isLogin = ref(true)
   backdrop-filter: blur(10px);
   animation: smoothGradientFlow 15s ease infinite;
   @include g.flexCenter;
+  .aurora-container {
+    width: 100%;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+  }
   .register-login-box {
     display: flex;
     width: 600px;

@@ -6,7 +6,11 @@
           v-model:value="formValue.email"
           clearable
           :placeholder="$t('common.emailPlaceholder')"
-        />
+        >
+        <template #prefix>
+          <img width="20px" src="@/assets/images/Email.svg">
+        </template>
+      </n-input>
       </n-form-item>
       <n-form-item :label="$t('common.pwd')" path="password">
         <n-input
@@ -15,7 +19,11 @@
           clearable
           show-password-on="mousedown"
           :placeholder="$t('common.pwdPlaceholder')"
-        />
+        >
+        <template #prefix>
+          <img width="20px" src="@/assets/images/passWord.svg">
+        </template>
+      </n-input>
       </n-form-item>
       <div>
         <span @click="handelforgotPwd">{{ $t('login.forgotPwd') }}</span>
