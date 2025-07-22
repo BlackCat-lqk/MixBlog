@@ -58,6 +58,9 @@
                 <img v-else src="@/assets/images/BlibliWhite.svg" />
               </n-icon>
             </div>
+            <StarBorder as="button" color="white" speed="2s" :thickness="3">
+              Star Border
+            </StarBorder>
           </div>
         </div>
       </div>
@@ -69,6 +72,7 @@
 import { useScrollStore } from '@/stores/scrollStore'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import { useThemeStore } from '@/stores/themeStore'
+import StarBorder from '@/views/VueBits/StarBorder.vue'
 const themeStore = useThemeStore()
 const sloganStore = useSloganInfoStore()
 

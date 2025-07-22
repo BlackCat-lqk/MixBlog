@@ -56,6 +56,11 @@ const router = createRouter({
       component: () => import('@/views/CoverIllustration/CoverIllustration.vue'),
     },
     {
+      path: '/d-chat',
+      name: 'DeepSeekChat',
+      component: () => import('@/views/Chat/DeepSeekChat.vue'),
+    },
+    {
       path: '/unauthorized',
       name: 'Unauthorized',
       component: () => import('@/views/UnAuthorized.vue'),
