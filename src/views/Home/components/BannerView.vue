@@ -35,35 +35,19 @@
             <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" />
           </n-icon>
         </div>
-        <div class="relevant-address">
-          <p>{{ $t('banner.content') }}</p>
-          <div class="address-list">
-            <div
-              class="address-img-box"
-              @click="redirectToExternal('https://github.com/BlackCat-lqk/MixBlog')"
-            >
-              <n-icon size="40">
-                <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/Github.svg" />
-                <img v-else src="@/assets/images/GithubWhite.svg" />
-              </n-icon>
-            </div>
-            <div
-              class="address-img-box"
-              @click="
-                redirectToExternal('https://space.bilibili.com/154164424?spm_id_from=333.1007.0.0')
-              "
-            >
-              <n-icon size="40">
-                <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/Blibli.svg" />
-                <img v-else src="@/assets/images/BlibliWhite.svg" />
-              </n-icon>
-            </div>
-            <StarBorder as="button" color="white" speed="2s" :thickness="3">
-              Star Border
-            </StarBorder>
-          </div>
+        <div class="chat-ai-btn" @click="router.push('/d-chat')">
+          <span class="pure-text-glow">MIX AI</span>
         </div>
       </div>
+    </div>
+    <div class="relative overflow-hidden">
+      <LiquidChrome
+        class="ripple-grid"
+        :baseColor="[0.1, 0.1, 0.3]"
+        :speed="0.3"
+        :amplitude="0.3"
+        :interactive="false"
+      />
     </div>
   </div>
 </template>
@@ -72,7 +56,8 @@
 import { useScrollStore } from '@/stores/scrollStore'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import { useThemeStore } from '@/stores/themeStore'
-import StarBorder from '@/views/VueBits/StarBorder.vue'
+import LiquidChrome from '@/views/VueBits/RippleGrid.vue'
+import router from '@/router'
 const themeStore = useThemeStore()
 const sloganStore = useSloganInfoStore()
 
@@ -80,9 +65,6 @@ const scrollStore = useScrollStore()
 const handelScrollDown = () => {
   const nowDate = new Date()
   scrollStore.scrollTo('scorll' + nowDate)
-}
-const redirectToExternal = (url: string) => {
-  window.open(url, '_blank')
 }
 </script>
 
@@ -93,12 +75,23 @@ const redirectToExternal = (url: string) => {
   margin: 64px 0;
   align-items: center;
   position: relative;
+  background-color: var(--box-bg-color1);
+  border-radius: 10px;
+  overflow: hidden;
+  .ripple-grid {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 1480px;
+    height: 800px;
+  }
   .banner-left {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-right: 80px;
+    z-index: 1;
     @keyframes scrollDown {
       0% {
         transform: translateY(0);
@@ -145,40 +138,59 @@ const redirectToExternal = (url: string) => {
       letter-spacing: 0.1em;
       font-family: 'Courier New', Courier, monospace;
     }
-    .relevant-address {
+    .chat-ai-btn {
+      cursor: pointer;
+      margin-left: 30px;
+      position: relative;
+      width: 132px;
       display: flex;
-      align-items: flex-end;
-      P {
-        padding: 0px;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(90deg, #40ffaa, #4079ff, #40ffaa, #4079ff, #40ffaa);
+      border-radius: 50%;
+      background-size: 400%;
+      animation: gradient-text 50s linear infinite;
+      .pure-text-glow {
+        background: linear-gradient(90deg, #40ffaa, #4079ff, #40ffaa, #4079ff, #40ffaa);
+        background-size: 400% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradient-text 20s linear infinite;
         font-size: 24px;
-        line-height: 36px;
-        font-weight: normal;
-        font-family: 'Courier New', Courier, monospace;
-        color: var(--text-color);
+        font-weight: bold;
+        text-shadow: none;
+        box-shadow: none;
+        z-index: 1;
       }
-      .address-list {
-        display: flex;
-        align-items: center;
-        .address-img-box {
-          width: 50px;
-          height: 50px;
-          border-radius: 15px;
-          margin-left: 20px;
-          @include g.flexCenter;
-          cursor: pointer;
-          border: 1px solid #ccc;
-          &:hover {
-            border: 1px solid #5dc0fe;
-          }
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
+    }
+    .chat-ai-btn::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      right: 3px;
+      bottom: 3px;
+      background: var(--box-bg-color1);
+      background-size: 400%;
+      border-radius: 50%;
+      filter: blur(4px);
+      z-index: 0;
+    }
+    @keyframes gradient-text {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 400% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
       }
     }
   }
   .banner-pic {
+    z-index: 1;
     flex: 1;
     img {
       width: 80%;

@@ -336,7 +336,7 @@ onMounted(() => {
   .site-classify {
     width: 220px;
     height: auto;
-    background-color: #fff;
+    background-color: var(--box-bg-color1);
     padding: 10px 20px;
     display: flex;
     flex-direction: column;
@@ -363,7 +363,7 @@ onMounted(() => {
     flex-direction: column;
     gap: 12px;
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--box-bg-color1);
     padding: 10px 15px;
     .site-content-search-box {
       display: flex;
@@ -412,7 +412,7 @@ onMounted(() => {
             position: relative;
             transform: translateY(0);
             transition: all 0.2s;
-            background-color: #fff;
+            background-color: var(--box-bg-color1);
             color: #666;
             border-radius: 12px;
             box-shadow: 0 0 2px -1px #e3e8f7;

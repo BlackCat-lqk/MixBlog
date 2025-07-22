@@ -41,18 +41,17 @@
           <strong v-else
             ><img width="32px" style="padding: 8px" src="@/assets/images/ChatsAI.svg"
           /></strong>
-          <!-- <div>{{ message.content }}</div> -->
           <quill-view :content="md.render(message.content)"></quill-view>
         </div>
         <div v-show="isLoading" :class="['message']">
           <strong v-show="isLoading"
             ><img width="32px" style="padding: 8px" src="@/assets/images/ChatsAI.svg" />
-            <ShinyText
-              text="正在生成..."
-              :disabled="false"
-              :speed="6"
-              class-name="your-custom-class"
-            />
+            <n-space vertical>
+              <n-skeleton height="40px" width="33%" />
+              <n-skeleton height="40px" width="66%" :sharp="false" />
+              <n-skeleton height="40px" round />
+              <n-skeleton height="40px" circle />
+            </n-space>
           </strong>
         </div>
         <div v-if="streamingResponse" class="message assistant">
@@ -96,7 +95,6 @@ import QuillView from '@/components/QuillView.vue'
 import MarkdownIt from 'markdown-it'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
-import ShinyText from '@/views/VueBits/ShinyText.vue'
 
 // 定义类型
 interface MarkdownOptions {
@@ -240,6 +238,9 @@ const sendMessage = async () => {
     }
     :deep(.ql-snow) {
       border: none;
+    }
+    :deep(.ql-editor) {
+      font-size: 18px;
     }
   }
   .chat-option-box {

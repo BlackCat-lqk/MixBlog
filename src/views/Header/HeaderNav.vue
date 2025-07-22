@@ -60,7 +60,7 @@
         <div class="menu-item-text">
           <n-dropdown trigger="hover" :options="moreData" @select="handleMoreSelect">
             <div class="more-item-box">
-              <img src="@/assets/images/More.svg" />
+              <img src="@/assets/images/moreiconfont.svg" />
             </div>
           </n-dropdown>
         </div>
@@ -108,6 +108,32 @@
             <img src="/src/assets/images/NightlightRoundSharp.svg" />
           </template>
         </n-switch>
+      </div>
+      <div
+        class="address-img-box"
+        @click="redirectToExternal('https://github.com/BlackCat-lqk/MixBlog')"
+      >
+        <n-icon size="24">
+          <img
+            width="24px"
+            v-if="themeStore.currentTheme == 'light'"
+            src="@/assets/images/Github.svg"
+          />
+          <img width="24px" v-else src="@/assets/images/GithubWhite.svg" />
+        </n-icon>
+      </div>
+      <div
+        class="address-img-box"
+        @click="redirectToExternal('https://space.bilibili.com/154164424?spm_id_from=333.1007.0.0')"
+      >
+        <n-icon size="24">
+          <img
+            width="24px"
+            v-if="themeStore.currentTheme == 'light'"
+            src="@/assets/images/Blibli.svg"
+          />
+          <img width="24px" v-else src="@/assets/images/BlibliWhite.svg" />
+        </n-icon>
       </div>
     </div>
   </div>
@@ -168,6 +194,9 @@ const moreData = [
 const handleMoreSelect = (key: string) => {
   router.push(key)
   state.activeRouter = -1
+}
+const redirectToExternal = (url: string) => {
+  window.open(url, '_blank')
 }
 const routerPage = reactive([
   {
@@ -400,6 +429,11 @@ onMounted(() => {
           border-radius: 10px;
           img {
             width: 32px;
+            transition: all 0.5s;
+            &:hover {
+              scale: 1.2;
+              transition: all 0.5s;
+            }
           }
         }
       }
@@ -466,6 +500,10 @@ onMounted(() => {
       :deep(.n-switch__rail) {
         box-shadow: 0 0 1px 1px #f7f7f7;
       }
+    }
+    .address-img-box {
+      margin-left: 10px;
+      cursor: pointer;
     }
   }
 }

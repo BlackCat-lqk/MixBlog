@@ -80,6 +80,7 @@ npm install postcss-pxtorem autoprefixer --save-dev
 使用 npx node-modules-inspector命令生成依赖可视化
 
 1.0.5 预计完善功能：
+
 1. 登录页增加是否记住密码选项（完成）
 2. 支持markdown阅读（完成）
 3. 集成书籍、小说、漫画、散文等（进行中...）
@@ -90,5 +91,5 @@ npm install postcss-pxtorem autoprefixer --save-dev
 8. 站点集成导航（进行中...）
 9. 个人中心修改密码（完成）
 10. 立绘海报（进行中..）
-11. 集成deepseek AI模型（进行中...）
+11. 集成deepseek AI模型（完成）
 12. 其它问题修复与优化
