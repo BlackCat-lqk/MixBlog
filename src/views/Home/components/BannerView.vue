@@ -84,9 +84,11 @@ const redirectToExternal = (url: string) => {
 
 <style scoped lang="scss">
 .banner {
+  width: 100%;
   display: flex;
   margin: 64px 0;
   align-items: center;
+  position: relative;
   .banner-left {
     flex: 1;
     display: flex;

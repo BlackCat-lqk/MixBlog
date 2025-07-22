@@ -2,23 +2,35 @@
   <div class="Register-main-box">
     <n-form ref="formRef" inline label-width="100%" :model="formValue" :rules="rules" size="medium">
       <n-form-item :label="$t('common.username')" path="userName">
-        <n-input v-model:value="formValue.userName" clearable :placeholder="$t('common.usernamePlaceholder')">
+        <n-input
+          v-model:value="formValue.userName"
+          clearable
+          :placeholder="$t('common.usernamePlaceholder')"
+        >
           <template #prefix>
-            <img width="20px" src="@/assets/images/username.svg">
+            <img width="20px" src="@/assets/images/username.svg" />
           </template>
         </n-input>
       </n-form-item>
       <n-form-item :label="$t('common.email')" path="email">
-        <n-input v-model:value="formValue.email" clearable :placeholder="$t('common.emailPlaceholder')">
+        <n-input
+          v-model:value="formValue.email"
+          clearable
+          :placeholder="$t('common.emailPlaceholder')"
+        >
           <template #prefix>
-            <img width="20px" src="@/assets/images/Email.svg">
+            <img width="20px" src="@/assets/images/Email.svg" />
           </template>
         </n-input>
       </n-form-item>
       <n-form-item :label="$t('common.code')" path="code">
-        <n-input v-model:value="formValue.code" clearable :placeholder="$t('common.codePlaceholder')">
+        <n-input
+          v-model:value="formValue.code"
+          clearable
+          :placeholder="$t('common.codePlaceholder')"
+        >
           <template #prefix>
-            <img width="20px" src="@/assets/images/Verification.svg">
+            <img width="20px" src="@/assets/images/Verification.svg" />
           </template>
         </n-input>
         <n-button
@@ -26,7 +38,9 @@
           :disabled="!isEmailValid || isCounting"
           style="height: 46px; width: 120px; margin-left: 10px"
           @click="handleGetCode"
-          >{{ isCounting ? `${countdown}s` + $t('common.getCode') : $t('common.resetCode') }}</n-button
+          >{{
+            isCounting ? `${countdown}s` + $t('common.resetCode') : $t('common.getCode')
+          }}</n-button
         >
       </n-form-item>
       <n-form-item :label="$t('common.pwd')" path="password">
@@ -37,10 +51,10 @@
           show-password-on="mousedown"
           :placeholder="$t('common.pwdPlaceholder')"
         >
-        <template #prefix>
-          <img width="20px" src="@/assets/images/passWord.svg">
-        </template>
-      </n-input>
+          <template #prefix>
+            <img width="20px" src="@/assets/images/passWord.svg" />
+          </template>
+        </n-input>
       </n-form-item>
       <n-form-item>
         <n-button

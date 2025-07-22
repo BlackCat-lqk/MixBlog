@@ -1,13 +1,7 @@
 <template>
   <n-modal-provider>
     <n-modal v-model:show="showModal" :mask-closable="false">
-      <n-card
-        style="width: 600px"
-        :bordered="false"
-        size="huge"
-        role="dialog"
-        aria-modal="true"
-      >
+      <n-card style="width: 600px" :bordered="false" size="huge" role="dialog" aria-modal="true">
         <n-form ref="formRef" inline label-width="100%" :model="formValue" :rules="rules">
           <div class="forget-main-box">
             <div class="steps-box">
@@ -20,16 +14,34 @@
             <div class="form-content-box">
               <div class="content-input-box" v-show="current === 1">
                 <n-form-item :label="$t('common.email')" path="email">
-                  <n-input v-model:value="formValue.email" clearable :placeholder="$t('common.emailPlaceholder')" />
+                  <n-input
+                    v-model:value="formValue.email"
+                    clearable
+                    :placeholder="$t('common.emailPlaceholder')"
+                  >
+                    <template #prefix>
+                      <img width="20px" src="@/assets/images/Email.svg" />
+                    </template>
+                  </n-input>
                 </n-form-item>
                 <n-form-item :label="$t('common.code')" path="code">
-                  <n-input v-model:value="formValue.code" clearable :placeholder="$t('common.codePlaceholder')" />
+                  <n-input
+                    v-model:value="formValue.code"
+                    clearable
+                    :placeholder="$t('common.codePlaceholder')"
+                  >
+                    <template #prefix>
+                      <img width="20px" src="@/assets/images/Verification.svg" />
+                    </template>
+                  </n-input>
                   <n-button
                     type="info"
                     :disabled="!isEmailValid || isCounting"
                     style="height: 46px; width: 120px; margin-left: 10px"
                     @click="handleGetCode"
-                    >{{ isCounting ? `${countdown}s` + $t('common.getCode') : $t('common.resetCode') }}</n-button
+                    >{{
+                      isCounting ? `${countdown}s` + $t('common.resetCode') : $t('common.getCode')
+                    }}</n-button
                   >
                 </n-form-item>
               </div>
@@ -41,7 +53,11 @@
                     clearable
                     show-password-on="mousedown"
                     :placeholder="$t('common.pwdPlaceholder')"
-                  />
+                  >
+                    <template #prefix>
+                      <img width="20px" src="@/assets/images/passWord.svg" />
+                    </template>
+                  </n-input>
                 </n-form-item>
                 <n-form-item :label="$t('common.confirmPwd')" path="confirmPassword">
                   <n-input
@@ -50,7 +66,11 @@
                     clearable
                     show-password-on="mousedown"
                     :placeholder="$t('common.confirmPwdPlaceholder')"
-                  />
+                  >
+                    <template #prefix>
+                      <img width="20px" src="@/assets/images/passWord.svg" />
+                    </template>
+                  </n-input>
                 </n-form-item>
               </div>
               <div class="content-input-box finsh-input" v-show="current === 3">
@@ -63,11 +83,15 @@
           <n-button type="info" @click="onNegativeClick" strong secondary v-show="current !== 3">
             {{ $t('common.cancel') }}
           </n-button>
-          <n-button type="info" @click="prev" v-show="current == 2"> {{ $t('login.lastStep') }} </n-button>
+          <n-button type="info" @click="prev" v-show="current == 2">
+            {{ $t('login.lastStep') }}
+          </n-button>
           <n-button type="info" @click="next" v-show="current == 1 || current == 2">
             {{ $t('login.nextStep') }}
           </n-button>
-          <n-button type="info" @click="onNegativeClick" v-show="current === 3"> {{ $t('login.finish1') }} </n-button>
+          <n-button type="info" @click="onNegativeClick" v-show="current === 3">
+            {{ $t('login.finish1') }}
+          </n-button>
         </template>
       </n-card>
     </n-modal>

@@ -1,6 +1,6 @@
 export default {
   login: {
-    forgotPwd: '忘记密码',
+    forgotPwd: '忘记密码?',
     retrievePwd: '找回密码',
     authentication: '身份验证',
     resetPwd: '重置密码',
@@ -123,6 +123,6 @@ export default {
     content: 'Mix Blog 1.0.0 · Made by LQK',
   },
   about: {
-    tagsList: "富强, 民主, 文明, 和谐, 自由,, 平等, 公正, 法治, 爱国, 敬业, 诚信, 友善",
+    tagsList: '富强, 民主, 文明, 和谐, 自由,, 平等, 公正, 法治, 爱国, 敬业, 诚信, 友善',
   },
 }

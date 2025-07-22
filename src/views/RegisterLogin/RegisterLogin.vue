@@ -2,10 +2,10 @@
   <n-config-provider style="width: 100%; height: 100%" :theme="null">
     <div class="register-login-main-box">
       <Aurora
-        :color-stops="['#7cff67', '#171D22', '#7cff67']"
-        :amplitude="1.0"
-        :blend="0.5"
-        :speed="1.0"
+        :color-stops="['#3a95df', '#167208', '#616719']"
+        :amplitude="2.0"
+        :blend="0.1"
+        :speed="0.3"
         :intensity="1.0"
         class="w-full h-full"
       />
@@ -54,14 +54,13 @@ const isLogin = ref(true)
   position: relative;
   width: 100%;
   height: 100%;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background: linear-gradient(-45deg, #141e30, #243b55);
   background-size: 400% 400%;
-  backdrop-filter: blur(10px);
   animation: smoothGradientFlow 15s ease infinite;
   @include g.flexCenter;
   .aurora-container {
     width: 100%;
-    height: 500px;
+    height: 100%;
     position: relative;
     overflow: hidden;
   }
