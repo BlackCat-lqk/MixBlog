@@ -104,13 +104,13 @@ const supportData = [
   }
   .icp-filing-text {
     span{
-      color: rgba(11, 25, 38, .72);
+      color: var(--text-color3);
       font-size: 14px;
       line-height: 1.54;
       font-weight: 400;
       a{
         padding-left: 10px;
-        color: rgba(11, 25, 38, .72);
+        color: var(--text-color3);
         &:hover{
           color: #0AA9DB;
           text-decoration-line: underline;
