@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 type Theme = 'light' | 'dark'
 export const useThemeStore = defineStore('theme', {
   state: () => ({
-    currentTheme: (localStorage.getItem('app-theme') as Theme) || 'light',
+    currentTheme: (localStorage.getItem('app-theme') as Theme) || 'dark',
   }),
   actions: {
     setTheme(theme: Theme) {

@@ -39,23 +39,24 @@
             {{ tag }}
           </n-tag>
         </span>
-        <div>
+        <div class="views-comment-icon">
           <span>
             <n-icon>
-              <img
-                v-if="themeStore.currentTheme == 'light'"
-                src="@/assets/images/CommentOutlined.svg"
-              />
-              <img v-else src="@/assets/images/CommentWhite.svg" />
+              <img width="20px" src="@/assets/images/likes.svg" />
             </n-icon>
             0
           </span>
           <span>
             <n-icon>
-              <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/View.svg" />
-              <img v-else src="@/assets/images/ViewWhite.svg" />
+              <img width="20px" src="@/assets/images/comment.svg" />
             </n-icon>
-            {{ item.views }}
+            0
+          </span>
+          <span>
+            <n-icon>
+              <img width="20px" src="@/assets/images/views.svg" />
+            </n-icon>
+            0
           </span>
         </div>
       </div>
@@ -67,8 +68,6 @@
 import { defineProps, reactive, ref } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import ArticleDetail from '@/views/Article/ArticleDetail.vue'
-import { useThemeStore } from '@/stores/themeStore'
-const themeStore = useThemeStore()
 const showActiveDrawer = ref(false)
 interface articleDetailType {
   title: string
@@ -171,6 +170,16 @@ const articleClick = (data: articleDetailType) => {
         font-size: 14px;
         line-height: 1.54;
         color: var(--text-color2);
+      }
+      .views-comment-icon {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        span {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
       }
     }
   }

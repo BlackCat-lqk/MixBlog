@@ -150,6 +150,7 @@ const handelScrollDown = () => {
       border-radius: 50%;
       background-size: 400%;
       animation: gradient-text 50s linear infinite;
+      animation: gradient-box 3s linear infinite;
       .pure-text-glow {
         background: linear-gradient(90deg, #40ffaa, #4079ff, #40ffaa, #4079ff, #40ffaa);
         background-size: 400% 100%;
@@ -186,6 +187,17 @@ const handelScrollDown = () => {
       }
       100% {
         background-position: 0% 50%;
+      }
+    }
+    @keyframes gradient-box {
+      0% {
+        scale: 1;
+      }
+      50% {
+        scale: 1.1;
+      }
+      100% {
+        scale: 1;
       }
     }
   }

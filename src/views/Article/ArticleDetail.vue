@@ -27,21 +27,15 @@
               </div>
               <div class="article-header-data-info">
                 <n-icon>
-                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/Like.svg" />
-                  <img v-else src="@/assets/images/LikeWhite.svg" />
+                  <img width="20px" src="@/assets/images/likes.svg" />
                   <span>0</span>
                 </n-icon>
                 <n-icon>
-                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/View.svg" />
-                  <img v-else src="@/assets/images/ViewWhite.svg" />
+                  <img width="20px" src="@/assets/images/views.svg" />
                   <span>0</span>
                 </n-icon>
                 <n-icon>
-                  <img
-                    v-if="themeStore.currentTheme == 'light'"
-                    src="@/assets/images/CommentOutlined.svg"
-                  />
-                  <img v-else src="@/assets/images/CommentWhite.svg" />
+                  <img width="20px" src="@/assets/images/comment.svg" />
                   <span>0</span>
                 </n-icon>
               </div>
@@ -57,6 +51,12 @@
               <quill-view :content="props.data.content"></quill-view>
             </div>
           </div>
+          <div v-if="!showComment" class="article-comment-float" @click="showComment = true">
+            <img width="40px" src="@/assets/images/commentFloat.svg" />
+          </div>
+          <div v-else class="article-comment-area">
+            <img width="20px" src="@/assets/images/close1.svg" @click="showComment = false" />
+          </div>
         </div>
       </n-drawer-content>
     </n-drawer>
@@ -67,8 +67,6 @@
 import { defineProps, watch, ref, defineEmits } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import QuillView from '@/components/QuillView.vue'
-import { useThemeStore } from '@/stores/themeStore'
-const themeStore = useThemeStore()
 const activeDrawer = ref(false)
 const emits = defineEmits(['update:showModal'])
 interface articleDetailType {
@@ -79,6 +77,8 @@ interface articleDetailType {
   updatedAt: string
   tags: string[]
 }
+
+const showComment = ref(false)
 
 const props = defineProps({
   data: {
@@ -169,6 +169,27 @@ body {
     max-width: 1264px;
     min-width: 1040px;
     padding: 0 120px;
+    position: relative;
+    .article-comment-float {
+      position: fixed;
+      top: 50%;
+      right: 0%;
+      max-width: 1264px;
+      min-width: 1040px;
+      transform: translate(35%, 0%);
+    }
+    .article-comment-area {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 0%);
+      max-width: 1264px;
+      min-width: 1040px;
+      height: 500px;
+      border-radius: 8px;
+      background-color: var(--box-bg-color5);
+      color: var(--text-color);
+    }
     .article-intro {
       background-color: var(--box-bg-color5);
       padding: 32px;

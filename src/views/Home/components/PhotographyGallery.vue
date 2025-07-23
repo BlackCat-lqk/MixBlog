@@ -42,18 +42,13 @@
             <div>
               <span>
                 <n-icon size="small">
-                  <img
-                    v-if="themeStore.currentTheme == 'light'"
-                    src="@/assets/images/CommentOutlined.svg"
-                  />
-                  <img v-else src="@/assets/images/CommentWhite.svg" />
+                  <img width="20px" src="@/assets/images/comment.svg" />
                 </n-icon>
                 12
               </span>
               <span>
                 <n-icon size="small">
-                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/View.svg" />
-                  <img v-else src="@/assets/images/ViewWhite.svg" />
+                  <img width="20px" src="@/assets/images/views.svg" />
                 </n-icon>
                 24
               </span>
