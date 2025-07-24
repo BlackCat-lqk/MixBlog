@@ -19,21 +19,15 @@
               </div>
               <div class="image-header-data-info">
                 <n-icon>
-                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/Like.svg" />
-                  <img v-else src="@/assets/images/LikeWhite.svg" />
+                  <img width="20px" src="@/assets/images/likes.svg" />
                   <span>0</span>
                 </n-icon>
                 <n-icon>
-                  <img v-if="themeStore.currentTheme == 'light'" src="@/assets/images/View.svg" />
-                  <img v-else src="@/assets/images/ViewWhite.svg" />
+                  <img width="20px" src="@/assets/images/views.svg" />
                   <span>0</span>
                 </n-icon>
                 <n-icon>
-                  <img
-                    v-if="themeStore.currentTheme == 'light'"
-                    src="@/assets/images/CommentOutlined.svg"
-                  />
-                  <img v-else src="@/assets/images/CommentWhite.svg" />
+                  <img width="20px" src="@/assets/images/comment.svg" />
                   <span>0</span>
                 </n-icon>
               </div>
@@ -55,6 +49,12 @@
               />
             </div>
           </div>
+          <div v-if="!showComment" class="image-comment-float" @click="showComment = true">
+            <img width="40px" src="@/assets/images/commentFloat.svg" />
+          </div>
+          <div v-else class="image-comment-area">
+            <img width="20px" src="@/assets/images/close1.svg" @click="showComment = false" />
+          </div>
         </div>
       </n-drawer-content>
     </n-drawer>
@@ -64,8 +64,6 @@
 <script setup lang="ts">
 import { defineProps, watch, ref, defineEmits } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
-import { useThemeStore } from '@/stores/themeStore'
-const themeStore = useThemeStore()
 
 const activeDrawer = ref(false)
 const emits = defineEmits(['update:showModal'])
@@ -76,6 +74,8 @@ interface articleDetailType {
   updatedAt: string
   photos: string[]
 }
+
+const showComment = ref(false)
 
 const props = defineProps({
   data: {
@@ -159,6 +159,27 @@ body {
     max-width: 1264px;
     min-width: 1040px;
     padding: 0 120px;
+    position: relative;
+    .image-comment-float {
+      position: fixed;
+      top: 50%;
+      right: 0%;
+      max-width: 1264px;
+      min-width: 1040px;
+      transform: translate(60%, 0%);
+    }
+    .image-comment-area {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 0%);
+      max-width: 1264px;
+      min-width: 1040px;
+      height: 500px;
+      border-radius: 8px;
+      background-color: var(--box-bg-color5);
+      color: var(--text-color);
+    }
     .image-intro {
       background-color: var(--box-bg-color1);
       padding: 32px;

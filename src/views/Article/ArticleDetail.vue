@@ -55,7 +55,16 @@
             <img width="40px" src="@/assets/images/commentFloat.svg" />
           </div>
           <div v-else class="article-comment-area">
-            <img width="20px" src="@/assets/images/close1.svg" @click="showComment = false" />
+            <div class="comment-area-header">
+              <img width="20px" src="@/assets/images/close1.svg" @click="showComment = false" />
+            </div>
+            <div class="comment-area-chat">
+              <CommentsChat
+                  :comments="comments"
+                  @submit-comment="handleSubmitComment"
+                  @reply-comment="handleReplyComment"
+                />
+            </div>
           </div>
         </div>
       </n-drawer-content>
@@ -64,11 +73,13 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, watch, ref, defineEmits } from 'vue'
+import { defineProps, watch, ref, defineEmits, onUnmounted } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import QuillView from '@/components/QuillView.vue'
+import CommentsChat from '@/components/CommentsChat.vue'
 const activeDrawer = ref(false)
 const emits = defineEmits(['update:showModal'])
+
 interface articleDetailType {
   title: string
   content: string
@@ -77,6 +88,93 @@ interface articleDetailType {
   updatedAt: string
   tags: string[]
 }
+
+export interface Comment {
+  _id: string
+  userId: string
+  userName: string
+  avatar: string
+  content: string
+  parentId: string | null
+  createdAt: string
+  children?: Comment[]
+}
+
+// 评论数据
+const comments = ref<Comment[]>([
+  {
+    _id: '1',
+    userId: 'userA',
+    userName: '用户A',
+    content: '这篇文章真不错！',
+    parentId: null,
+    avatar: '/uploads/defalut/web.svg',
+    createdAt: '2023-01-01T10:00:00Z',
+  },
+  {
+    _id: '2',
+    userId: 'userB',
+    userName: '用户B',
+    content: '确实，我也这么认为',
+    parentId: '1',
+    avatar: '/uploads/defalut/web.svg',
+    createdAt: '2023-01-01T10:05:00Z',
+  },
+  {
+    _id: '3',
+    userId: 'userC',
+    userName: '用户C',
+    content: '你们都太客气了',
+    parentId: '2',
+    avatar: '/uploads/defalut/web.svg',
+    createdAt: '2023-01-01T10:10:00Z',
+  },
+
+  {
+    _id: '5',
+    userId: 'userI',
+    userName: '我',
+    content: '我我我我我学到了很多知识',
+    parentId: null,
+    avatar: '/uploads/defalut/web.svg',
+    createdAt: '2023-01-01T10:02:00Z',
+  },
+  {
+    _id: '6',
+    userId: 'userC',
+    userName: '用户C',
+    content: '学到了很多知识',
+    parentId: '5',
+    avatar: '/uploads/defalut/web.svg',
+    createdAt: '2023-01-01T10:02:00Z',
+  },
+])
+
+// 处理提交评论事件
+function handleSubmitComment(data: { content: string; parentId?: string }) {
+  // 调用 API 提交评论
+  console.log('提交评论:', data);
+
+  // 示例：添加新评论到列表（实际应该从 API 获取更新后的数据）
+  const newComment: Comment = {
+    _id: `comment_${Date.now()}`,
+    userId: 'currentUser',
+    userName: '当前用户',
+    avatar: 'https://example.com/avatar.png',
+    content: data.content,
+    parentId: data.parentId || null,
+    createdAt: new Date().toISOString()
+  };
+
+  comments.value.push(newComment);
+}
+
+// 处理回复评论事件
+function handleReplyComment(comment: Comment) {
+  console.log('回复评论:', comment);
+  // 可以在这里处理回复相关的逻辑
+}
+
 
 const showComment = ref(false)
 
@@ -107,6 +205,11 @@ watch(
     }
   },
 )
+onUnmounted(() => {
+  // 确保评论区域关闭，触发子组件的销毁
+  showComment.value = false
+  // 可以在这里添加其他清理逻辑
+})
 </script>
 
 <style scoped lang="scss">
@@ -176,7 +279,8 @@ body {
       right: 0%;
       max-width: 1264px;
       min-width: 1040px;
-      transform: translate(35%, 0%);
+      transform: translate(60%, 0%);
+      cursor: pointer;
     }
     .article-comment-area {
       position: fixed;
@@ -185,10 +289,30 @@ body {
       transform: translate(-50%, 0%);
       max-width: 1264px;
       min-width: 1040px;
-      height: 500px;
+      height: 82%;
       border-radius: 8px;
       background-color: var(--box-bg-color5);
       color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      padding: 5px;
+      gap: 10px;
+      .comment-area-header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        img {
+          cursor: pointer;
+        }
+      }
+      .comment-area-chat {
+        flex: 1;
+        background-color: var(--box-bg-color4);
+        border-radius: 5px;
+        overflow: auto;
+        padding: 20px;
+        @include g.scrollbarCustom;
+      }
     }
     .article-intro {
       background-color: var(--box-bg-color5);
