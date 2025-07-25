@@ -22,67 +22,71 @@
     <div class="comments-container">
       <div v-if="commentGroups.length === 0" class="no-comments">还没有评论，快来抢沙发吧！</div>
 
-      <div v-for="group in commentGroups" :key="group.root._id" class="comment-group">
-        <!-- 主评论 -->
-        <div class="main-comment">
-          <div class="comment-header">
-            <div class="avatar">
-              <img :src="group.root.avatar" />
-            </div>
-            <span class="username">{{ group.root.userName }}</span>
-            <span class="time">{{ formatTime(group.root.createdAt) }}</span>
-          </div>
-          <div class="comment-content">
-            {{ group.root.content }}
-          </div>
-          <div class="comment-actions">
-            <n-button strong secondary type="info" @click="handleReplyToComment(group.root)"
-              >锐评</n-button
-            >
-          </div>
-        </div>
-
-        <!-- 针对这条主评论的所有回复 -->
-        <div class="replies-container">
-          <div v-for="reply in group.replies" :key="reply._id" class="reply-item">
+      <template v-for="group in commentGroups" :key="group.root._id">
+        <div class="comment-group">
+          <!-- 主评论 -->
+          <div class="main-comment">
             <div class="comment-header">
               <div class="avatar">
-                <img :src="reply.avatar" />
+                <img :src="group.root.avatar" loading="lazy" />
               </div>
-              <span class="username">{{ reply.userName }}</span>
-              <span class="time">{{ formatTime(reply.createdAt) }}</span>
+              <span class="username">{{ group.root.userName }}</span>
+              <span class="time">{{ formatTime(group.root.createdAt) }}</span>
             </div>
             <div class="comment-content">
-              <!-- 如果是回复其他回复，显示回复信息 -->
-              <span v-if="reply.parentId && reply.parentId !== group.root._id" class="reply-info">
-                回复 {{ getCommentUserName(reply.parentId) }}：
-              </span>
-              {{ reply.content }}
+              {{ group.root.content }}
             </div>
             <div class="comment-actions">
-              <n-button strong secondary type="info" @click="handleReplyToComment(reply)"
-                >回复</n-button
+              <n-button strong secondary type="info" @click="handleReplyToComment(group.root)"
+                >锐评</n-button
               >
             </div>
           </div>
-        </div>
 
-        <!-- 回复输入框 -->
-        <div v-if="replyTarget && replyTarget._id in getCommentIds(group)" class="reply-input">
-          <n-input
-            v-model:value="replyContent"
-            placeholder="写下你的回复..."
-            type="textarea"
-            maxlength="500"
-            show-count
-            clearable
-          />
-          <div class="reply-actions">
-            <n-button type="info" @click="submitReply(group.root._id)">提交</n-button>
-            <n-button strong secondary type="info" @click="cancelReply">取消</n-button>
+          <!-- 针对这条主评论的所有回复 -->
+          <div class="replies-container">
+            <template v-for="reply in group.replies" :key="reply._id">
+              <div class="reply-item">
+                <div class="comment-header">
+                  <div class="avatar">
+                    <img :src="reply.avatar" loading="lazy" />
+                  </div>
+                  <span class="username">{{ reply.userName }}</span>
+                  <span class="time">{{ formatTime(reply.createdAt) }}</span>
+                </div>
+                <div class="comment-content">
+                  <!-- 如果是回复其他回复，显示回复信息 -->
+                  <span v-if="reply.parentId && reply.parentId !== group.root._id" class="reply-info">
+                    回复 {{ replyParentNames[reply._id] }}：
+                  </span>
+                  {{ reply.content }}
+                </div>
+                <div class="comment-actions">
+                  <n-button strong secondary type="info" @click="handleReplyToComment(reply)"
+                    >回复</n-button
+                  >
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <!-- 回复输入框 -->
+          <div v-if="replyTarget && replyTarget._id in getCommentIds(group)" class="reply-input">
+            <n-input
+              v-model:value="replyContent"
+              placeholder="写下你的回复..."
+              type="textarea"
+              maxlength="500"
+              show-count
+              clearable
+            />
+            <div class="reply-actions">
+              <n-button type="info" @click="submitReply">提交</n-button>
+              <n-button strong secondary type="info" @click="cancelReply">取消</n-button>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -119,11 +123,34 @@ const newCommentContent = ref('')
 const replyTarget = ref<Comment | null>(null)
 const replyContent = ref('')
 
-// 按主评论分组
+// 预计算回复父级名称映射
+const replyParentNames = computed(() => {
+  const names: Record<string, string> = {}
+  const commentMap: Record<string, Comment> = {}
+
+  // 创建评论映射
+  props.comments.forEach((comment) => {
+    commentMap[comment._id] = comment
+  })
+
+  // 为每个回复设置父级名称
+  props.comments.forEach((comment) => {
+    if (comment.parentId && comment.parentId !== comment._id) {
+      const parent = commentMap[comment.parentId]
+      if (parent) {
+        names[comment._id] = parent.userName
+      }
+    }
+  })
+
+  return names
+})
+
+// 按主评论分组 - 使用记忆化优化
 const commentGroups = computed(() => {
   const groups: { root: Comment; replies: Comment[] }[] = []
   const commentMap: Record<string, Comment> = {}
-  console.log('props.comments', props.comments)
+
   // 创建评论映射
   props.comments.forEach((comment) => {
     commentMap[comment._id] = comment
@@ -141,13 +168,34 @@ const commentGroups = computed(() => {
     }
   })
 
+  // 预先构建父级到子级的映射
+  const parentToChildren: Record<string, Comment[]> = {}
+  replyComments.forEach((reply) => {
+    if (!parentToChildren[reply.parentId!]) {
+      parentToChildren[reply.parentId!] = []
+    }
+    parentToChildren[reply.parentId!].push(reply)
+  })
+
   // 构建分组
   rootComments.forEach((root) => {
-    const replies = replyComments.filter((reply) => isReplyToComment(reply, root._id, commentMap))
+    // 收集所有直接和间接回复
+    const replies: Comment[] = []
+    const queue = [...(parentToChildren[root._id] || [])]
+
+    while (queue.length > 0) {
+      const current = queue.shift()!
+      replies.push(current)
+
+      // 添加当前回复的子回复
+      if (parentToChildren[current._id]) {
+        queue.push(...parentToChildren[current._id])
+      }
+    }
 
     groups.push({
       root,
-      replies: [...replies].sort(
+      replies: replies.sort(
         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       ),
     })
@@ -156,40 +204,9 @@ const commentGroups = computed(() => {
   return groups
 })
 
-// 检查回复是否属于某个主评论（直接或间接）
-function isReplyToComment(
-  reply: Comment,
-  rootId: string,
-  commentMap: Record<string, Comment>,
-): boolean {
-  if (reply.parentId === rootId) {
-    return true
-  }
-
-  let current = reply
-  while (current.parentId) {
-    if (current.parentId === rootId) {
-      return true
-    }
-    current = commentMap[current.parentId]
-    if (!current) {
-      return false
-    }
-  }
-
-  return false
-}
-
-// 获取评论的用户名称
-function getCommentUserName(commentId: string): string {
-  const comment = props.comments.find((c) => c._id === commentId)
-  return comment ? comment.userName : '未知用户'
-}
-
-// 获取组内所有评论ID
-function getCommentIds(group: { root: Comment; replies: Comment[] }): Record<string, boolean> {
-  const ids: Record<string, boolean> = {}
-  ids[group.root._id] = true
+// 获取组内所有评论ID - 优化为简单查找
+const getCommentIds = (group: { root: Comment; replies: Comment[] }): Record<string, boolean> => {
+  const ids: Record<string, boolean> = { [group.root._id]: true }
   group.replies.forEach((reply) => {
     ids[reply._id] = true
   })
@@ -197,39 +214,35 @@ function getCommentIds(group: { root: Comment; replies: Comment[] }): Record<str
 }
 
 // 处理回复评论
-function handleReplyToComment(comment: Comment) {
+const handleReplyToComment = (comment: Comment) => {
   replyTarget.value = comment
   emit('reply-comment', comment)
 }
 
 // 提交主评论
-function submitMainComment() {
+const submitMainComment = () => {
   if (newCommentContent.value.trim()) {
     emit('submit-comment', {
       content: newCommentContent.value,
     })
-
-    // 重置输入框
     newCommentContent.value = ''
   }
 }
 
 // 提交回复
-function submitReply(rootCommentId: string) {
+const submitReply = () => {
   if (replyContent.value.trim() && replyTarget.value) {
     emit('submit-comment', {
       content: replyContent.value,
       parentId: replyTarget.value._id,
     })
-    console.log(rootCommentId)
-    // 重置状态
     replyContent.value = ''
     replyTarget.value = null
   }
 }
 
 // 取消回复
-function cancelReply() {
+const cancelReply = () => {
   replyContent.value = ''
   replyTarget.value = null
 }
@@ -238,18 +251,22 @@ function cancelReply() {
 <style lang="scss" scoped>
 .article-comments {
   padding: 20px;
+  will-change: transform; /* 提示浏览器优化 */
 }
 
 .main-comment-input {
   margin-bottom: 30px;
 }
+
 .comment-actions {
   margin-top: 12px;
   text-align: right;
 }
+
 .comments-container {
   border-top: 1px solid var(--border-color);
   padding-top: 20px;
+  contain: content; /* 限制浏览器重绘范围 */
 }
 
 .no-comments {
@@ -264,6 +281,7 @@ function cancelReply() {
   box-shadow: 0 0 10px 3px var(--border-color);
   border-radius: 4px;
   padding: 16px;
+  contain: layout style; /* 优化渲染性能 */
 }
 
 .main-comment {
@@ -280,6 +298,7 @@ function cancelReply() {
 .reply-item {
   padding: 12px 0;
   border-bottom: 1px solid var(--border-color);
+  contain: content;
 }
 
 .reply-item:last-child {
@@ -290,16 +309,20 @@ function cancelReply() {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+
   .avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
     margin-right: 12px;
     overflow: hidden;
+    flex-shrink: 0; /* 防止头像被压缩 */
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block; /* 消除图片下方间隙 */
     }
   }
 }
@@ -308,11 +331,16 @@ function cancelReply() {
   font-weight: bold;
   color: var(--text-color1);
   margin-right: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }
 
 .time {
   font-size: 0.8em;
   color: var(--text-color2);
+  flex-shrink: 0; /* 防止时间被压缩 */
 }
 
 .reply-info {
@@ -323,6 +351,7 @@ function cancelReply() {
 .comment-content {
   margin-bottom: 8px;
   line-height: 1.5;
+  word-break: break-word; /* 防止长文本溢出 */
 }
 
 .reply-input {
@@ -337,5 +366,16 @@ function cancelReply() {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+/* 优化滚动性能 */
+.comments-container {
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+.comment-group, .reply-item {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 </style>

@@ -44,19 +44,19 @@
             <n-icon>
               <img width="20px" src="@/assets/images/likes.svg" />
             </n-icon>
-            0
-          </span>
-          <span>
-            <n-icon>
-              <img width="20px" src="@/assets/images/comment.svg" />
-            </n-icon>
-            0
+            {{ item.likes.length }}
           </span>
           <span>
             <n-icon>
               <img width="20px" src="@/assets/images/views.svg" />
             </n-icon>
-            0
+            {{ item.views.length }}
+          </span>
+          <span>
+            <n-icon>
+              <img width="20px" src="@/assets/images/comment.svg" />
+            </n-icon>
+            {{ item.comments.length }}
           </span>
         </div>
       </div>
@@ -79,6 +79,15 @@ export interface Comment {
   createdAt: string
   children?: Comment[]
 }
+
+export interface LikeView {
+  userId: string
+  userName: string
+  email: string
+  viewedAt: string
+  likedAt: string
+}
+
 interface articleDetailType {
   _id: string
   title: string
@@ -87,7 +96,9 @@ interface articleDetailType {
   category: string
   updatedAt: string
   tags: string[]
-  comments: Comment[]
+  comments: Comment[],
+  likes: LikeView[]
+  views: LikeView[]
 }
 let articleDetail: articleDetailType = reactive({
   _id: '',
@@ -98,6 +109,8 @@ let articleDetail: articleDetailType = reactive({
   updatedAt: '',
   tags: [],
   comments: [],
+  likes: [],
+  views: []
 })
 const props = defineProps({
   articleData: {

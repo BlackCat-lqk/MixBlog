@@ -56,7 +56,7 @@ export function updateBlogArticleApi(params: Object) {
  * @param {Object}
  * @returns {Promise}
  */
-export function addArticleCommentApi(params: Object) {
+export function addArticleCommentApi(params: object) {
   return request.post('/blogArticle/addComment', params)
 }
 
@@ -65,6 +65,24 @@ export function addArticleCommentApi(params: Object) {
  * @param {Object}
  * @returns {Promise}
  */
-export function delArticleCommentApi(params: Object) {
+export function delArticleCommentApi(params: object) {
   return request.post('/blogArticle/deleteComment', params)
+}
+
+/**
+ * 博客文章点赞/取消点赞
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function likeArticleApi(params: object) {
+  return request.post('/blogArticle/like', params)
+}
+
+/**
+ * 博客文章新增浏览
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function viewArticleApi(params: object) {
+  return request.post('/blogArticle/view', params)
 }

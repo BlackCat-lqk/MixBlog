@@ -17,7 +17,9 @@ import PhotographyGallery from './components/PhotographyGallery.vue'
 import { onMounted } from 'vue'
 import { recordVisitApi, getVisitorIpApi } from '@/http/visit'
 import { getDeviceType } from '@/utils/deviceUtils'
+import { useDeviceStore } from '@/stores/deviceInfo'
 
+const deviceStore = useDeviceStore()
 // 记录访问统计
 const recordVisit = async () => {
   const userAgent = getDeviceType()
@@ -30,6 +32,7 @@ const recordVisit = async () => {
   const response = await recordVisitApi(params)
   const result = response.data
   if (result.code === 200) {
+    deviceStore.setDeviceInfo({ userAgent, ip: res.data.ip })
     return
   } else {
     return

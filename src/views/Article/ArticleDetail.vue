@@ -5,6 +5,7 @@
       placement="bottom"
       style="height: 98%; border-radius: 10px 10px 0 0"
       to="body"
+      @after-leave="closeDrawer"
     >
       <n-drawer-content closable>
         <template #header>
@@ -26,17 +27,17 @@
                 <p>{{ _formatTime(props.data.updatedAt) }}</p>
               </div>
               <div class="article-header-data-info">
-                <div>
-                  <img width="32px" src="@/assets/images/likes.svg" />
-                  <span>0</span>
+                <div style="cursor: pointer;">
+                  <img width="32px" src="@/assets/images/likes.svg" @click="likeArticle" />
+                  <span>{{ state.likes }}</span>
                 </div>
                 <div>
                   <img width="32px" src="@/assets/images/views.svg" />
-                  <span>0</span>
+                  <span>{{ state.views }}</span>
                 </div>
-                <div class="comment-animation" @click="showComment = true">
+                <div class="comment-animation" @click="showComment = !showComment">
                   <img width="32px" src="@/assets/images/comment-pen.svg" />
-                  <span>0</span>
+                  <span>{{ state.comments }}</span>
                 </div>
               </div>
             </div>
@@ -70,13 +71,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, watch, ref, defineEmits } from 'vue'
+import { defineProps, watch, ref, defineEmits, reactive } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import QuillView from '@/components/QuillView.vue'
 import CommentsChat from '@/components/CommentsChat.vue'
 import { useUserInfoStore } from '@/stores/userInfo'
-import { addArticleCommentApi } from '@/http/blogArticle'
+import { addArticleCommentApi, likeArticleApi, viewArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
+import { useDeviceStore } from '@/stores/deviceInfo'
+
+const deviceStore = useDeviceStore()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 const activeDrawer = ref(false)
@@ -94,6 +98,20 @@ const props = defineProps({
   },
 })
 
+const state = reactive({
+  likes: 0,
+  views: 0,
+  comments: 0,
+})
+
+export interface LikeView {
+  userId: string
+  userName: string
+  email: string
+  viewedAt: string
+  likedAt: string
+}
+
 interface articleDetailType {
   _id: string
   title: string
@@ -103,6 +121,8 @@ interface articleDetailType {
   updatedAt: string
   tags: string[]
   comments: Comment[]
+  likes: LikeView[]
+  views: LikeView[]
 }
 
 export interface Comment {
@@ -122,7 +142,6 @@ const comments = ref<Comment[]>([])
 // 处理提交评论事件
 const handleSubmitComment = async (data: { content: string; parentId?: string }) => {
   // 调用 API 提交评论
-  console.log('提交评论:', data)
   const params = {
     articleId: props.data._id,
     userId: userInfoStore.data.user._id,
@@ -132,12 +151,9 @@ const handleSubmitComment = async (data: { content: string; parentId?: string })
     content: data.content,
     parentId: data.parentId || null,
   }
-  console.log(params)
   const result = await addArticleCommentApi(params)
   const res = result.data
-  console.log(res)
   if (res.code === 200) {
-    // 示例：添加新评论到列表（实际应该从 API 获取更新后的数据）
     const newComment: Comment = {
       _id: res.data._id,
       userId: userInfoStore.data.user._id,
@@ -149,8 +165,29 @@ const handleSubmitComment = async (data: { content: string; parentId?: string })
     }
     comments.value.push(newComment)
     message.success('评论成功')
+    state.comments += 1
   } else {
     message.warning('评论出错了')
+  }
+}
+// 处理点赞事件
+const likeArticle = async () => {
+  const params = {
+    articleId: props.data._id,
+    userId: userInfoStore.data.user._id,
+    userName: userInfoStore.data.user.userName,
+    email: userInfoStore.data.user.email,
+  }
+  const result = await likeArticleApi(params)
+  const res = result.data
+  if (res.code === 200) {
+    if(res.type == 'like'){
+    }else {
+      console.log('取消点赞')
+    }
+    state.likes = res.data
+  } else {
+    message.warning('点赞失败')
   }
 }
 
@@ -158,6 +195,25 @@ const handleSubmitComment = async (data: { content: string; parentId?: string })
 function handleReplyComment(comment: Comment) {
   console.log('回复评论:', comment)
   // 可以在这里处理回复相关的逻辑
+}
+
+// Drawer 关闭后的回调
+const closeDrawer = () => {
+  showComment.value = false
+}
+
+// 浏览接口
+const viewArticle = async () => {
+  const params = {
+    articleId: props.data._id,
+    userId: userInfoStore.data.user._id,
+    ip: deviceStore.ip,
+  }
+  const result = await viewArticleApi(params)
+  const res = result.data
+  if (res.code === 200) {
+    state.views = res.data
+  }
 }
 
 watch(
@@ -170,23 +226,19 @@ watch(
 )
 
 watch(
-  () => props.data,
-  (newVal) => {
-    if (newVal) {
-      console.log(props.data)
-      comments.value = props.data.comments
-    }
-  },
-)
-
-watch(
   () => activeDrawer.value,
   (newVal) => {
     if (newVal) {
+      comments.value = props.data.comments
+      state.comments = props.data.comments.length
+      state.likes = props.data.likes.length
+      state.views = props.data.views.length
+      viewArticle()
       emits('update:showModal', false)
     }
   },
 )
+
 </script>
 
 <style scoped lang="scss">
