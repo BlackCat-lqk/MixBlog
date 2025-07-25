@@ -69,21 +69,35 @@ import { defineProps, reactive, ref } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import ArticleDetail from '@/views/Article/ArticleDetail.vue'
 const showActiveDrawer = ref(false)
+export interface Comment {
+  _id: string
+  userId: string
+  userName: string
+  avatar: string
+  content: string
+  parentId: string | null
+  createdAt: string
+  children?: Comment[]
+}
 interface articleDetailType {
+  _id: string
   title: string
   content: string
   intro: string
   category: string
   updatedAt: string
   tags: string[]
+  comments: Comment[]
 }
 let articleDetail: articleDetailType = reactive({
+  _id: '',
   title: '',
   content: '',
   intro: '',
   category: '',
   updatedAt: '',
   tags: [],
+  comments: [],
 })
 const props = defineProps({
   articleData: {
@@ -92,8 +106,8 @@ const props = defineProps({
   },
 })
 const articleClick = (data: articleDetailType) => {
-  showActiveDrawer.value = true
   articleDetail = data
+  showActiveDrawer.value = true
 }
 </script>
 <style lang="scss" scoped>

@@ -50,3 +50,21 @@ export function deleteBlogArticleApi(params: { _id: string }) {
 export function updateBlogArticleApi(params: Object) {
   return request.post('/updateBlogArticle', params)
 }
+
+/**
+ * 博客文章添加评论
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function addArticleCommentApi(params: Object) {
+  return request.post('/blogArticle/addComment', params)
+}
+
+/**
+ * 博客文章删除评论
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function delArticleCommentApi(params: Object) {
+  return request.post('/blogArticle/deleteComment', params)
+}

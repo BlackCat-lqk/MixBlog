@@ -26,6 +26,9 @@
         <!-- 主评论 -->
         <div class="main-comment">
           <div class="comment-header">
+            <div class="avatar">
+              <img :src="group.root.avatar" />
+            </div>
             <span class="username">{{ group.root.userName }}</span>
             <span class="time">{{ formatTime(group.root.createdAt) }}</span>
           </div>
@@ -33,7 +36,9 @@
             {{ group.root.content }}
           </div>
           <div class="comment-actions">
-            <n-button strong secondary type="info" @click="handleReplyToComment(group.root)">锐评</n-button>
+            <n-button strong secondary type="info" @click="handleReplyToComment(group.root)"
+              >锐评</n-button
+            >
           </div>
         </div>
 
@@ -41,6 +46,9 @@
         <div class="replies-container">
           <div v-for="reply in group.replies" :key="reply._id" class="reply-item">
             <div class="comment-header">
+              <div class="avatar">
+                <img :src="reply.avatar" />
+              </div>
               <span class="username">{{ reply.userName }}</span>
               <span class="time">{{ formatTime(reply.createdAt) }}</span>
             </div>
@@ -52,7 +60,9 @@
               {{ reply.content }}
             </div>
             <div class="comment-actions">
-              <n-button strong secondary type="info" @click="handleReplyToComment(reply)">回复</n-button>
+              <n-button strong secondary type="info" @click="handleReplyToComment(reply)"
+                >回复</n-button
+              >
             </div>
           </div>
         </div>
@@ -113,7 +123,7 @@ const replyContent = ref('')
 const commentGroups = computed(() => {
   const groups: { root: Comment; replies: Comment[] }[] = []
   const commentMap: Record<string, Comment> = {}
-
+  console.log('props.comments', props.comments)
   // 创建评论映射
   props.comments.forEach((comment) => {
     commentMap[comment._id] = comment
@@ -280,6 +290,18 @@ function cancelReply() {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 12px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 }
 
 .username {
