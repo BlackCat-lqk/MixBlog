@@ -2,7 +2,7 @@
   <div class="banner">
     <div class="banner-pic">
       <img v-if="sloganStore.sloganConfig.cover" :src="sloganStore.sloganConfig.cover" />
-      <img v-else src="@/assets/images/logo2024.png" />
+      <img v-else src="@/assets/images/logo2024.svg" />
     </div>
     <div class="banner-left">
       <div>
@@ -114,7 +114,7 @@ const handelScrollDown = () => {
     .scroll-down-box {
       width: 100%;
       display: flex;
-      margin-top: 40px;
+      margin-top: 10px;
     }
     .scroll-down {
       height: 80px;

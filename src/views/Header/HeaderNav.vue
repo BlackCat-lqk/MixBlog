@@ -4,7 +4,8 @@
     <div class="background-blur"></div>
     <div class="header-logo-search-box">
       <div class="header-logo-box">
-        <img :src="sloganStore.sloganConfig.logoPicture" />
+        <img v-if="themeStore.currentTheme == 'light'" :src="logoLight" />
+        <img v-else :src="logoNight" />
       </div>
       <span class="logo-name-text" style="padding-right: 10px">{{
         sloganStore.sloganConfig.logoName
@@ -171,6 +172,8 @@ const languages = [
   { label: '中文', value: 'zh-CN' },
 ]
 const showForgotPwdModal = ref(false)
+const logoNight = '/uploads/defalut/logo-transparent-night.png'
+const logoLight = '/uploads/defalut/logo-transparent.png'
 const changeLanguage = (lang: string) => {
   locale.value = lang
   localStorage.setItem('locale', lang)

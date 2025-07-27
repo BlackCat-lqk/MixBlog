@@ -20,11 +20,7 @@
         </div>
         <div>
           <div class="doc-list-box">
-            <n-grid
-              :x-gap="12"
-              :y-gap="12"
-              :cols="7"
-            >
+            <n-grid :x-gap="12" :y-gap="12" :cols="7">
               <n-grid-item v-for="(item, idx) in fileListData" :key="idx">
                 <n-card
                   hoverable
@@ -203,7 +199,7 @@ const handleUploadFile = async () => {
 const fileListData = ref([] as bookDocType[])
 const allCategory = ref({} as object)
 const getBookDocList = async () => {
-  const response = await getBookDocApi()
+  const response = await getBookDocApi({})
   const res = response.data
   if (res.code === 200) {
     fileListData.value = res.data

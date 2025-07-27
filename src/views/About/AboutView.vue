@@ -52,7 +52,7 @@
             <h3>{{ item.title }}</h3>
             <p>{{ item.content }}</p>
           </div>
-          <div class="about-images-content">
+          <div v-if="idx == 0" class="about-images-content">
             <n-image :src="about2" width="200" height="240" object-fit="cover" />
             <n-image :src="about3" width="200" height="240" object-fit="cover" />
           </div>

@@ -34,7 +34,6 @@
   $semi-black: #1a2130;
   $white: #fff;
   $dress: #ededed;
-  $dress-dark: darken($dress, 10%);
   $sword: #e6e6e6;
   $staff: #bf5507;
   $skin: #ffd8ad;
@@ -103,7 +102,6 @@
       border-bottom: 230px solid $dress;
       border-left: 100px solid transparent;
       border-right: 100px solid transparent;
-      filter: drop-shadow(0 0 6px $dress-dark);
 
       &::before {
         content: '';
@@ -135,7 +133,6 @@
         content: '';
         position: absolute;
         border-bottom: 70px solid $dress;
-        filter: drop-shadow(0 0 6px $dress-dark);
       }
       &::before {
         // sleeve left

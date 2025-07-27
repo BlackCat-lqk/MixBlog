@@ -169,7 +169,7 @@ const handleSubmitComment = _.debounce(async (data: { content: string; parentId?
     comments.value.push(newComment)
     message.success('评论成功')
     state.comments += 1
-  } else if (res.code === 400) {
+  } else if (res.code === 401) {
     message.info('请先登录')
     router.push('/register-login')
   } else {

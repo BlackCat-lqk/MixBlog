@@ -107,6 +107,7 @@ export interface LikeView {
   likedAt: string
 }
 interface photoItemType {
+  _id: string
   title: string
   photos: string[]
   content: string
@@ -117,6 +118,7 @@ interface photoItemType {
   views: LikeView[]
 }
 const photoItem = ref<photoItemType>({
+  _id: '',
   title: '',
   photos: [],
   content: '',
@@ -132,6 +134,7 @@ const state = reactive({
   dataCount: 0,
 })
 let imagesDetail: photoItemType = reactive({
+  _id: '',
   title: '',
   content: '',
   category: '',
