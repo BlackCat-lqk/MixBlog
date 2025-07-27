@@ -120,7 +120,7 @@ export default {
   },
   footer: {
     title: '技术支持',
-    content: 'Mix Blog 1.0.0 · Made by LQK',
+    content: 'Mix Blog 1.1.0 · Made by LQK',
   },
   about: {
     tagsList: '富强, 民主, 文明, 和谐, 自由, 友善, 平等, 公正, 法治, 爱国, 敬业, 诚信',
