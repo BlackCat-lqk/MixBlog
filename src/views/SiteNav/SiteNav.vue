@@ -4,7 +4,7 @@
   </header>
   <div class="site-nav-main">
     <div class="site-classify">
-      <n-button strong secondary type="primary" @click="showCreateUrl = !showCreateUrl">
+      <n-button strong secondary type="primary" @click="showCreateInput">
         <template #icon>
           <n-icon>
             <img v-if="!showCreateUrl" src="@/assets/images/add.svg" />
@@ -15,20 +15,25 @@
       >
       <div v-show="showCreateUrl">
         <n-form ref="formRef" :model="formValue" :rules="rules">
-          <n-form-item label="分类名称" path="classifyName">
-            <n-input v-model:value="formValue.classifyName" maxlength="10" show-count clearable />
+          <n-form-item label="分类名称" path="secondaryCategory">
+            <n-input
+              v-model:value="formValue.secondaryCategory"
+              maxlength="10"
+              show-count
+              clearable
+            />
           </n-form-item>
-          <n-form-item label="URL" path="url">
-            <n-input v-model:value="formValue.url" placeholder="输入URL链接..." clearable />
+          <n-form-item label="URL" path="link">
+            <n-input v-model:value="formValue.link" placeholder="输入URL链接..." clearable />
           </n-form-item>
-          <n-form-item label="名称">
-            <n-input v-model:value="formValue.name" maxlength="30" show-count clearable />
+          <n-form-item label="名称" path="siteName">
+            <n-input v-model:value="formValue.siteName" maxlength="30" show-count clearable />
           </n-form-item>
           <n-form-item label="描述">
             <n-input v-model:value="formValue.desc" maxlength="500" show-count clearable />
           </n-form-item>
           <n-form-item>
-            <n-button strong secondary type="primary"> 确认</n-button>
+            <n-button strong secondary type="primary" @click="handleCreateSite"> 确认</n-button>
           </n-form-item>
         </n-form>
       </div>
@@ -42,22 +47,22 @@
           <template #header>
             <span>我的</span>
           </template>
-          <template #arrow> </template>
+          <!-- <template #arrow> </template> -->
           <div class="site-classify-item-box">
             <n-card
               hoverable
               v-for="(item, idx) in state.userSiteData"
               :key="idx"
-              @click="getSiteCategoryData(item)"
+              @click="getSiteCategoryData(item, 'user')"
             >
-              {{ item.secondary }}
+              {{ item.secondaryCategory }}
             </n-card>
           </div>
         </n-collapse-item>
         <n-collapse-item
           v-for="(item, idx) in state.blogSiteData"
           :key="idx"
-          :title="item.primary"
+          :title="item.primaryCategory"
           :name="idx"
         >
           <div class="site-classify-item-box">
@@ -65,39 +70,62 @@
               v-for="(secondaryItem, idx) in item.primaryItem"
               :key="idx"
               hoverable
-              @click="getSiteCategoryData(secondaryItem)"
-              >{{ secondaryItem.secondary }}</n-card
+              @click="getSiteCategoryData(secondaryItem, 'blog')"
+              >{{ secondaryItem.secondaryCategory }}</n-card
             >
           </div>
         </n-collapse-item>
       </n-collapse>
     </div>
     <div class="site-content-main-box">
-      <div class="site-content-search-box">
-        <n-input clearable round size="large" placeholder="输入关键字搜索...">
+      <!-- <div class="site-content-search-box">
+        <n-input
+          clearable
+          round
+          size="large"
+          v-model:value="searchKeyWord"
+          placeholder="输入关键字搜索..."
+        >
           <template #suffix>
             <img src="@/assets/images/searchIconfont.svg" alt="search nav" />
           </template>
         </n-input>
-      </div>
+      </div> -->
       <div class="site-card-box">
         <div v-for="(f, idxf) in state.siteData" :key="idxf" class="site-content-main">
-          <h3>{{ f.secondary }}</h3>
+          <h3>{{ f.secondaryCategory }}</h3>
           <div class="site-content-main-item">
-            <a
+            <div
               class="card-item"
               v-for="(item, idx) in f.data"
               :key="idx"
-              @click.prevent="handleLinkClick(item.url)"
+              @mouseenter="hoverItem = idxf + '-' + idx"
+              @mouseleave="hoverItem = ''"
             >
-              <h3>
-                <div class="link-logo">
-                  <img :src="item.favicon" />
-                </div>
-                <span>{{ item.name }}</span>
-              </h3>
-              <div class="link-info">{{ item.desc }}</div>
-            </a>
+              <a @click.prevent="handleLinkClick(item.link)">
+                <h3>
+                  <div class="link-logo">
+                    <img :src="item.icon" />
+                  </div>
+                  <span>{{ item.siteName }}</span>
+                </h3>
+                <div class="link-info">{{ item.desc }}</div>
+              </a>
+              <div
+                :class="
+                  hoverItem == idxf + '-' + idx && showDelBtn
+                    ? 'active-opretion-btn'
+                    : 'opretion-btn'
+                "
+              >
+                <n-popconfirm @positive-click="delSiteNav(item._id)">
+                  <template #trigger>
+                    <img width="20px" src="@/assets/images/deleteHover.svg" />
+                  </template>
+                  确认删除吗？
+                </n-popconfirm>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -111,42 +139,64 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useMessage } from 'naive-ui'
-// import { getFavicon } from '../../utils/getFavicon'
+import type { FormInst } from 'naive-ui'
+import { getFavicon } from '../../utils/getFavicon'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
-const message = useMessage()
+import { createSiteApi, getSiteApi, delSiteNavApi } from '@/http/siteNav'
+import { useUserInfoStore } from '@/stores/userInfo'
+import { useRouter } from 'vue-router'
+import _ from 'lodash'
 
-// const targetUrl = ref('' as string)
+const router = useRouter()
+// const searchKeyWord = ref('')
+const hoverItem = ref('')
+const showDelBtn = ref(false)
+const userInfoStore = useUserInfoStore()
+const formRef = ref<FormInst | null>(null)
+const message = useMessage()
 const showCreateUrl = ref(false)
+const faviconLink = ref('')
+const allSiteNavData = ref({
+  user: [],
+  blog: [],
+})
 
 interface FormValue {
-  classifyName: string
-  url: string
-  name: string
+  type: string
+  primaryCategory: string
+  secondaryCategory: string
+  link: string
+  siteName: string
   desc: string
+  icon: string
 }
 
 const formValue: FormValue = reactive({
-  classifyName: '',
-  url: '',
-  name: '',
+  type: 'user',
+  primaryCategory: 'mysite',
+  secondaryCategory: '',
+  link: '',
+  siteName: '',
   desc: '',
+  icon: '',
 })
 
 interface SiteData {
-  name: string
-  url: string
+  siteName: string
+  link: string
   desc: string
-  favicon: string
+  icon: string
+  _id: string
 }
 
 interface primaryItem {
-  secondary: string
+  secondaryCategory: string
   data: SiteData[]
 }
 
 interface BlogSiteData {
-  primary: string
+  primaryCategory: string
   primaryItem: primaryItem[]
 }
 
@@ -157,13 +207,66 @@ const state = reactive({
 })
 
 const rules = {
-  classifyName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-  url: [{ required: true, message: '请输入网址', trigger: 'blur' }],
+  secondaryCategory: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+  siteName: [{ required: true, message: '请输入站点名称', trigger: 'blur' }],
+  link: [{ required: true, message: '请输入网址', trigger: 'blur' }],
 }
 
 // 展开触发
 const handleUpdateExpanded = (expandedNames: Array<string | number> | string | number | null) => {
   console.log('handleUpdateExpanded', expandedNames)
+}
+
+const showCreateInput = () => {
+  if (userInfoStore.data.user.isLogin) {
+    showCreateUrl.value = !showCreateUrl.value
+  } else {
+    message.info('请先登录')
+    router.push('/register-login')
+  }
+}
+
+// 创建站点
+const handleCreateSite = _.debounce((e: MouseEvent) => {
+  e.preventDefault()
+  formRef.value?.validate(async (errors) => {
+    if (!errors) {
+      const faviconResult = await faviconFetching(formValue.link)
+      if (faviconResult) formValue.icon = faviconLink.value
+      const result = await createSiteApi(formValue)
+      const res = result.data
+      if (res.code === 200) {
+        message.success('站点创建成功')
+        formValue.secondaryCategory = ''
+        formValue.link = ''
+        formValue.siteName = ''
+        formValue.desc = ''
+        getSiteNavData()
+      } else if (res.code === 401) {
+        message.info('请先登录')
+        router.push('/register-login')
+      } else {
+        message.error('站点创建失败')
+      }
+    } else {
+      message.error('提交失败，请检查输入信息')
+    }
+  })
+}, 300)
+
+// 删除站点
+const delSiteNav = async (site: string) => {
+  const params = {
+    ids: [site],
+  }
+  const result = await delSiteNavApi(params)
+  const res = result.data
+  if (res.code === 200) {
+    message.success(res.message)
+    getSiteNavData()
+  } else {
+    message.error(res.message)
+  }
 }
 
 // 外部网站跳转
@@ -175,152 +278,58 @@ const handleLinkClick = (url: string) => {
 }
 
 // 获取网站图标
-// const testFaviconFetching = async () => {
-//   const testUrl = 'https://cn.vuejs.org/'
-//   const result = await getFavicon(testUrl)
-//   if (result) {
-//     console.log('成功获取favicon:', result)
-//     targetUrl.value = result
-//     return result
-//   } else {
-//     return false
-//   }
-// }
+const faviconFetching = async (val: string) => {
+  const result = await getFavicon(val)
+  if (result) {
+    faviconLink.value = result
+    return true
+  } else {
+    return false
+  }
+}
 
 // 获取二级分类下所有站点数据
-const getSiteCategoryData = (data: primaryItem) => {
+const getSiteCategoryData = (data: primaryItem, type: string) => {
+  if (type === 'user') {
+    showDelBtn.value = true
+  } else {
+    showDelBtn.value = false
+  }
   state.siteData = [data]
 }
 
-// 获取用户站点数据
-const getUserSiteData = () => {
-  state.userSiteData = [
-    {
-      secondary: '分类名称1',
-      data: [
-        {
-          name: '站点名称1',
-          url: 'https://cn.vuejs.org/',
-          desc: '描述1',
-          favicon: 'https://cn.vuejs.org/images/logo.png',
-        },
-        {
-          name: '站点名称2',
-          url: 'https://cn.vuejs.org/',
-          desc: '描述2',
-          favicon: 'https://cn.vuejs.org/images/logo.png',
-        },
-      ],
-    },
-    {
-      secondary: '分类名称2',
-      data: [
-        {
-          name: '站点名称1',
-          url: 'https://cn.vuejs.org/',
-          desc: '描述1',
-          favicon: 'https://cn.vuejs.org/images/logo.png',
-        },
-        {
-          name: '站点名称2',
-          url: 'https://cn.vuejs.org/',
-          desc: '描述2',
-          favicon: 'https://cn.vuejs.org/images/logo.png',
-        },
-      ],
-    },
-  ]
+interface siteNav {
+  primaryCategory: string
+  primaryItem: []
 }
-
-// 获取博客站点数据
-const getSiteData = () => {
-  state.blogSiteData = [
-    {
-      primary: '一级分类1',
-      primaryItem: [
-        {
-          secondary: '二级分类1',
-          data: [
-            {
-              name: '站点名称1',
-              url: 'https://cn.vuejs.org/',
-              desc: '描述1',
-              favicon: 'https://cn.vuejs.org/images/logo.png',
-            },
-            {
-              name: '站点名称2',
-              url: 'https://cn.vuejs.org/',
-              desc: '描述2',
-              favicon: 'https://cn.vuejs.org/images/logo.png',
-            },
-          ],
-        },
-        {
-          secondary: '二级分类2',
-          data: [
-            {
-              name: '站点名称1',
-              url: 'https://cn.vuejs.org/',
-              desc: '描述1',
-              favicon: 'https://cn.vuejs.org/images/logo.png',
-            },
-            {
-              name: '站点名称2',
-              url: 'https://cn.vuejs.org/',
-              desc: '描述2',
-              favicon: 'https://cn.vuejs.org/images/logo.png',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      primary: '一级分类2',
-      primaryItem: [
-        {
-          secondary: '二级分类1',
-          data: [
-            {
-              name: '站点名称1',
-              url: 'https://cn.vuejs.org/',
-              desc: '描述1',
-              favicon: 'https://cn.vuejs.org/images/logo.png',
-            },
-            {
-              name: '站点名称2',
-              url: 'https://cn.vuejs.org/',
-              desc: '描述2',
-              favicon: 'https://cn.vuejs.org/images/logo.png',
-            },
-          ],
-        },
-        {
-          secondary: '二级分类2',
-          data: [
-            {
-              name: '站点名称1',
-              url: 'https://cn.vuejs.org/',
-              desc: '描述1',
-              favicon: 'https://cn.vuejs.org/images/logo.png',
-            },
-            {
-              name: '站点名称2',
-              url: 'https://cn.vuejs.org/',
-              desc: '描述2',
-              favicon: 'https://cn.vuejs.org/images/logo.png',
-            },
-          ],
-        },
-      ],
-    },
-  ]
+// 获取站点数据
+const getSiteNavData = async () => {
+  // 是否已登录，登录获取id返回数据
+  const params = {
+    userId: userInfoStore.data.user._id || '',
+  }
+  const result = await getSiteApi(params)
+  const res = result.data
+  if (res.code === 200) {
+    allSiteNavData.value = res.data
+    state.blogSiteData = res.data?.blog
+    if (res.data?.user.length > 0) {
+      const filterUserSiteData = res.data.user.filter(
+        (item: siteNav) => item.primaryCategory == 'mysite',
+      )
+      state.userSiteData = filterUserSiteData[0].primaryItem
+      state.siteData = filterUserSiteData[0].primaryItem
+      showDelBtn.value = true
+    } else {
+      state.siteData = res.data?.blog.primaryItem[0].primaryItem[0]
+      showDelBtn.value = false
+    }
+  } else {
+    message.error('站点数据获取失败')
+  }
 }
-
-// 获取
 onMounted(() => {
-  getUserSiteData()
-  getSiteData()
-  // testFaviconFetching()
+  getSiteNavData()
 })
 </script>
 
@@ -396,7 +405,7 @@ onMounted(() => {
           font-size: 20px;
           font-weight: 700;
           line-height: 1.3;
-          color: #333;
+          color: var(--text-color);
         }
         .site-content-main-item {
           display: flex;
@@ -413,10 +422,20 @@ onMounted(() => {
             transform: translateY(0);
             transition: all 0.2s;
             background-color: var(--box-bg-color1);
-            color: #666;
+            color: var(--text-color);
             border-radius: 12px;
             box-shadow: 0 0 2px -1px #e3e8f7;
             border: 1px solid #e3e8f7;
+            .active-opretion-btn {
+              position: absolute;
+              right: 0;
+              top: 0;
+              z-index: 10;
+              margin: 5px;
+            }
+            .opretion-btn {
+              display: none;
+            }
             &:hover {
               border-color: #3e4a5c;
               box-shadow:
@@ -433,6 +452,7 @@ onMounted(() => {
               line-height: 20px;
               font-weight: 700;
               height: 32px;
+              color: var(--text-color);
               .link-logo {
                 padding: 2px;
                 width: 30px;
@@ -448,7 +468,7 @@ onMounted(() => {
             }
             .link-info {
               font-size: 12px;
-              color: #8f8f8f;
+              color: var(--text-color);
               line-height: 18px;
               height: 36px;
               line-clamp: 2;
@@ -457,6 +477,7 @@ onMounted(() => {
               display: -webkit-box;
               -webkit-box-orient: vertical;
               white-space: inherit;
+              padding-top: 10px;
             }
           }
         }

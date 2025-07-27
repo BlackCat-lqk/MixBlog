@@ -13,6 +13,23 @@ export function createSiteApi(params: object) {
  * 获取站点导航数据
  * @returns {Promise}
  */
-export function getSiteApi() {
-  return request.get('/getSiteNav')
+export function getSiteApi(params: object) {
+  return request.get('/getSiteNav', { params })
+}
+
+/**
+ * 获取站点导航数据,管理员用
+ * @returns {Promise}
+ */
+export function getSiteAdminApi() {
+  return request.get('/getSiteNavAdmin')
+}
+
+/**
+ * 批量删除站点导航数据
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function delSiteNavApi(params: object) {
+  return request.post('/deleteSiteNav', params)
 }

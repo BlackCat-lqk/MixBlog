@@ -123,6 +123,16 @@ export default {
     content: 'Mix Blog 1.0.0 · Made by LQK',
   },
   about: {
-    tagsList: "Prosperity, Democracy, Civilization, Harmony, Freedom, Equality, Justice, Rule of Law, Patriotism, Dedication, Integrity, Friendship",
+    tagsList:
+      'Prosperity, Democracy, Civilization, Harmony, Freedom, Equality, Justice, Rule of Law, Patriotism, Dedication, Integrity, Friendship',
+  },
+  bookDoc: {
+    title: 'Book Documents',
+    inputTip: 'Search book documents...',
+  },
+  chat: {
+    startChat: 'start chat',
+    sendMsg: 'send message...',
+    padding: 'padding',
   },
 }

@@ -82,7 +82,7 @@
 import type { FormInst, FormItemRule } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { getResetEmailCodeApi, getVerifyEmailCodeApi, resetPasswordApi } from '@/http/user'
-import { ref, defineProps, defineEmits, watch, reactive, computed } from 'vue'
+import { ref, watch, reactive, computed } from 'vue'
 import { validateEmail, validatePassword, validateCode } from '@/utils/validate'
 import { _debounce } from '@/utils/publickFun'
 
@@ -264,7 +264,6 @@ watch(
       align-items: center;
       justify-content: center;
     }
-
   }
 }
 :deep(.n-card__footer) {

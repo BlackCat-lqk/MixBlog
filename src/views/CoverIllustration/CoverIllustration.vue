@@ -2,26 +2,31 @@
   <header>
     <HeaderNav></HeaderNav>
   </header>
-  <div class="i-cover-image-box">
+  <div :class="showxq ? 'i-cover-image-xq-box' : 'i-cover-image-box'">
     <div v-if="!showSearchModel" class="filter-search-box" @click="showSearchModel = true">
-      <img src="@/assets/images/searchIconfont.svg" />
+      <img src="@/assets/images/more.svg" />
     </div>
     <div v-else class="search-options-box">
       <div class="close-img-box">
         <img src="@/assets/images/close.svg" @click="showSearchModel = false" />
       </div>
-      <div class="search-input-box">
+      <!-- <div class="search-input-box">
         <n-input placeholder="搜索">
           <template #prefix>
             <img src="@/assets/images/searchIconfont.svg" />
           </template>
         </n-input>
-      </div>
+      </div> -->
       <div v-if="true" class="classify-card-box" v-prevent-scroll-passthrough>
         <n-grid :x-gap="12" :y-gap="8" :cols="2">
-          <n-grid-item v-for="(item, idx) in 16" :key="idx">
-            <n-card hoverable
-              ><span class="card-text">ZZZ 绝区零{{ item }}</span>
+          <n-grid-item>
+            <n-card hoverable class="xq-bg" @click="showxq = true"
+              ><span class="card-text">星球大战</span>
+            </n-card>
+          </n-grid-item>
+          <n-grid-item>
+            <n-card hoverable @click="showxq = false"
+              ><span class="card-text">ZZZ 绝区零</span>
             </n-card>
           </n-grid-item>
         </n-grid>
@@ -30,9 +35,17 @@
         <n-empty description="什么都没有"> </n-empty>
       </div>
     </div>
-    <div class="cover-face-bg-box">
-      <MarqueeView :items="imageArray" direction="left" :speed="20"></MarqueeView>
-      <MarqueeView :items="imageArray" direction="right" :speed="18"></MarqueeView>
+    <div v-if="!showxq" class="cover-face-bg-box">
+      <MarqueeView :items="imageArray1" direction="left" :speed="20"></MarqueeView>
+      <MarqueeView :items="imageArray2" direction="right" :speed="18"></MarqueeView>
+      <MarqueeView :items="imageArray3" direction="left" :speed="20"></MarqueeView>
+      <MarqueeView :items="imageArray4" direction="right" :speed="18"></MarqueeView>
+    </div>
+    <div v-else class="cover-face-bg-box">
+      <MarqueeView :items="imageArrayxq1" direction="left" :speed="20"></MarqueeView>
+      <MarqueeView :items="imageArrayxq2" direction="right" :speed="18"></MarqueeView>
+      <MarqueeView :items="imageArrayxq3" direction="left" :speed="20"></MarqueeView>
+      <MarqueeView :items="imageArrayxq4" direction="right" :speed="18"></MarqueeView>
     </div>
   </div>
   <footer>
@@ -47,11 +60,52 @@ import FooterNav from '@/views/Footer/FooterNav.vue'
 import MarqueeView from '@/views/CoverIllustration/MarqueeView.vue'
 
 const showSearchModel = ref(false)
-const imageArray = ['/uploads/fileList/juequ6.png', '/uploads/fileList/juequ3.png']
+const showxq = ref(true)
+const imageArray1 = [
+  '/uploads/fileList/juequ1.png',
+  '/uploads/fileList/juequ2.png',
+  '/uploads/fileList/juequ3.png',
+]
+const imageArray2 = [
+  '/uploads/fileList/juequ4.png',
+  '/uploads/fileList/juequ5.png',
+  '/uploads/fileList/juequ6.png',
+]
+const imageArray3 = [
+  '/uploads/fileList/juequ7.png',
+  '/uploads/fileList/juequ8.png',
+  '/uploads/fileList/juequ9.png',
+]
+const imageArray4 = [
+  '/uploads/fileList/juequ10.png',
+  '/uploads/fileList/juequ11.png',
+  '/uploads/fileList/juequ12.png',
+]
+const imageArrayxq1 = [
+  '/uploads/fileList/xq1.jpeg',
+  '/uploads/fileList/xq2.jpg',
+  '/uploads/fileList/xq3.jpg',
+]
+const imageArrayxq2 = [
+  '/uploads/fileList/xq4.jpg',
+  '/uploads/fileList/xq5.jpg',
+  '/uploads/fileList/xq6.jpg',
+]
+const imageArrayxq3 = [
+  '/uploads/fileList/xq7.png',
+  '/uploads/fileList/xq8.jpg',
+  '/uploads/fileList/xq9.jpg',
+]
+const imageArrayxq4 = [
+  '/uploads/fileList/xq10.jpg',
+  '/uploads/fileList/xq11.jpg',
+  '/uploads/fileList/xq12.jpg',
+]
 </script>
 
 <style lang="scss" scoped>
-.i-cover-image-box {
+.i-cover-image-box,
+.i-cover-image-xq-box {
   width: 100%;
   height: 100%;
   min-height: calc(100vh - 64px);
@@ -72,9 +126,9 @@ const imageArray = ['/uploads/fileList/juequ6.png', '/uploads/fileList/juequ3.pn
     left: 50%;
     top: 64px;
     transform: translate(-50%, 0%);
-    background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);
+    background: linear-gradient(to right, #667db6, #00c8be, #00c861, #667db6);
     z-index: 1;
-    width: 200px;
+    width: 180px;
     border-radius: 0 0 10px 10px;
     backdrop-filter: blur(5px);
     padding: 10px 20px;
@@ -154,6 +208,13 @@ const imageArray = ['/uploads/fileList/juequ6.png', '/uploads/fileList/juequ3.pn
           text-align: center;
         }
       }
+      .xq-bg {
+        background: url('/uploads/fileList/xq12.jpg');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        @include g.borderRadius(10px);
+      }
     }
   }
   .cover-face-bg-box {
@@ -175,5 +236,8 @@ const imageArray = ['/uploads/fileList/juequ6.png', '/uploads/fileList/juequ3.pn
       object-fit: cover;
     }
   }
+}
+.i-cover-image-xq-box {
+  background-image: url(@/assets/wallpaper/xq12.jpg);
 }
 </style>

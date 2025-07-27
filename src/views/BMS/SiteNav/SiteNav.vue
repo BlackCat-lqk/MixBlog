@@ -11,7 +11,6 @@
         <h3>站点收录</h3>
         <div class="site-nav-box">
           <div class="create-site-nav">
-            <h5>创建站点</h5>
             <n-form ref="formRef" :model="formValue" :rules="rules">
               <n-form-item label="一级分类名称" path="primaryCategory">
                 <n-input
@@ -39,13 +38,33 @@
                 <n-input v-model:value="formValue.desc" maxlength="500" show-count clearable />
               </n-form-item>
               <n-form-item>
-                <n-button strong secondary type="primary" @click="handleCreateSite">
-                  确认</n-button
-                >
+                <n-button strong secondary type="primary" @click="handleCreateSite"> 确认</n-button>
               </n-form-item>
             </n-form>
           </div>
-          <div class="site-nav-content-box"></div>
+          <div class="site-nav-content-box">
+            <n-p> 你选中了 {{ checkedRowKeys.length }} 行。 </n-p>
+            <n-button style="margin-right: 20px" type="primary" @click="selectTypeData('user')">
+              User
+            </n-button>
+            <n-button
+              style="margin-right: 20px; margin-bottom: 10px"
+              type="primary"
+              @click="selectTypeData('blog')"
+            >
+              Blog
+            </n-button>
+            <n-button type="error" :disabled="checkedRowKeys.length <= 0" @click="bitchDelData">
+              批量删除
+            </n-button>
+            <n-data-table
+              :columns="columns"
+              :data="tableData"
+              :pagination="{ pageSize: 10 }"
+              :row-key="rowKey"
+              @update:checked-row-keys="handleCheck"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -54,16 +73,88 @@
 
 <script setup lang="ts">
 import { onMounted, ref, reactive } from 'vue'
-import type { FormInst } from 'naive-ui'
+import type { FormInst, DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-// import { getFavicon } from '@/utils/getFavicon'
+import { getFavicon } from '@/utils/getFavicon'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import { createSiteApi, getSiteApi } from '@/http/siteNav'
+import { createSiteApi, getSiteAdminApi, delSiteNavApi } from '@/http/siteNav'
 
-// const targetUrl = ref('' as string)
+const faviconLink = ref('')
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()
+const checkedRowKeysRef = ref<DataTableRowKey[]>([])
+const checkedRowKeys = checkedRowKeysRef
+const tableData = ref([])
+interface uploader {
+  _id: string
+  email: string
+}
+const tableAllData = ref({
+  user: [],
+  blog: [],
+})
+interface RowData {
+  _id: string
+  uploader: uploader
+  updatedAt: string
+  type: string
+  siteName: string
+  primaryCategory: string
+  secondaryCategory: string
+  link: string
+  icon: string
+  desc: string
+  createdAt: string
+}
+function createColumns(): DataTableColumns<RowData> {
+  return [
+    {
+      type: 'selection',
+    },
+    {
+      title: 'type',
+      key: 'type',
+    },
+    {
+      title: '更新人',
+      key: 'uploader.email',
+    },
+    {
+      title: 'updatedAt',
+      key: 'updatedAt',
+    },
+    {
+      title: 'siteName',
+      key: 'siteName',
+    },
+    {
+      title: 'primaryCategory',
+      key: 'primaryCategory',
+    },
+    {
+      title: 'secondaryCategory',
+      key: 'secondaryCategory',
+    },
+    {
+      title: 'link',
+      key: 'link',
+    },
+    {
+      title: 'desc',
+      key: 'desc',
+    },
+    {
+      title: 'createdAt',
+      key: 'createdAt',
+    },
+  ]
+}
+const columns = createColumns()
+const handleCheck = (rowKeys: DataTableRowKey[]) => {
+  checkedRowKeysRef.value = rowKeys
+}
+const rowKey = (row: RowData) => row._id
 
 interface FormValue {
   primaryCategory: string
@@ -72,6 +163,7 @@ interface FormValue {
   siteName: string
   desc: string
   type: string
+  icon: string
 }
 
 const formValue: FormValue = reactive({
@@ -81,6 +173,7 @@ const formValue: FormValue = reactive({
   siteName: '',
   desc: '',
   type: '',
+  icon: '',
 })
 
 const rules = {
@@ -89,14 +182,29 @@ const rules = {
   siteName: [{ required: true, message: '请输入站点名称', trigger: 'blur' }],
   link: [{ required: true, message: '请输入网址', trigger: 'blur' }],
 }
-
-// 表单验证
+// 批量删除
+const bitchDelData = async () => {
+  const params = {
+    ids: checkedRowKeys.value,
+  }
+  const result = await delSiteNavApi(params)
+  const res = result.data
+  if (res.code === 200) {
+    message.success(res.message)
+    getSiteNavData()
+    checkedRowKeys.value = []
+  } else {
+    message.error(res.message)
+  }
+}
+// 创建站点
 const handleCreateSite = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      formValue.type = 'user'
-      console.log(formValue)
+      formValue.type = 'blog'
+      const faviconResult = await faviconFetching(formValue.link)
+      if (faviconResult) formValue.icon = faviconLink.value
       const result = await createSiteApi(formValue)
       const res = result.data
       if (res.code === 200) {
@@ -115,24 +223,33 @@ const handleCreateSite = (e: MouseEvent) => {
     }
   })
 }
-// const testFaviconFetching = async () => {
-//   const testUrl = 'https://cn.vuejs.org/'
-//   const result = await getFavicon(testUrl)
-//   if (result) {
-//     targetUrl.value = result
-//     return result
-//   } else {
-//     return false
-//   }
-// }
+// 获取网站图标
+const faviconFetching = async (val: string) => {
+  const result = await getFavicon(val)
+  if (result) {
+    faviconLink.value = result
+    return true
+  } else {
+    return false
+  }
+}
 // 获取站点数据
 const getSiteNavData = async () => {
-  const result = await getSiteApi()
+  const result = await getSiteAdminApi()
   const res = result.data
   if (res.code === 200) {
-    console.log('站点数据获取成功', res.data)
+    tableAllData.value = res.data
+    tableData.value = res.data.blog
   } else {
     message.error('站点数据获取失败')
+  }
+}
+// 切换type
+const selectTypeData = (type: string) => {
+  if (type === 'blog') {
+    tableData.value = tableAllData.value.blog
+  } else {
+    tableData.value = tableAllData.value.user
   }
 }
 onMounted(() => {
@@ -155,11 +272,20 @@ onMounted(() => {
   }
   .site-nav-box {
     display: flex;
+    gap: 24px;
     .create-site-nav {
       width: 220px;
+      background-color: var(--box-bg-color);
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      border-radius: 8px;
     }
     .site-nav-content-box {
       flex: 1;
+      background-color: var(--box-bg-color);
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      border-radius: 8px;
     }
   }
 }

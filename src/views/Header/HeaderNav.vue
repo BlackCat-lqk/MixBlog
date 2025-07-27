@@ -9,7 +9,7 @@
       <span class="logo-name-text" style="padding-right: 10px">{{
         sloganStore.sloganConfig.logoName
       }}</span>
-      <div class="search-box">
+      <!-- <div class="search-box">
         <n-popselect
           v-model:value="state.searchQuery"
           :options="state.searchOptions"
@@ -24,7 +24,7 @@
           >
             <template #prefix>
               <n-icon>
-                <img src="/src/assets/images/Search.svg" />
+                <img width="20px" src="/src/assets/images/searchIconfont.svg" />
               </n-icon>
             </template>
           </n-input>
@@ -45,7 +45,7 @@
             </div>
           </template>
         </n-popselect>
-      </div>
+      </div> -->
     </div>
     <div class="header-menu-box">
       <div class="menu-item-box" v-for="(item, idx) in routerPage" :key="idx">
@@ -90,7 +90,7 @@
           <n-avatar round :size="40">
             <n-icon>
               <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" />
-              <img v-else :src="defaultAvatar" />
+              <img v-else src="@/assets/images/UserAvatarFilled.svg" />
             </n-icon>
           </n-avatar>
           <span class="user-name" @click="jumpPage('/register-login')">{{ t('header.text') }}</span>
@@ -150,7 +150,7 @@ import { useRouter } from 'vue-router'
 import { useScroll } from '@vueuse/core'
 import { useThemeStore } from '@/stores/themeStore'
 import { useUserInfoStore } from '@/stores/userInfo'
-import { useGlobalSearchStore } from '@/stores/globalSearch'
+// import { useGlobalSearchStore } from '@/stores/globalSearch'
 import { useMessage } from 'naive-ui'
 import { logOutUserApi } from '@/http/user'
 import { useSloganInfoStore } from '@/stores/configInfo'
@@ -160,11 +160,10 @@ import { useI18n } from 'vue-i18n'
 const { locale, t } = useI18n()
 // import { clearDynamicRoutes } from '@/router'
 const sloganStore = useSloganInfoStore()
-const defaultAvatar = new URL('/uploads/defalut/UserAvatarFilled.svg', import.meta.url).href
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
 const themeStore = useThemeStore()
-const globalSearchStore = useGlobalSearchStore()
+// const globalSearchStore = useGlobalSearchStore()
 const message = useMessage()
 const { y } = useScroll(window)
 const languages = [
@@ -188,6 +187,10 @@ const moreData = [
   {
     label: '封面立绘',
     key: '/cover-illustration',
+  },
+  {
+    label: 'MIX AI',
+    key: '/d-chat',
   },
 ]
 // 选择更多选项
@@ -262,20 +265,20 @@ const handleChangeTheme = (value: boolean) => {
   themeStore.setTheme(value ? 'light' : 'dark')
 }
 
-const handleGlobalSearch = async () => {
-  if (state.searchQuery) {
-    await globalSearchStore.setSearch(state.searchQuery)
-    handleSearchHistory()
-  }
-}
+// const handleGlobalSearch = async () => {
+//   if (state.searchQuery) {
+//     await globalSearchStore.setSearch(state.searchQuery)
+//     handleSearchHistory()
+//   }
+// }
 
 // 清空搜索记录
-const clearHistory = () => {
-  state.searchHistory = []
-  localStorage.removeItem('globalSearch')
-  const tip = computed(() => t('header.search.tip4'))
-  message.success(tip.value)
-}
+// const clearHistory = () => {
+//   state.searchHistory = []
+//   localStorage.removeItem('globalSearch')
+//   const tip = computed(() => t('header.search.tip4'))
+//   message.success(tip.value)
+// }
 // 用户头像菜单select回调
 const handleAvatarClick = async (key: string | number) => {
   if (key === 0) {

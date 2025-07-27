@@ -98,7 +98,7 @@
 
 <script lang="ts" setup>
 import type { FormInst, UploadFileInfo } from 'naive-ui'
-import { reactive, ref, defineProps, defineEmits, watch, onMounted } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { validateEmail, validateUsername } from '@/utils/validate'

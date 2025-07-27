@@ -27,7 +27,7 @@
                 <p>{{ _formatTime(props.data.updatedAt) }}</p>
               </div>
               <div class="article-header-data-info">
-                <div style="cursor: pointer;">
+                <div style="cursor: pointer">
                   <img width="32px" src="@/assets/images/likes.svg" @click="likeArticle" />
                   <span>{{ state.likes }}</span>
                 </div>
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, watch, ref, defineEmits, reactive } from 'vue'
+import { watch, ref, reactive } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import QuillView from '@/components/QuillView.vue'
 import CommentsChat from '@/components/CommentsChat.vue'
@@ -79,7 +79,10 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { addArticleCommentApi, likeArticleApi, viewArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
+import { useRouter } from 'vue-router'
+import _ from 'lodash'
 
+const router = useRouter()
 const deviceStore = useDeviceStore()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
@@ -140,7 +143,7 @@ export interface Comment {
 const comments = ref<Comment[]>([])
 
 // 处理提交评论事件
-const handleSubmitComment = async (data: { content: string; parentId?: string }) => {
+const handleSubmitComment = _.debounce(async (data: { content: string; parentId?: string }) => {
   // 调用 API 提交评论
   const params = {
     articleId: props.data._id,
@@ -159,19 +162,22 @@ const handleSubmitComment = async (data: { content: string; parentId?: string })
       userId: userInfoStore.data.user._id,
       userName: userInfoStore.data.user.userName,
       avatar: userInfoStore.data.user.avatar,
-      content: data.content,
-      parentId: data.parentId || null,
+      content: res.data.content,
+      parentId: res.data.parentId || null,
       createdAt: res.data.createdAt,
     }
     comments.value.push(newComment)
     message.success('评论成功')
     state.comments += 1
+  } else if (res.code === 400) {
+    message.info('请先登录')
+    router.push('/register-login')
   } else {
     message.warning('评论出错了')
   }
-}
+}, 300)
 // 处理点赞事件
-const likeArticle = async () => {
+const likeArticle = _.debounce(async () => {
   const params = {
     articleId: props.data._id,
     userId: userInfoStore.data.user._id,
@@ -180,19 +186,23 @@ const likeArticle = async () => {
   }
   const result = await likeArticleApi(params)
   const res = result.data
+  console.log(res)
   if (res.code === 200) {
-    if(res.type == 'like'){
-    }else {
+    if (res.type == 'like') {
+    } else {
       console.log('取消点赞')
     }
     state.likes = res.data
+  } else if (res.code === 401) {
+    message.info('请先登录')
+    router.push('/register-login')
   } else {
     message.warning('点赞失败')
   }
-}
+}, 300)
 
 // 处理回复评论事件
-function handleReplyComment(comment: Comment) {
+const handleReplyComment = (comment: Comment) => {
   console.log('回复评论:', comment)
   // 可以在这里处理回复相关的逻辑
 }
@@ -238,7 +248,6 @@ watch(
     }
   },
 )
-
 </script>
 
 <style scoped lang="scss">

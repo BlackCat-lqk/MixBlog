@@ -7,16 +7,16 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, onMounted } from 'vue';
+import { onMounted } from 'vue'
 
 const props = defineProps({
   fileUrl: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 onMounted(() => {
-  console.log(props.fileUrl);
+  console.log(props.fileUrl)
 })
 </script>
 

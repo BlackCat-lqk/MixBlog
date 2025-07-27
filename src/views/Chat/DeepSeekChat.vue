@@ -13,49 +13,42 @@
       />
     </div>
     <div class="chat-header-box">
-      <n-button strong secondary round type="primary"
-        ><img
-          style="margin-right: 5px"
-          width="24px"
-          src="@/assets/images/NewChat.svg"
-        />开启新对话</n-button
+      <n-button strong secondary round type="primary" @click="startNewChat"
+        ><img style="margin-right: 5px" width="24px" src="@/assets/images/NewChat.svg" />{{
+          $t('chat.startChat')
+        }}</n-button
       >
-      <n-button strong secondary round type="primary"
+      <!-- <n-button strong secondary round type="primary"
         ><img
           style="margin-right: 5px"
           width="24px"
           src="@/assets/images/history.svg"
         />历史会话</n-button
-      >
+      > -->
     </div>
     <div class="chat-content-box">
       <div class="messages">
         <div v-for="(message, index) in messages" :key="index" :class="['message', message.role]">
-          <strong v-if="message.role === 'user'"
-            ><img
-              v-show="message.role === 'user'"
-              width="32px"
-              style="padding: 8px"
-              src="@/assets/images/ChatUser.svg"
-          /></strong>
-          <strong v-else
-            ><img width="32px" style="padding: 8px" src="@/assets/images/ChatsAI.svg"
-          /></strong>
-          <quill-view :content="md.render(message.content)"></quill-view>
+          <strong v-if="message.role === 'user'"> </strong>
+          <strong v-else>
+            <div style="display: flex; align-items: center">
+              <img width="32px" class="mix-ai-icon" src="@/assets/images/ChatsAI.svg" />
+            </div>
+          </strong>
+          <quill-view :content="message.content"></quill-view>
         </div>
         <div v-show="isLoading" :class="['message']">
-          <strong v-show="isLoading"
-            ><img width="32px" style="padding: 8px" src="@/assets/images/ChatsAI.svg" />
+          <strong v-show="isLoading">
+            <div style="display: flex; align-items: center">
+              {{ $t('chat.padding') }}
+              <img width="20px" class="chat-loading-icon" src="@/assets/images/Loading.svg" />
+            </div>
             <n-space vertical>
-              <n-skeleton height="40px" width="33%" />
               <n-skeleton height="40px" width="66%" :sharp="false" />
-              <n-skeleton height="40px" round />
-              <n-skeleton height="40px" circle />
             </n-space>
           </strong>
         </div>
         <div v-if="streamingResponse" class="message assistant">
-          <strong>DeepSeek:</strong>
           <div>{{ streamingResponse }}</div>
         </div>
       </div>
@@ -64,7 +57,7 @@
       <n-input
         v-model:value="userInput"
         type="textarea"
-        placeholder="发送消息~"
+        :placeholder="$t('chat.sendMsg')"
         style="--n-border: none; --n-border-hover: none"
         @keyup.enter="sendMessage"
       />
@@ -92,25 +85,33 @@ import Orb from '@/views/VueBits/BitsOrb.vue'
 import { ref } from 'vue'
 import { chatWithDeepSeek, streamChatWithDeepSeek } from '@/http/deepseek'
 import QuillView from '@/components/QuillView.vue'
-import MarkdownIt from 'markdown-it'
+// import MarkdownIt from 'markdown-it'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
+import { useUserInfoStore } from '@/stores/userInfo'
+import { useRouter } from 'vue-router'
+import { useMessage } from 'naive-ui'
+
+const router = useRouter()
+const message = useMessage()
+const userInfoStore = useUserInfoStore()
+import _ from 'lodash'
 
 // 定义类型
-interface MarkdownOptions {
-  html?: boolean
-  linkify?: boolean
-  typographer?: boolean
-  breaks?: boolean
-}
+// interface MarkdownOptions {
+//   html?: boolean
+//   linkify?: boolean
+//   typographer?: boolean
+//   breaks?: boolean
+// }
 
 // 创建 markdown-it 实例
-const md: MarkdownIt = new MarkdownIt({
-  html: true, // 启用 HTML 标签
-  linkify: true, // 自动转换 URL 为链接
-  typographer: true, // 优化排版
-  breaks: true, // 转换换行符为 <br>
-} as MarkdownOptions)
+// const md: MarkdownIt = new MarkdownIt({
+//   html: true, // 启用 HTML 标签
+//   linkify: true, // 自动转换 URL 为链接
+//   typographer: true, // 优化排版
+//   breaks: true, // 转换换行符为 <br>
+// } as MarkdownOptions)
 
 const userInput = ref('')
 interface ChatMessage {
@@ -120,11 +121,27 @@ interface ChatMessage {
 const messages = ref<ChatMessage[]>([])
 const streamingResponse = ref('')
 const isLoading = ref(false)
-const useStreaming = ref(false)
+const useStreaming = ref(true)
 
-const sendMessage = async () => {
+// 开启新对话
+const startNewChat = () => {
+  // 清空消息历史
+  messages.value = []
+  // 清空输入框
+  userInput.value = ''
+  // 重置流式响应
+  streamingResponse.value = ''
+  // 重置加载状态
+  isLoading.value = false
+}
+const sendMessage = _.debounce(async () => {
   if (!userInput.value.trim()) return
-
+  // 检查是否登录
+  if (!userInfoStore.data.user.isLogin) {
+    message.error('请先登录')
+    router.push('/register-login')
+    return
+  }
   const userMessage: ChatMessage = {
     role: 'user',
     content: userInput.value,
@@ -133,7 +150,7 @@ const sendMessage = async () => {
   messages.value.push(userMessage)
   isLoading.value = true
   streamingResponse.value = ''
-
+  userInput.value = ''
   try {
     if (useStreaming.value) {
       await streamChatWithDeepSeek(
@@ -166,7 +183,7 @@ const sendMessage = async () => {
     isLoading.value = false
     userInput.value = ''
   }
-}
+}, 300)
 </script>
 
 <style lang="scss" scoped>
@@ -190,6 +207,7 @@ const sendMessage = async () => {
     transform: translate(-50%, -50%);
     width: 70%;
     height: 70%;
+    z-index: 0;
   }
   .chat-header-box {
     width: 70%;
@@ -207,6 +225,17 @@ const sendMessage = async () => {
     height: calc(100% - 200px);
     border-radius: 8px;
     padding: 0 10px;
+    .chat-loading-icon {
+      animation: loading 1s ease-in-out infinite;
+    }
+    @keyframes loading {
+      0% {
+        rotate: 0deg;
+      }
+      100% {
+        rotate: 360deg;
+      }
+    }
     .messages {
       height: calc(100% - 50px);
       overflow-y: auto;
@@ -216,6 +245,18 @@ const sendMessage = async () => {
       line-height: 1.5;
       @include g.scrollbarCustom;
       font-size: 18px;
+      .mix-ai-icon {
+        animation: aicolor 5s ease-in-out infinite;
+        border-radius: 50%;
+      }
+      @keyframes aicolor {
+        0% {
+          background: linear-gradient(to right, #a8ff78, #fffb00);
+        }
+        100% {
+          background: linear-gradient(to right, #fffb00, #a8ff78);
+        }
+      }
     }
     .user {
       background-color: var(--box-bg-color7);

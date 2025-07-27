@@ -153,6 +153,13 @@ onMounted(() => {
   box-sizing: border-box;
   margin: 0 15px;
 }
+:deep(.n-image) {
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
 .marquee-image {
   width: 100%;
   height: 100%;

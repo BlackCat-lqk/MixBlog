@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, watch, defineProps, defineEmits, withDefaults } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, withDefaults } from 'vue'
 import * as echarts from 'echarts'
 import type { EChartsOption, ECharts } from 'echarts'
 
@@ -22,7 +22,7 @@ interface ChartProps {
 const props = withDefaults(defineProps<ChartProps>(), {
   isDark: false,
   loading: false,
-  isEmpty: false
+  isEmpty: false,
 })
 
 const emit = defineEmits<{
@@ -56,13 +56,11 @@ const resizeHandler = () => {
 // 监听 options 变化，重新渲染
 watch(() => props.options, initChart, { deep: true })
 
-
 // 生命周期：挂载后初始化图表
 onMounted(() => {
   initChart()
   window.addEventListener('resize', resizeHandler)
 })
-
 
 // 生命周期：卸载前释放资源
 onBeforeUnmount(() => {

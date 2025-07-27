@@ -1,13 +1,7 @@
 <template>
   <n-modal-provider>
     <n-modal v-model:show="showModal" :mask-closable="false">
-      <n-card
-        title="找回密码"
-        :bordered="false"
-        size="huge"
-        role="dialog"
-        aria-modal="true"
-      >
+      <n-card title="找回密码" :bordered="false" size="huge" role="dialog" aria-modal="true">
         <n-form ref="formRef" inline label-width="100%" :model="formValue" :rules="rules">
           <div class="forget-main-box">
             <div class="steps-box">
@@ -76,7 +70,7 @@
 import type { StepsProps, FormInst, FormItemRule } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { getResetEmailCodeApi, getVerifyEmailCodeApi, resetPasswordApi } from '@/http/user'
-import { ref, defineProps, defineEmits, watch, reactive, computed } from 'vue'
+import { ref, watch, reactive, computed } from 'vue'
 import { validateEmail, validatePassword, validateCode } from '@/utils/validate'
 import { _debounce } from '@/utils/publickFun'
 

@@ -13,8 +13,8 @@ export function uploadBookDocApi(params: unknown) {
  * @param {Object}
  * @returns {Promise}
  */
-export function getBookDocApi() {
-  return request.get('/files')
+export function getBookDocApi(params: object) {
+  return request.get(`/files`, { params })
 }
 
 /**
@@ -25,4 +25,3 @@ export function getBookDocApi() {
 export function deleteBookDocApi(params: unknown) {
   return request.delete(`/files/${params}`)
 }
-

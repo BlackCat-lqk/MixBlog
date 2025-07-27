@@ -1,6 +1,5 @@
 import request from '@/utils/request'
 
-
 /**
  * 新建图库数据
  * @param {Object}
@@ -37,3 +36,38 @@ export function deletePhotoLibraryApi(params: unknown) {
   return request.delete(`/deletePhotoLibrary/${params}`)
 }
 
+/**
+ * 博客图库添加评论
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function addPhotoCommentApi(params: object) {
+  return request.post('/photoLibrary/addComment', params)
+}
+
+/**
+ * 博客图库删除评论
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function delPhotoCommentApi(params: object) {
+  return request.post('/photoLibrary/deleteComment', params)
+}
+
+/**
+ * 博客图库点赞/取消点赞
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function likePhotoApi(params: object) {
+  return request.post('/photoLibrary/like', params)
+}
+
+/**
+ * 博客图库新增浏览
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function viewPhotoApi(params: object) {
+  return request.post('/photoLibrary/view', params)
+}

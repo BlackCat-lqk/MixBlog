@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from 'vue'
 import { ref } from 'vue'
 
 const isSelected = ref('全部')

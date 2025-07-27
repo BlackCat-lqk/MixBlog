@@ -82,7 +82,7 @@ export default {
     },
   },
   validate: {
-    emailError: '请输入的邮箱地址',
+    emailError: '请输入邮箱地址',
     emailError1: '请输入正确的邮箱地址',
     nameError1: '用户名不能为空',
     nameError2: '用户名只能为2-10位数字或字母组合',
@@ -123,6 +123,15 @@ export default {
     content: 'Mix Blog 1.0.0 · Made by LQK',
   },
   about: {
-    tagsList: '富强, 民主, 文明, 和谐, 自由,, 平等, 公正, 法治, 爱国, 敬业, 诚信, 友善',
+    tagsList: '富强, 民主, 文明, 和谐, 自由, 友善, 平等, 公正, 法治, 爱国, 敬业, 诚信',
+  },
+  bookDoc: {
+    title: '书籍文档',
+    inputTip: '输入文件名进行搜索...',
+  },
+  chat: {
+    startChat: '开启新对话',
+    sendMsg: '发送消息...',
+    padding: '正在生成中',
   },
 }

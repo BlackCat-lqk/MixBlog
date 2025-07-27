@@ -24,7 +24,6 @@
           </div>
         </div>
       </div>
-      <div class="random-notes-comment">{{ $t('notes.content3') }}</div>
     </div>
     <div class="random-notes-content">
       <notes-card :notesDetail="notesDetail"></notes-card>
@@ -119,13 +118,14 @@ onMounted(() => {
     background-color: var(--box-bg-color4);
     border-radius: 8px;
     .random-notes-list {
-      height: 680px;
-      min-height: 640px;
       display: grid;
       gap: 24px;
-      overflow: auto;
       grid-template-columns: repeat(auto-fill, minmax(1, 1fr)); /* 每个子元素最小200px，自动换行 */
-      @include g.scrollbarCustom;
+      overflow: hidden;
+      &:hover {
+        @include g.scrollbarCustom;
+        overflow: auto;
+      }
       .random-notes-list-item {
         width: 100%;
         height: 100%;
@@ -191,15 +191,6 @@ onMounted(() => {
           }
         }
       }
-    }
-    .random-notes-comment {
-      height: 240px;
-      background-color: var(--box-bg-color1);
-      border-radius: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--text-color);
     }
   }
   .random-notes-content {

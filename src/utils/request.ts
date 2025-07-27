@@ -37,7 +37,7 @@ service.interceptors.response.use(
     console.log('网络异常，请稍后再试', error)
     const res = {
       data: {
-        code: 400,
+        code: error.response.data.data.code,
         message: error.response.data.data.message,
         data: null,
         success: false,

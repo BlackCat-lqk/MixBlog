@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { useUserInfoStore } from '@/stores/userInfo'
-import { ref, reactive, onMounted, h, defineEmits, defineProps, watch } from 'vue'
+import { ref, reactive, onMounted, h, watch } from 'vue'
 import { upsertCategoryTags, getCategoryTagsApi } from '@/http/categoryTags'
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { NButton, useMessage } from 'naive-ui'

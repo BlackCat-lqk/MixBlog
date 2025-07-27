@@ -39,18 +39,18 @@
           <h1>{{ photoItem.title }}</h1>
           <div class="photo-gallery-title-data">
             <p>{{ _formatTime(photoItem.updatedAt) }}</p>
-            <div>
+            <div class="views-comment-icon">
               <span>
-                <n-icon size="small">
-                  <img width="20px" src="@/assets/images/comment.svg" />
-                </n-icon>
-                12
+                <img width="20px" src="@/assets/images/likes.svg" />
+                {{ photoItem.likes.length }}
               </span>
               <span>
-                <n-icon size="small">
-                  <img width="20px" src="@/assets/images/views.svg" />
-                </n-icon>
-                24
+                <img width="20px" src="@/assets/images/views.svg" />
+                {{ photoItem.views.length }}
+              </span>
+              <span>
+                <img width="20px" src="@/assets/images/comment.svg" />
+                {{ photoItem.comments.length }}
               </span>
             </div>
           </div>
@@ -88,12 +88,33 @@ import { _formatTime } from '@/utils/publickFun'
 const themeStore = useThemeStore()
 const router = useRouter()
 const showActiveDrawer = ref(false)
+export interface Comment {
+  _id: string
+  userId: string
+  userName: string
+  avatar: string
+  content: string
+  parentId: string | null
+  createdAt: string
+  children?: Comment[]
+}
+
+export interface LikeView {
+  userId: string
+  userName: string
+  email: string
+  viewedAt: string
+  likedAt: string
+}
 interface photoItemType {
   title: string
   photos: string[]
   content: string
   updatedAt: string
   category: string
+  comments: Comment[]
+  likes: LikeView[]
+  views: LikeView[]
 }
 const photoItem = ref<photoItemType>({
   title: '',
@@ -101,6 +122,9 @@ const photoItem = ref<photoItemType>({
   content: '',
   updatedAt: '',
   category: '',
+  comments: [],
+  likes: [],
+  views: [],
 })
 const state = reactive({
   photoLibrary: [],
@@ -113,6 +137,9 @@ let imagesDetail: photoItemType = reactive({
   category: '',
   updatedAt: '',
   photos: [],
+  comments: [],
+  likes: [],
+  views: [],
 })
 // 获取图库信息
 const getPhotoLibrary = async () => {
@@ -242,9 +269,16 @@ onMounted(() => {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          > div {
+          .views-comment-icon {
             display: flex;
-            margin-right: 20px;
+            align-items: center;
+            gap: 15px;
+            padding-right: 20px;
+            span {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
           }
           p {
             font-size: 14px;

@@ -41,21 +41,15 @@
         </span>
         <div class="views-comment-icon">
           <span>
-            <n-icon>
-              <img width="20px" src="@/assets/images/likes.svg" />
-            </n-icon>
+            <img width="20px" src="@/assets/images/likes.svg" />
             {{ item.likes.length }}
           </span>
           <span>
-            <n-icon>
-              <img width="20px" src="@/assets/images/views.svg" />
-            </n-icon>
+            <img width="20px" src="@/assets/images/views.svg" />
             {{ item.views.length }}
           </span>
           <span>
-            <n-icon>
-              <img width="20px" src="@/assets/images/comment.svg" />
-            </n-icon>
+            <img width="20px" src="@/assets/images/comment.svg" />
             {{ item.comments.length }}
           </span>
         </div>
@@ -65,7 +59,7 @@
   <ArticleDetail v-model:showModal="showActiveDrawer" :data="articleDetail"></ArticleDetail>
 </template>
 <script setup lang="ts">
-import { defineProps, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import ArticleDetail from '@/views/Article/ArticleDetail.vue'
 const showActiveDrawer = ref(false)
@@ -96,7 +90,7 @@ interface articleDetailType {
   category: string
   updatedAt: string
   tags: string[]
-  comments: Comment[],
+  comments: Comment[]
   likes: LikeView[]
   views: LikeView[]
 }
@@ -110,7 +104,7 @@ let articleDetail: articleDetailType = reactive({
   tags: [],
   comments: [],
   likes: [],
-  views: []
+  views: [],
 })
 const props = defineProps({
   articleData: {

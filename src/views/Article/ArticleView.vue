@@ -6,8 +6,15 @@
     <classify-meun :classify="classify" @classifyEmit="handleClassify"></classify-meun>
     <article-card :articleData="articleData"></article-card>
     <div class="more-btn" v-if="!isClassify">
-      <n-button v-if="articleData.data.length < articleData.deepData.length" tertiary round @click="moreArticle"> {{ $t('common.more') }} </n-button>
-      <n-gradient-text v-else type="info"> {{ $t('common.loadMore') }} </n-gradient-text>
+      <n-button
+        v-if="articleData.data.length < articleData.deepData.length"
+        tertiary
+        round
+        @click="moreArticle"
+      >
+        {{ $t('common.more') }}
+      </n-button>
+      <n-gradient-text v-else type="info"> {{ $t('common.noMore') }} </n-gradient-text>
     </div>
     <div v-else class="more-btn"></div>
   </div>
@@ -26,24 +33,24 @@ import { getAllBlogArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-import _ from 'lodash';
+import _ from 'lodash'
 const message = useMessage()
 const isClassify = ref(false)
 const articleData = reactive({
   data: [],
   columns: 3,
-  deepData: []
+  deepData: [],
 })
 const classifyAll = computed(() => t('common.all'))
 const classify = reactive([
   {
     name: classifyAll.value,
     number: 0,
-  }
+  },
 ])
 
 interface articelDataType {
-  status: string,
+  status: string
   category: string
 }
 // 获取所有文章数据
@@ -54,10 +61,10 @@ const getAllBlogArticleData = async () => {
     const listData = res.data.list.filter((item: articelDataType) => item.status === 'published')
     articleData.deepData = _.cloneDeep(listData)
     classify[0].number = res.data.pagination.total
-    for(const key in res.data.stats.categories){
+    for (const key in res.data.stats.categories) {
       classify.push({
         name: key,
-        number: res.data.stats.categories[key]
+        number: res.data.stats.categories[key],
       })
     }
     articleData.data = listData.slice(0, 6)
@@ -77,10 +84,10 @@ const handleClassify = (name: string) => {
   const filterData = listData.filter((item: articelDataType) => {
     return item.category === name
   })
-  if(name === classifyAll.value){
+  if (name === classifyAll.value) {
     isClassify.value = false
     articleData.data = listData.slice(0, 6)
-  }else {
+  } else {
     isClassify.value = true
     articleData.data = filterData
   }

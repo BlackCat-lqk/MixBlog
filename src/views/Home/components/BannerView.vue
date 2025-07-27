@@ -8,19 +8,13 @@
       <div>
         <div>
           <h1>
-            <n-gradient-text type="info">
-              {{ sloganStore.sloganConfig.sloganTitle }}
-            </n-gradient-text>
+            {{ sloganStore.sloganConfig.sloganTitle }}
           </h1>
           <p>
-            <n-gradient-text type="danger">
-              {{ sloganStore.sloganConfig.sloganSub1 }}
-            </n-gradient-text>
+            {{ sloganStore.sloganConfig.sloganSub1 }}
           </p>
           <p>
-            <n-gradient-text type="warning">
-              {{ sloganStore.sloganConfig.sloganSub2 }}
-            </n-gradient-text>
+            {{ sloganStore.sloganConfig.sloganSub2 }}
           </p>
         </div>
         <div></div>
@@ -69,6 +63,20 @@ const handelScrollDown = () => {
 </script>
 
 <style scoped lang="scss">
+@font-face {
+  font-family: 'MyCustomFont';
+  src:
+    url('@/assets/font/QG8fvHslXdtr.woff2') format('woff2'),
+    url('@/assets/font/QG8fvHslXdtr.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-variation-settings:
+    'SRIF' 1,
+    'slnt' 12,
+    'wdth' 75,
+    'wght' 630.08;
+  font-display: swap;
+}
 .banner {
   width: 100%;
   display: flex;
@@ -123,20 +131,42 @@ const handelScrollDown = () => {
     }
     h1 {
       font-size: 86px;
-      font-weight: 600;
-      letter-spacing: 0.44em;
+      font-weight: 700;
+      letter-spacing: 0.24em;
       padding-top: 30px;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'MyCustomFont', sans-serif;
+      font-variation-settings:
+        'SRIF' 1,
+        'slnt' 8,
+        'wdth' 75,
+        'wght' 630.08;
+      background: linear-gradient(45deg, #77f7c8, #5ffffa, #001194);
+      opacity: 0.8;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent; /* 降级处理 */
       span {
         display: inline;
       }
     }
+
     p {
       padding-top: 20px;
-      font-size: 78px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      font-family: 'Courier New', Courier, monospace;
+      font-size: 72px;
+      letter-spacing: 0.14em;
+      font-family: 'MyCustomFont', sans-serif;
+      font-variation-settings:
+        'SRIF' 1,
+        'slnt' 8,
+        'wdth' 75,
+        'wght' 630.08;
+      background: linear-gradient(45deg, #6bb3ff, #4ecdc4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent; /* 降级处理 */
+      opacity: 0.8;
     }
     .chat-ai-btn {
       cursor: pointer;

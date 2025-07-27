@@ -112,8 +112,11 @@ const hasNote = ref(true)
       }
     }
     .n-card__content {
-      overflow-y: auto;
-      @include g.scrollbarCustom;
+      overflow-y: hidden;
+      &:hover {
+        overflow-y: auto;
+        @include g.scrollbarCustom;
+      }
     }
   }
 }

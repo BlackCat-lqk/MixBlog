@@ -30,9 +30,9 @@
         round
         @click="moreArticle"
       >
-        加载更多
+        {{ $t('common.loadMore') }}
       </n-button>
-      <n-gradient-text v-else type="info"> 没有更多了 </n-gradient-text>
+      <n-gradient-text v-else type="info"> {{ $t('common.noMore') }} </n-gradient-text>
     </div>
     <div v-else class="more-btn"></div>
   </div>
@@ -47,28 +47,53 @@ import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import ClassifyMeun from '@/components/ClassifyMeun.vue'
-import { reactive, onMounted, ref } from 'vue'
+import { reactive, onMounted, ref, computed } from 'vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
 import { useMessage } from 'naive-ui'
 import _ from 'lodash'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const showActiveDrawer = ref(false)
 const message = useMessage()
 const isClassify = ref(false)
+export interface Comment {
+  _id: string
+  userId: string
+  userName: string
+  avatar: string
+  content: string
+  parentId: string | null
+  createdAt: string
+  children?: Comment[]
+}
+
+export interface LikeView {
+  userId: string
+  userName: string
+  email: string
+  viewedAt: string
+  likedAt: string
+}
 interface dataType {
+  _id: string
   title: string
   content: string
   photos: string[]
   category: string
   updatedAt: string
+  comments: Comment[]
+  likes: LikeView[]
+  views: LikeView[]
 }
 const photoData = reactive({
   data: [] as dataType[],
   columns: 3,
   deepData: [],
 })
+const classifyAll = computed(() => t('common.all'))
 const classify = reactive([
   {
-    name: '全部',
+    name: classifyAll,
     number: 0,
   },
 ])
@@ -76,11 +101,15 @@ interface photoDataType {
   category: string
 }
 let imagesDetail: dataType = reactive({
+  _id: '',
   title: '',
   content: '',
   category: '',
   updatedAt: '',
-  photos: []
+  photos: [],
+  comments: [],
+  likes: [],
+  views: [],
 })
 // 查看图库详情
 const handleDetailImage = (data: dataType) => {
