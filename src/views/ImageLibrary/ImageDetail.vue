@@ -62,6 +62,9 @@
               />
             </div>
           </div>
+          <div class="signature-box">
+            <img width="20%" src="@/assets/images/signature-night.png" />
+          </div>
         </div>
       </n-drawer-content>
     </n-drawer>
@@ -419,6 +422,9 @@ body {
           color: #0b1926;
         }
       }
+    }
+    .signature-box {
+      @include g.flexCenter;
     }
   }
 }

@@ -60,6 +60,118 @@
               </div>
             </n-card>
           </n-grid-item>
+          <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
+            <n-card
+              hoverable
+              :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 50%; background-position: center center;`"
+            >
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <h3>{{ item.filename }}</h3>
+                </template>
+                {{ item.filename }}
+              </n-tooltip>
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <p>描述：{{ item.description }}</p>
+                </template>
+                {{ item.description }}
+              </n-tooltip>
+              <div class="doc-info">
+                <span>类型：{{ item.suffix }}</span>
+                <span>大小：{{ item.size }}</span>
+                <span>时间：{{ item.updatedAt }}</span>
+              </div>
+              <div class="btn-box">
+                <n-button type="primary" @click="downloadFile(item)">下载</n-button>
+                <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
+              </div>
+            </n-card>
+          </n-grid-item>
+          <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
+            <n-card
+              hoverable
+              :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 50%; background-position: center center;`"
+            >
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <h3>{{ item.filename }}</h3>
+                </template>
+                {{ item.filename }}
+              </n-tooltip>
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <p>描述：{{ item.description }}</p>
+                </template>
+                {{ item.description }}
+              </n-tooltip>
+              <div class="doc-info">
+                <span>类型：{{ item.suffix }}</span>
+                <span>大小：{{ item.size }}</span>
+                <span>时间：{{ item.updatedAt }}</span>
+              </div>
+              <div class="btn-box">
+                <n-button type="primary" @click="downloadFile(item)">下载</n-button>
+                <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
+              </div>
+            </n-card>
+          </n-grid-item>
+          <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
+            <n-card
+              hoverable
+              :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 50%; background-position: center center;`"
+            >
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <h3>{{ item.filename }}</h3>
+                </template>
+                {{ item.filename }}
+              </n-tooltip>
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <p>描述：{{ item.description }}</p>
+                </template>
+                {{ item.description }}
+              </n-tooltip>
+              <div class="doc-info">
+                <span>类型：{{ item.suffix }}</span>
+                <span>大小：{{ item.size }}</span>
+                <span>时间：{{ item.updatedAt }}</span>
+              </div>
+              <div class="btn-box">
+                <n-button type="primary" @click="downloadFile(item)">下载</n-button>
+                <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
+              </div>
+            </n-card>
+          </n-grid-item>
+          <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
+            <n-card
+              hoverable
+              :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 50%; background-position: center center;`"
+            >
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <h3>{{ item.filename }}</h3>
+                </template>
+                {{ item.filename }}
+              </n-tooltip>
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <p>描述：{{ item.description }}</p>
+                </template>
+                {{ item.description }}
+              </n-tooltip>
+              <div class="doc-info">
+                <span>类型：{{ item.suffix }}</span>
+                <span>大小：{{ item.size }}</span>
+                <span>时间：{{ item.updatedAt }}</span>
+              </div>
+              <div class="btn-box">
+                <n-button type="primary" @click="downloadFile(item)">下载</n-button>
+                <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
+              </div>
+            </n-card>
+          </n-grid-item>
         </n-grid>
       </div>
       <div v-else class="doc-list-box">
@@ -306,6 +418,10 @@ onMounted(() => {
         width: 100%;
         height: 100%;
         @include g.flexCenter;
+      }
+      > div {
+        width: 260px;
+        height: 200px;
       }
       :deep(.n-card) {
         border-radius: 5px;
