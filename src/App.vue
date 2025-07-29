@@ -7,7 +7,9 @@
     <main>
       <n-message-provider>
         <n-dialog-provider>
-          <RouterView />
+          <n-notification-provider>
+            <RouterView />
+          </n-notification-provider>
         </n-dialog-provider>
       </n-message-provider>
     </main>
@@ -28,8 +30,10 @@ const themeStore = useThemeStore()
 // 根据当前语言返回对应的Naive UI locale
 const naiveLocale = computed(() => {
   switch (locale.value) {
-    case 'zh-CN': return zhCN
-    default: return enUS
+    case 'zh-CN':
+      return zhCN
+    default:
+      return enUS
   }
 })
 </script>

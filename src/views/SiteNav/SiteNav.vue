@@ -38,7 +38,6 @@
         </n-form>
       </div>
       <n-collapse
-        default-expanded-names="1"
         accordion
         arrow-placement="right"
         @on-item-header-click="handleUpdateExpanded"
@@ -47,7 +46,6 @@
           <template #header>
             <span>我的</span>
           </template>
-          <!-- <template #arrow> </template> -->
           <div class="site-classify-item-box">
             <n-card
               hoverable
@@ -60,10 +58,10 @@
           </div>
         </n-collapse-item>
         <n-collapse-item
-          v-for="(item, idx) in state.blogSiteData"
-          :key="idx"
+          v-for="(item, key) in state.blogSiteData"
+          :key="key"
           :title="item.primaryCategory"
-          :name="idx"
+          :name="key"
         >
           <div class="site-classify-item-box">
             <n-card
@@ -78,19 +76,20 @@
       </n-collapse>
     </div>
     <div class="site-content-main-box">
-      <!-- <div class="site-content-search-box">
+      <div class="site-content-search-box">
         <n-input
           clearable
           round
           size="large"
           v-model:value="searchKeyWord"
           placeholder="输入关键字搜索..."
+          @input="handleSearch"
         >
           <template #suffix>
             <img src="@/assets/images/searchIconfont.svg" alt="search nav" />
           </template>
         </n-input>
-      </div> -->
+      </div>
       <div class="site-card-box">
         <div v-for="(f, idxf) in state.siteData" :key="idxf" class="site-content-main">
           <h3>{{ f.secondaryCategory }}</h3>
@@ -138,7 +137,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { useMessage } from 'naive-ui'
+import { useMessage, useNotification } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 import { getFavicon } from '../../utils/getFavicon'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
@@ -148,8 +147,10 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
 
+const notification = useNotification()
 const router = useRouter()
-// const searchKeyWord = ref('')
+const collapseName = ref('')
+const searchKeyWord = ref('')
 const hoverItem = ref('')
 const showDelBtn = ref(false)
 const userInfoStore = useUserInfoStore()
@@ -271,10 +272,26 @@ const delSiteNav = async (site: string) => {
 
 // 外部网站跳转
 const handleLinkClick = (url: string) => {
-  message.info('3秒后即将跳转到外部网站', { duration: 3000 })
-  setTimeout(() => {
-    window.open(url, '_blank')
-  }, 3000)
+  let count = 3
+  const n = notification.create({
+    title: '将访问外部网站',
+    content: `${count} 秒后跳转：${url}`,
+    duration: 3000,
+    closable: false,
+    onAfterEnter: () => {
+      const minusCount = () => {
+        count--
+        n.content = `${count} 秒后跳转：${url}`
+        if (count > 0) {
+          window.setTimeout(minusCount, 1000)
+        }
+      }
+      window.setTimeout(minusCount, 1000)
+    },
+    onAfterLeave: () => {
+      window.open(url, '_blank')
+    },
+  })
 }
 
 // 获取网站图标
@@ -298,6 +315,15 @@ const getSiteCategoryData = (data: primaryItem, type: string) => {
   state.siteData = [data]
 }
 
+// 搜索
+const handleSearch = (val: string) => {
+  state.siteData = state.siteData.filter((item: siteNav) => {
+    item.primaryItem.some((item: primaryItem) => {
+      return item.siteName.includes(val)
+    })
+  })
+}
+
 interface siteNav {
   primaryCategory: string
   primaryItem: []
@@ -317,15 +343,17 @@ const getSiteNavData = async () => {
       const filterUserSiteData = res.data.user.filter(
         (item: siteNav) => item.primaryCategory == 'mysite',
       )
+      collapseName.value = 'own'
       state.userSiteData = filterUserSiteData[0].primaryItem
       state.siteData = filterUserSiteData[0].primaryItem
       showDelBtn.value = true
     } else {
-      state.siteData = res.data?.blog.primaryItem[0].primaryItem[0]
+      collapseName.value = res.data?.blog[0].primaryCategory
+      state.siteData = res.data?.blog[0].primaryItem
       showDelBtn.value = false
     }
   } else {
-    message.error('站点数据获取失败')
+    message.error('服务器出错啦')
   }
 }
 onMounted(() => {
@@ -334,6 +362,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.active-collapse-item {
+  :deep(.n-collapse-item__header) {
+    background-color: #2898ee; // 您可以选择任何喜欢的颜色
+  }
+}
 .site-nav-main {
   min-width: 1240px;
   max-width: 1480px;
