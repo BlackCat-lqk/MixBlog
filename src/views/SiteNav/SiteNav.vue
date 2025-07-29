@@ -37,11 +37,7 @@
           </n-form-item>
         </n-form>
       </div>
-      <n-collapse
-        accordion
-        arrow-placement="right"
-        @on-item-header-click="handleUpdateExpanded"
-      >
+      <n-collapse accordion arrow-placement="right" @on-item-header-click="handleUpdateExpanded">
         <n-collapse-item name="own">
           <template #header>
             <span>我的</span>
@@ -76,7 +72,7 @@
       </n-collapse>
     </div>
     <div class="site-content-main-box">
-      <div class="site-content-search-box">
+      <!-- <div class="site-content-search-box">
         <n-input
           clearable
           round
@@ -89,7 +85,7 @@
             <img src="@/assets/images/searchIconfont.svg" alt="search nav" />
           </template>
         </n-input>
-      </div>
+      </div> -->
       <div class="site-card-box">
         <div v-for="(f, idxf) in state.siteData" :key="idxf" class="site-content-main">
           <h3>{{ f.secondaryCategory }}</h3>
@@ -150,7 +146,7 @@ import _ from 'lodash'
 const notification = useNotification()
 const router = useRouter()
 const collapseName = ref('')
-const searchKeyWord = ref('')
+// const searchKeyWord = ref('')
 const hoverItem = ref('')
 const showDelBtn = ref(false)
 const userInfoStore = useUserInfoStore()
@@ -316,13 +312,13 @@ const getSiteCategoryData = (data: primaryItem, type: string) => {
 }
 
 // 搜索
-const handleSearch = (val: string) => {
-  state.siteData = state.siteData.filter((item: siteNav) => {
-    item.primaryItem.some((item: primaryItem) => {
-      return item.siteName.includes(val)
-    })
-  })
-}
+// const handleSearch = (val: string) => {
+//   state.siteData = state.siteData.filter((item: siteNav) => {
+//     item.primaryItem.some((item: primaryItem) => {
+//       return item.siteName.includes(val)
+//     })
+//   })
+// }
 
 interface siteNav {
   primaryCategory: string
