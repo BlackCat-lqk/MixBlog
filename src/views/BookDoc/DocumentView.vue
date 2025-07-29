@@ -10,7 +10,7 @@
         round
         :placeholder="$t('bookDoc.inputTip')"
         v-model:value="searchKeyword"
-        @change="handleChangeSearch"
+        @input="handleChangeSearch"
       />
     </div>
     <div class="content-box">
@@ -63,7 +63,7 @@
         </n-grid>
       </div>
       <div v-else class="doc-list-box">
-        <n-empty description="无搜索结果"> </n-empty>
+        <n-empty description="无数据"> </n-empty>
       </div>
     </div>
   </div>
