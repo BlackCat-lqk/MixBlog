@@ -63,7 +63,12 @@
             </div>
           </div>
           <div class="signature-box">
-            <img width="20%" src="@/assets/images/signature-night.png" />
+            <img
+              v-if="themeStore.currentTheme == 'dark'"
+              width="20%"
+              src="@/assets/images/signature-night.png"
+            />
+            <img v-else width="20%" src="@/assets/images/signature-light.png" />
           </div>
         </div>
       </n-drawer-content>
@@ -81,7 +86,9 @@ import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
 import { useRouter } from 'vue-router'
 import _ from 'lodash'
+import { useThemeStore } from '@/stores/themeStore'
 
+const themeStore = useThemeStore()
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
 const deviceStore = useDeviceStore()
