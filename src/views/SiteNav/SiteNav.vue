@@ -223,6 +223,13 @@ const showCreateInput = () => {
   }
 }
 
+// icon图片加载失败
+const webIconImageError = (event: Event) => {
+  const imgElement = event.target as HTMLImageElement
+  imgElement.src = '/uploads/defalut/web.svg'
+  imgElement.onerror = null
+}
+
 // 创建站点
 const handleCreateSite = _.debounce((e: MouseEvent) => {
   e.preventDefault()
