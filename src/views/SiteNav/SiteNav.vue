@@ -100,7 +100,7 @@
               <a @click.prevent="handleLinkClick(item.link)">
                 <h3>
                   <div class="link-logo">
-                    <img :src="item.icon" />
+                    <img :src="item.icon" @error="webIconImageError" />
                   </div>
                   <span>{{ item.siteName }}</span>
                 </h3>
