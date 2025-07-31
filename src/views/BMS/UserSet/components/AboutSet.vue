@@ -127,7 +127,6 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted } from 'vue'
 import type { FormInst, UploadFileInfo } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { getAboutConfigApi, upsertAboutApi } from '@/http/about'

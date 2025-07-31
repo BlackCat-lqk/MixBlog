@@ -18,8 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import { RouterView } from 'vue-router'
 import { NMessageProvider, NDialogProvider, darkTheme } from 'naive-ui'
 import { zhCN, enUS } from 'naive-ui/lib/locales'
 import { useThemeStore } from '@/stores/themeStore'

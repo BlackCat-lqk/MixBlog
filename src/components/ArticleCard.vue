@@ -59,7 +59,6 @@
   <ArticleDetail v-model:showModal="showActiveDrawer" :data="articleDetail"></ArticleDetail>
 </template>
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import ArticleDetail from '@/views/Article/ArticleDetail.vue'
 const showActiveDrawer = ref(false)

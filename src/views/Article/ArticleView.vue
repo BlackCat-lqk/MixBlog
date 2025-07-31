@@ -28,10 +28,8 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import ClassifyMeun from '@/components/ClassifyMeun.vue'
 import ArticleCard from '@/components/ArticleCard.vue'
-import { reactive, onMounted, ref, computed } from 'vue'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
-import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import _ from 'lodash'
 const message = useMessage()

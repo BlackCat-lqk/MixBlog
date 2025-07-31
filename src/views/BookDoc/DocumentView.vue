@@ -111,7 +111,6 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getBookDocApi } from '@/http/uploadFile'

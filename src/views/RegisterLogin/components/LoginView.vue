@@ -50,8 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { NButton, useMessage } from 'naive-ui'
-import { useRouter } from 'vue-router'
+import { useMessage } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 import { ref, reactive, onMounted } from 'vue'
 import { validateEmail, validatePassword } from '@/utils/validate'
@@ -60,9 +59,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { _debounce } from '@/utils/publickFun'
 import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
 import { encodeCredentials, decodeCredentials } from '@/utils/crypto'
-import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-// import { addAdminRoutes } from '@/router'
 const router = useRouter()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
@@ -166,10 +163,6 @@ const handleLogin = _debounce(() => {
         } else {
           localStorage.removeItem('blog_credentials')
         }
-        // 如果是管理员则注入后台路由
-        // if (res.data.user.role === 'admin') {
-        //   addAdminRoutes()
-        // }
         router.push({ path: '/' })
       } else {
         message.error(t('login.loginError'))

@@ -104,12 +104,10 @@
 
 <script setup lang="ts">
 import { NConfigProvider, useMessage } from 'naive-ui'
-import { ref, reactive, onMounted } from 'vue'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import EchartsInit from '@/echarts/EchartsInit.vue'
 import { lineOptions, pieOptions } from '@/echarts/echartsConfig.ts'
-import { useRouter } from 'vue-router'
 import type { DataTableColumns } from 'naive-ui'
 import { getStatisticsApi } from '@/http/statistics'
 

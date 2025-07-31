@@ -115,7 +115,6 @@
 import type { FormInst, FormItemRule, DataTableRowKey, DataTableColumns } from 'naive-ui'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import { h, reactive, ref, onMounted } from 'vue'
 import { NButton, useMessage, useDialog } from 'naive-ui'
 import { validateEmail, validateUsername, validatePassword } from '@/utils/validate'
 import { createUser, getAllUsers, deleteUsers, updateUsers } from '@/http/user'

@@ -2,7 +2,7 @@
   <div class="header-view-box">
     <div class="logo-box">
       <div class="logo">
-        <img src="@/assets/images/logo-transparent.png" />
+        <img :src="logoUrl" />
       </div>
       <n-gradient-text :size="16" type="info"> Mix Blog BMS </n-gradient-text>
       <n-button @click="router.push('/')" type="info"> 返回前台 </n-button>
@@ -29,11 +29,11 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { logOutUserApi } from '@/http/user'
 import { useMessage } from 'naive-ui'
 
+const logoUrl = new URL('./assets/images/logo-transparent.webp', import.meta.url).href
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
 const avatar = userInfoStore.data.user.avatar

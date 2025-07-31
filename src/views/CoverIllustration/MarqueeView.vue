@@ -19,7 +19,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 
 type Direction = 'left' | 'right'

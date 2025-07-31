@@ -112,7 +112,6 @@
 <script setup lang="ts">
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import { ref, reactive, onMounted } from 'vue'
 import { useMessage } from 'naive-ui'
 import type { UploadFileInfo } from 'naive-ui'
 import TiptapEditor from '@/components/TiptapEditor.vue'

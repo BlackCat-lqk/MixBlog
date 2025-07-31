@@ -132,7 +132,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
 import { useMessage, useNotification } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 import { getFavicon } from '../../utils/getFavicon'
@@ -140,7 +139,6 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { createSiteApi, getSiteApi, delSiteNavApi } from '@/http/siteNav'
 import { useUserInfoStore } from '@/stores/userInfo'
-import { useRouter } from 'vue-router'
 import _ from 'lodash'
 
 const notification = useNotification()

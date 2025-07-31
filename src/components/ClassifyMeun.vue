@@ -16,9 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const isSelected = ref('全部')
+const { t } = useI18n()
+const isSelected = ref(t('common.all'))
 const emit = defineEmits(['classifyEmit'])
 
 interface ClassifyItem {

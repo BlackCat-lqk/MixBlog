@@ -74,7 +74,6 @@
 import { registerUserApi, getEmailCodeApi } from '@/http/user'
 import type { FormInst } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-import { ref, reactive, watch, computed, onMounted } from 'vue'
 import {
   validateEmail,
   validateUsername,
@@ -83,10 +82,7 @@ import {
 } from '@/utils/validate.ts'
 import { _debounce } from '@/utils/publickFun'
 import { useUserInfoStore } from '@/stores/userInfo'
-import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-// import { addAdminRoutes } from '@/router'
 const message = useMessage()
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
@@ -142,10 +138,6 @@ const handleRegister = () => {
         userInfoStore.setUserInfo(res.data)
         userInfoStore.setAuthStatus(true)
         router.push({ path: '/' })
-        // 如果是管理员则注入后台路由
-        // if (res.data.role === 'admin') {
-        //   addAdminRoutes()
-        // }
       } else {
         message.error(res.message)
       }

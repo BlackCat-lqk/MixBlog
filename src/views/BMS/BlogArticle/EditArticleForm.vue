@@ -20,8 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref } from 'vue'
-
 const emit = defineEmits<{
   (e: 'update:showModal', val: boolean): void
 }>()

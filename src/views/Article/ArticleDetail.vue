@@ -71,7 +71,6 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, reactive } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import QuillView from '@/components/QuillView.vue'
 import CommentsChat from '@/components/CommentsChat.vue'
@@ -79,7 +78,6 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { addArticleCommentApi, likeArticleApi, viewArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
-import { useRouter } from 'vue-router'
 import _ from 'lodash'
 
 const router = useRouter()

@@ -12,9 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
 import ArticleCard from '@/components/ArticleCard.vue'
-import { reactive, onMounted } from 'vue'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
 const message = useMessage()

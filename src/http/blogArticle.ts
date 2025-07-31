@@ -47,7 +47,7 @@ export function deleteBlogArticleApi(params: { _id: string }) {
  * @param {Object} 根据_id更新 - 更新博客文章参数
  * @returns {Promise}
  */
-export function updateBlogArticleApi(params: Object) {
+export function updateBlogArticleApi(params: object) {
   return request.post('/updateBlogArticle', params)
 }
 

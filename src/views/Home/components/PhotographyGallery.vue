@@ -80,8 +80,6 @@
 
 <script lang="ts" setup>
 import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
-import { useRouter } from 'vue-router'
-import { reactive, onMounted, ref } from 'vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
 import { useThemeStore } from '@/stores/themeStore'
 import { _formatTime } from '@/utils/publickFun'

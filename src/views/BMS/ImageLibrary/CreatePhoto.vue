@@ -76,10 +76,8 @@
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import type { UploadFileInfo, FormInst, FormItemRule } from 'naive-ui'
-import { reactive, ref, onMounted } from 'vue'
 import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
-import { useRouter } from 'vue-router'
 import { createPhotoLibraryApi, uploadPhotoImageApi } from '@/http/photoLibrary'
 import { getCategoryTagsApi,  } from '@/http/categoryTags'
 

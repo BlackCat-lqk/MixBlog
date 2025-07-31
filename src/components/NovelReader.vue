@@ -30,8 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
-
 const props = defineProps<{
   txtUrl: string // TXT文件的URL链接
   bookId?: string // 书籍ID，用于区分不同书籍的阅读记录
