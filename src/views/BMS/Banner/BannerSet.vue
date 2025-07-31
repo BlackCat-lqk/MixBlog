@@ -167,7 +167,6 @@ import {
   updateBanner,
   uploadBannerCoverApi,
 } from '@/http/banner'
-import { ref, reactive, onMounted } from 'vue'
 import { useMessage } from 'naive-ui'
 import type { UploadFileInfo } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'

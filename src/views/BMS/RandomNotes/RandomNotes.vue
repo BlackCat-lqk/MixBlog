@@ -116,7 +116,6 @@
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import HeaderDetail from '@/views/BMS/components/HeaderDetail.vue'
-import { reactive, ref, computed, onMounted } from 'vue'
 import type { FormInst, UploadFileInfo } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'

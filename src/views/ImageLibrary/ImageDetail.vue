@@ -66,9 +66,9 @@
             <img
               v-if="themeStore.currentTheme == 'dark'"
               width="20%"
-              src="@/assets/images/signature-night.png"
+              src="@/assets/images/signature-night.webp"
             />
-            <img v-else width="20%" src="@/assets/images/signature-light.png" />
+            <img v-else width="20%" src="@/assets/images/signature-light.webp" />
           </div>
         </div>
       </n-drawer-content>
@@ -77,14 +77,12 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, reactive } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 import CommentsChat from '@/components/CommentsChat.vue'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { addPhotoCommentApi, likePhotoApi, viewPhotoApi } from '@/http/photoLibrary'
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
-import { useRouter } from 'vue-router'
 import _ from 'lodash'
 import { useThemeStore } from '@/stores/themeStore'
 

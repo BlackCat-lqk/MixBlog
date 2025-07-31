@@ -12,7 +12,6 @@
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import HomeView from '@/views/Home/HomeView.vue'
-import { onMounted } from 'vue'
 import { getSloganApi } from '@/http//slogan'
 import { sloganConfigData } from '@/utils/defaultConfig'
 import { useSloganInfoStore } from '@/stores/configInfo'

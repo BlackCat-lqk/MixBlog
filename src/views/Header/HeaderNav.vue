@@ -68,7 +68,6 @@
       </div>
     </div>
     <div class="oprate-box">
-      <!-- <n-button type="primary" @click="dingyue">订阅</n-button> -->
       <n-button
         v-if="state.userInfo.role === 'admin' && state.userInfo.isLogin"
         type="info"
@@ -146,8 +145,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, onBeforeMount, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { useScroll } from '@vueuse/core'
 import { useThemeStore } from '@/stores/themeStore'
 import { useUserInfoStore } from '@/stores/userInfo'
@@ -157,9 +154,8 @@ import { logOutUserApi } from '@/http/user'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import SetUserInfo from './components/SetUserInfo.vue'
 import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
-import { useI18n } from 'vue-i18n'
+
 const { locale, t } = useI18n()
-// import { clearDynamicRoutes } from '@/router'
 const sloganStore = useSloganInfoStore()
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
@@ -172,8 +168,8 @@ const languages = [
   { label: '中文', value: 'zh-CN' },
 ]
 const showForgotPwdModal = ref(false)
-const logoNight = '/uploads/defalut/logo-transparent-night.png'
-const logoLight = '/uploads/defalut/logo-transparent.png'
+const logoNight = '/uploads/defalut/logo-transparent-night.webp'
+const logoLight = '/uploads/defalut/logo-transparent.webp'
 const changeLanguage = (lang: string) => {
   locale.value = lang
   localStorage.setItem('locale', lang)
@@ -297,8 +293,6 @@ const handleAvatarClick = async (key: string | number) => {
       //清除有关用户的全部数据
       userInfoStore.removeUserInfo()
       router.push('/register-login')
-      // 清理动态路由
-      // clearDynamicRoutes()
       message.success(res.message)
     } else {
       message.error(res.message)
@@ -315,14 +309,6 @@ const initUserData = () => {
     }
   }
 }
-// 订阅
-// const dingyue = () => {
-//   const channel = new BroadcastChannel('dingyue')
-//   channel.postMessage({ greeting: 'Hello from page 1!' })
-//   channel.onmessage = (event) => {
-//     message.success('订阅成功', event.data)
-//   }
-// }
 const jumpPage = (path: string, idx?: number | undefined) => {
   router.push(path)
   if (idx != undefined) {

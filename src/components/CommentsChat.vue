@@ -92,7 +92,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { formatTime } from '@/utils/commentUtils'
 
 export interface Comment {

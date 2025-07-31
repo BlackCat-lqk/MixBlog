@@ -11,11 +11,11 @@ export const sloganConfigData = () => {
     cover: string
   }
   return {
-    logoPicture: '@/assets/images/logo-transparent.png',
+    logoPicture: '/uploads/defalut/logo-transparent.webp',
     logoName: 'Mix Blog',
     sloganTitle: 'Mix Blog',
     sloganSub1: '记录生活',
     sloganSub2: '学习充电',
-    cover: '@/assets/images/logo2024.png',
+    cover: '/uploads/defalut/logo1024.svg',
   } as Slogan
 }

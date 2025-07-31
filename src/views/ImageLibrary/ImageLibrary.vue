@@ -47,11 +47,9 @@ import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import ClassifyMeun from '@/components/ClassifyMeun.vue'
-import { reactive, onMounted, ref, computed } from 'vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
 import { useMessage } from 'naive-ui'
 import _ from 'lodash'
-import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const showActiveDrawer = ref(false)
 const message = useMessage()

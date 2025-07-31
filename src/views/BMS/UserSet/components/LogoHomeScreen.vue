@@ -96,7 +96,7 @@
           :src="
             formValue?.logoPicture
               ? formValue?.logoPicture
-              : '/src/assets/images/logo-transparent.png'
+              : '/uploads/defalut/logo-transparent.webp'
           "
           :previewed-img-props="{ style: { border: '8px solid white' } }"
         />
@@ -104,7 +104,7 @@
       </div>
       <div class="slogan-text-box">
         <div class="content-img-box">
-          <img :src="formValue?.cover ? formValue?.cover : '/src/assets/images/logo2024.png'" />
+          <img :src="formValue?.cover ? formValue?.cover : '/uploads/defalut/logo1024.svg'" />
         </div>
         <div>
           <h3>
@@ -125,7 +125,6 @@
 
 <script setup lang="ts">
 import type { FormInst, UploadFileInfo } from 'naive-ui'
-import { ref, reactive, onMounted } from 'vue'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { getSloganApi, upsertSloganApi } from '@/http/slogan'
 import { useMessage } from 'naive-ui'

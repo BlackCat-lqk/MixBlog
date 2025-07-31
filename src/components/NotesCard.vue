@@ -31,7 +31,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import { _formatTime } from '@/utils/publickFun'
 
 const props = defineProps({

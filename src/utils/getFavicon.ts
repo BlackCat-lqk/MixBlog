@@ -39,7 +39,7 @@ export async function getFavicon(targetUrl: string): Promise<string | false> {
       return googleFavicon
     }
   } catch (error) {
-    console.log('方法3失败，无更多方法可尝试')
+    console.log("🚀 ~ getFavicon ~ error:", error)
   }
 
   // 所有方法都失败
@@ -69,6 +69,7 @@ async function fetchFavicon(targetUrl: string): Promise<string | null> {
     }
     return new URL('/favicon.ico', targetUrl).href
   } catch (error) {
+    console.log("🚀 ~ fetchFavicon ~ error:", error)
     return null
   }
 }

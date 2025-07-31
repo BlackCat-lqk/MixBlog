@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { isMobileDevice } from '@/utils/deviceUtils'
-// import { adminRoutes } from './adminRoutes'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { verifyUserApi } from '@/http/user'
 
@@ -17,7 +16,7 @@ const router = createRouter({
       name: 'register',
       component: () =>
         import(
-          `@/views/RegisterLogin/${isMobileDevice() ? 'MobileRegisterLogin' : 'RegisterLogin'}.vue`
+          '@/views/RegisterLogin/RegisterLogin.vue'
         ),
     },
     {
@@ -146,33 +145,6 @@ const router = createRouter({
   ],
 })
 
-// 注入动态路由
-// let areAdminRoutesAdded = false // 防止重复添加路由
-// const addAdminRoutes = () => {
-//   console.log('注入路由')
-//   if (!areAdminRoutesAdded) {
-//     adminRoutes.forEach((route) => {
-//       const routeWithMeta = { ...route }
-//       routeWithMeta.meta = routeWithMeta.meta || {}
-//       routeWithMeta.meta.requiresAuth = true
-//       routeWithMeta.meta.requiresAdmin = true
-//       routeWithMeta.meta.dynamic = true
-//       router.addRoute(routeWithMeta)
-//     })
-//     areAdminRoutesAdded = true
-//   }
-// }
-// 用户退出登录或切换用户时清除动态路由
-// const clearDynamicRoutes = () => {
-//   areAdminRoutesAdded = false
-//   router.getRoutes().forEach((route) => {
-//     if (route.meta?.dynamic) {
-//       router.removeRoute(route.name!)
-//     }
-//   })
-//   console.log('清除动态路由')
-// }
-
 // 路由守卫
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.meta.requiresAuth
@@ -198,10 +170,9 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: 'register' })
     }
   } catch (error) {
+    console.log("🚀 ~ error:", error)
     userStore.removeUserInfo()
     return next({ name: 'register' })
   }
 })
-
-// export { router, addAdminRoutes, clearDynamicRoutes }
 export default router

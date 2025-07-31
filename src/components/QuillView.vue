@@ -1,9 +1,12 @@
+/**
+  * QuillView.vue
+  * @description: 预览组件，不提供文本编辑功能
+*/
 <template>
   <QuillEditor content-type="html" :content="editorContent" readonly :options="Options" />
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import hljs from 'highlight.js'
 import Syntax from 'quill/modules/syntax'

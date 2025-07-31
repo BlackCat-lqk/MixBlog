@@ -82,36 +82,17 @@
 
 <script lang="ts" setup>
 import Orb from '@/views/VueBits/BitsOrb.vue'
-import { ref } from 'vue'
 import { chatWithDeepSeek, streamChatWithDeepSeek } from '@/http/deepseek'
 import QuillView from '@/components/QuillView.vue'
-// import MarkdownIt from 'markdown-it'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { useUserInfoStore } from '@/stores/userInfo'
-import { useRouter } from 'vue-router'
 import { useMessage } from 'naive-ui'
 
 const router = useRouter()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 import _ from 'lodash'
-
-// 定义类型
-// interface MarkdownOptions {
-//   html?: boolean
-//   linkify?: boolean
-//   typographer?: boolean
-//   breaks?: boolean
-// }
-
-// 创建 markdown-it 实例
-// const md: MarkdownIt = new MarkdownIt({
-//   html: true, // 启用 HTML 标签
-//   linkify: true, // 自动转换 URL 为链接
-//   typographer: true, // 优化排版
-//   breaks: true, // 转换换行符为 <br>
-// } as MarkdownOptions)
 
 const userInput = ref('')
 interface ChatMessage {

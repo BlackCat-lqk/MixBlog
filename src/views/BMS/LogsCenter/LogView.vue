@@ -57,7 +57,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 

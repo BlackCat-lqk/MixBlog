@@ -133,9 +133,8 @@ import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import HeaderDetail from '@/views/BMS/components/HeaderDetail.vue'
 import ClassifyManage from '@/views/BMS/components/ClassifyManage.vue'
 import EditArticleForm from './EditArticleForm.vue'
-import { ref, reactive, onMounted } from 'vue'
 import { upsertCategoryTags } from '@/http/categoryTags'
-import { NButton, useMessage } from 'naive-ui'
+import { useMessage } from 'naive-ui'
 import {
   getAllBlogArticleApi,
   deleteBlogArticleApi,

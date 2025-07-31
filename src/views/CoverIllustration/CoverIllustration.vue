@@ -54,7 +54,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import MarqueeView from '@/views/CoverIllustration/MarqueeView.vue'
@@ -62,44 +61,44 @@ import MarqueeView from '@/views/CoverIllustration/MarqueeView.vue'
 const showSearchModel = ref(false)
 const showxq = ref(true)
 const imageArray1 = [
-  '/uploads/fileList/juequ1.png',
-  '/uploads/fileList/juequ2.png',
-  '/uploads/fileList/juequ3.png',
+  '/uploads/fileList/juequ1.webp',
+  '/uploads/fileList/juequ2.webp',
+  '/uploads/fileList/juequ3.webp',
 ]
 const imageArray2 = [
-  '/uploads/fileList/juequ4.png',
-  '/uploads/fileList/juequ5.png',
-  '/uploads/fileList/juequ6.png',
+  '/uploads/fileList/juequ4.webp',
+  '/uploads/fileList/juequ5.webp',
+  '/uploads/fileList/juequ6.webp',
 ]
 const imageArray3 = [
-  '/uploads/fileList/juequ7.png',
-  '/uploads/fileList/juequ8.png',
-  '/uploads/fileList/juequ9.png',
+  '/uploads/fileList/juequ7.webp',
+  '/uploads/fileList/juequ8.webp',
+  '/uploads/fileList/juequ9.webp',
 ]
 const imageArray4 = [
-  '/uploads/fileList/juequ10.png',
-  '/uploads/fileList/juequ11.png',
-  '/uploads/fileList/juequ12.png',
+  '/uploads/fileList/juequ10.webp',
+  '/uploads/fileList/juequ11.webp',
+  '/uploads/fileList/juequ12.webp',
 ]
 const imageArrayxq1 = [
-  '/uploads/fileList/xq1.jpeg',
-  '/uploads/fileList/xq2.jpg',
-  '/uploads/fileList/xq3.jpg',
+  '/uploads/fileList/xq1.webp',
+  '/uploads/fileList/xq2.webp',
+  '/uploads/fileList/xq3.webp',
 ]
 const imageArrayxq2 = [
-  '/uploads/fileList/xq4.jpg',
-  '/uploads/fileList/xq5.jpg',
-  '/uploads/fileList/xq6.jpg',
+  '/uploads/fileList/xq4.webp',
+  '/uploads/fileList/xq5.webp',
+  '/uploads/fileList/xq6.webp',
 ]
 const imageArrayxq3 = [
-  '/uploads/fileList/xq7.png',
-  '/uploads/fileList/xq8.jpg',
-  '/uploads/fileList/xq9.jpg',
+  '/uploads/fileList/xq7.webp',
+  '/uploads/fileList/xq8.webp',
+  '/uploads/fileList/xq9.webp',
 ]
 const imageArrayxq4 = [
-  '/uploads/fileList/xq10.jpg',
-  '/uploads/fileList/xq11.jpg',
-  '/uploads/fileList/xq12.jpg',
+  '/uploads/fileList/xq10.webp',
+  '/uploads/fileList/xq11.webp',
+  '/uploads/fileList/xq12.webp',
 ]
 </script>
 
@@ -115,7 +114,7 @@ const imageArrayxq4 = [
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url(@/assets/wallpaper/juequ1.png);
+  background-image: url('/uploads/fileList/juequ1.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -189,7 +188,7 @@ const imageArrayxq4 = [
       @include g.scrollbarCustom;
       :deep(.n-card) {
         @include g.borderRadius(10px);
-        background: url('/uploads/fileList/juequ3.png');
+        background: url('/uploads/fileList/juequ3.webp');
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -209,7 +208,7 @@ const imageArrayxq4 = [
         }
       }
       .xq-bg {
-        background: url('/uploads/fileList/xq12.jpg');
+        background: url('/uploads/fileList/xq12.webp');
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -238,6 +237,6 @@ const imageArrayxq4 = [
   }
 }
 .i-cover-image-xq-box {
-  background-image: url(@/assets/wallpaper/xq12.jpg);
+  background-image: url('/uploads/fileList/xq12.webp');
 }
 </style>

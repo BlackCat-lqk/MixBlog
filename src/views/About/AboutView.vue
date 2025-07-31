@@ -9,7 +9,7 @@
     <div class="background-layer" :style="'background-image:url(' + aboutData.cover + ')'">
       <div class="about-data-box">
         <div class="about-data-img-box">
-          <img src="@/assets/images/aboutAvatar.jpg" />
+          <img src="@/assets/images/aboutAvatar.webp" />
         </div>
         <div class="about-data-tags-box">
           <n-space>
@@ -65,8 +65,6 @@
 <script setup lang="ts">
 import about2 from '@/assets/wallpaper/about2.jpg'
 import about3 from '@/assets/wallpaper/about3.jpg'
-import { onMounted, reactive, ref, onBeforeUnmount } from 'vue'
-import { useRouter } from 'vue-router'
 import { getAboutConfigApi } from '@/http/about'
 const router = useRouter()
 import { useI18n } from 'vue-i18n'
@@ -231,7 +229,6 @@ onBeforeUnmount(() => {
     left: 0;
     width: 100%;
     height: 100vh;
-    // background-image: url('@/assets/wallpaper/about1.jpg');
     background-position: center center;
     background-size: cover;
     z-index: 0;

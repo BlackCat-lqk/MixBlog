@@ -15,8 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 const menu = reactive(

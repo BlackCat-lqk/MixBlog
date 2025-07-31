@@ -30,7 +30,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import LoginView from './components/LoginView.vue'
 import RegisterView from './components/RegisterView.vue'
 import Aurora from '@/views/VueBits/BitsAurora.vue'

@@ -38,7 +38,6 @@
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import NotesCard from '@/components/NotesCard.vue'
-import { ref, onMounted } from 'vue'
 import { getNotesApi } from '@/http/notes'
 import { _formatTime } from '@/utils/publickFun'
 interface NotesType {

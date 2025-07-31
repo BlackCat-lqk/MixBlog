@@ -29,8 +29,6 @@
 
 <script lang="ts" setup>
 import { addDays } from 'date-fns'
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import NotesCard from '@/components/NotesCard.vue'
 import { getNotesApi } from '@/http/notes'
 import { _formatTime } from '@/utils/publickFun'

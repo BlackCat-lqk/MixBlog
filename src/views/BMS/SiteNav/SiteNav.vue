@@ -72,7 +72,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue'
 import type { FormInst, DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { getFavicon } from '@/utils/getFavicon'

@@ -1,3 +1,7 @@
+/**
+  * QuillView.vue
+  * @description: 副文本编辑组件
+*/
 <template>
   <QuillEditor
     theme="snow"
@@ -11,7 +15,6 @@
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import Quill from 'quill'
-import { ref } from 'vue'
 import bold from 'quill/formats/bold'
 import italic from 'quill/formats/italic'
 import underline from 'quill/formats/underline'

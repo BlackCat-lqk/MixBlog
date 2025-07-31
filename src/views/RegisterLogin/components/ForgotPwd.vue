@@ -102,10 +102,8 @@
 import type { StepsProps, FormInst, FormItemRule } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { getResetEmailCodeApi, getVerifyEmailCodeApi, resetPasswordApi } from '@/http/user'
-import { ref, watch, reactive, computed } from 'vue'
 import { validateEmail, validatePassword, validateCode } from '@/utils/validate'
 import { _debounce } from '@/utils/publickFun'
-import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const message = useMessage()

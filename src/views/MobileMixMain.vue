@@ -1,9 +1,10 @@
 <template>
-  <MobileHome></MobileHome>
+  <div>
+    移动端及H5暂未上线，请使用客户端查看
+  </div>
 </template>
 
 <script lang="ts" setup>
-import MobileHome from '@/views/Home/MobileHome.vue'
 </script>
 
 <style scoped lang="scss"></style>
