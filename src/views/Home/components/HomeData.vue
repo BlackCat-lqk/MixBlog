@@ -15,7 +15,16 @@
       </div>
     </div>
     <div class="home-data-banner">
-      <n-carousel autoplay show-arrow dot-type="line" interval="3000">
+      <n-space v-if="imageLoading" vertical>
+        <n-skeleton height="400px" width="100%" />
+      </n-space>
+      <n-carousel
+        :style="'display: ' + (imageLoading ? 'none' : 'block')"
+        autoplay
+        show-arrow
+        dot-type="line"
+        interval="3000"
+      >
         <div v-for="(item, idx) in state.banners" :key="idx" class="carousel-box">
           <div class="mask-box"></div>
           <div class="banner-config-box">
@@ -30,7 +39,7 @@
             }}</n-button>
           </div>
           <div class="carousel-img">
-            <img :src="item.cover" />
+            <img :src="item.cover" alt="cover" @load="onImageLoad" @error="onImageError" />
           </div>
         </div>
       </n-carousel>
@@ -61,6 +70,17 @@ const state = reactive({
   totalCount: 0,
   todayCount: 0,
 })
+// 图片加载状态
+const imageLoading = ref(true)
+
+// 图片加载完成事件
+const onImageLoad = () => {
+  imageLoading.value = false
+}
+// 图片加载失败事件
+const onImageError = () => {
+  imageLoading.value = false
+}
 // 获取banner图片数据
 const getBannerData = async () => {
   const res = await getAllBanners()

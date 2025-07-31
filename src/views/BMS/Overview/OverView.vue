@@ -18,7 +18,7 @@
                 <h2>{{ item.content }}</h2>
                 <div v-show="idx != 0 && idx != 4" class="gather-cards-content-icon">
                   <n-button strong secondary @click="handleJump(idx)">
-                    <img src="@/assets/images/Add.svg" />
+                    <img src="@/assets/images/Add.svg" alt="添加" />
                   </n-button>
                 </div>
               </div>

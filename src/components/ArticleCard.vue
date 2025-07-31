@@ -11,7 +11,7 @@
     >
       <div class="article-card-header">
         <div class="article-card-header-img">
-          <img :src="item.cover" />
+          <img :src="item.cover" alt="文章封面" loading="lazy" />
         </div>
         <div class="article-card-header-title">
           <h3>{{ item.title }}</h3>
@@ -41,15 +41,15 @@
         </span>
         <div class="views-comment-icon">
           <span>
-            <img width="20px" src="@/assets/images/likes.svg" />
+            <img width="20px" src="@/assets/images/likes.svg" alt="点赞" />
             {{ item.likes.length }}
           </span>
           <span>
-            <img width="20px" src="@/assets/images/views.svg" />
+            <img width="20px" src="@/assets/images/views.svg" alt="浏览" />
             {{ item.views.length }}
           </span>
           <span>
-            <img width="20px" src="@/assets/images/comment.svg" />
+            <img width="20px" src="@/assets/images/comment.svg" alt="评论" />
             {{ item.comments.length }}
           </span>
         </div>

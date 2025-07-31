@@ -56,7 +56,7 @@
               >模块{{ index + 1 }}
               <n-popconfirm @positive-click="deleteItem(index)">
                 <template #trigger>
-                  <img src="@/assets/images/DeleteHover.svg" />
+                  <img src="@/assets/images/DeleteHover.svg" alt="delete" />
                 </template>
                 确认删除？删除后数据将无法恢复
               </n-popconfirm>
@@ -92,7 +92,7 @@
         <n-form-item class="banner-submit-btn-box">
           <n-space vertical>
             <n-button type="info" strong secondary @click="addItem">
-              <img style="width: 16px" src="@/assets/images/Add.svg" />
+              <img style="width: 16px" src="@/assets/images/Add.svg" alt="添加模块" />
               添加模块
             </n-button>
             <n-button type="info" @click="handleValidateClick"> 应用 </n-button>
@@ -106,7 +106,7 @@
         :style="formValue?.cover ? { backgroundImage: `url(${formValue?.cover})` } : {}"
       >
         <div class="avatar-box">
-          <img :src="userInfoStore.data.user.avatar" />
+          <img :src="userInfoStore.data.user.avatar" alt="avatar" />
         </div>
         <h3 class="user-name-title">{{ userInfoStore.data.user.userName }}</h3>
         <span class="introduction-text">{{ formValue.intro }}</span>

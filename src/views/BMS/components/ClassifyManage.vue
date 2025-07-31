@@ -15,13 +15,13 @@
         <n-button type="info" @click="confirmAddCategory"> 确认 </n-button>
       </div>
       <n-button v-else secondary round strong @click="isAddInput = !isAddInput">
-        <img src=" @/assets/images/Add.svg" />
+        <img src=" @/assets/images/Add.svg" alt="添加图片" />
         Add
       </n-button>
     </div>
     <div class="manage-option-box">
       <n-button secondary strong @click="showModal = true">
-        <img src=" @/assets/images/seting.svg" />
+        <img src=" @/assets/images/seting.svg" alt="管理分组" />
         管理分组
       </n-button>
     </div>

@@ -20,15 +20,20 @@
               </div>
               <div class="image-header-data-info">
                 <div style="cursor: pointer">
-                  <img width="32px" src="@/assets/images/likes.svg" @click="likeArticle" />
+                  <img
+                    width="32px"
+                    src="@/assets/images/likes.svg"
+                    @click="likeArticle"
+                    alt="likes"
+                  />
                   <span>{{ state.likes }}</span>
                 </div>
                 <div>
-                  <img width="32px" src="@/assets/images/views.svg" />
+                  <img width="32px" src="@/assets/images/views.svg" alt="views" />
                   <span>{{ state.views }}</span>
                 </div>
                 <div class="comment-animation" @click="showComment = !showComment">
-                  <img width="32px" src="@/assets/images/comment-pen.svg" />
+                  <img width="32px" src="@/assets/images/comment-pen.svg" alt="comment" />
                   <span>{{ state.comments }}</span>
                 </div>
               </div>
@@ -47,12 +52,19 @@
                 :src="item"
                 object-fit="cover"
                 width="100%"
+                alt="photo"
+                lazy="true"
               />
             </div>
           </div>
           <div :class="showComment ? 'photo-comment-area' : 'photo-comment-hide'">
             <div class="comment-area-header">
-              <img width="32px" src="@/assets/images/close1.svg" @click="showComment = false" />
+              <img
+                width="32px"
+                src="@/assets/images/close1.svg"
+                @click="showComment = false"
+                alt="close"
+              />
             </div>
             <div class="comment-area-chat">
               <CommentsChat
@@ -67,8 +79,16 @@
               v-if="themeStore.currentTheme == 'dark'"
               width="20%"
               src="@/assets/images/signature-night.webp"
+              alt="signature"
+              loading="lazy"
             />
-            <img v-else width="20%" src="@/assets/images/signature-light.webp" />
+            <img
+              v-else
+              width="20%"
+              src="@/assets/images/signature-light.webp"
+              loading="lazy"
+              alt="signature"
+            />
           </div>
         </div>
       </n-drawer-content>

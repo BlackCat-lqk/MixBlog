@@ -15,12 +15,14 @@
             <div class="note-date">
               <span>{{ _formatTime(item.updatedAt) }}</span>
             </div>
-            <div class="note-whter"><img :src="weatherIconsURLs[item.weather]" /></div>
+            <div class="note-whter">
+              <img :src="weatherIconsURLs[item.weather]" alt="weather" />
+            </div>
           </div>
           <div class="random-notes-list-content">
             <p>{{ item.title }}</p>
             <p class="note-content-p">{{ item.content }}</p>
-            <img :src="item.cover" />
+            <img :src="item.cover" alt="cover" />
           </div>
         </div>
       </div>

@@ -27,11 +27,19 @@
                   </div>
                   <div class="classify-tag-box">
                     <n-form-item path="category">
-                      <n-select style="width: 240px;" v-model:value="createForm.category" :options="classifyOption"
-                        placeholder="请选择分类">
+                      <n-select
+                        style="width: 240px"
+                        v-model:value="createForm.category"
+                        :options="classifyOption"
+                        placeholder="请选择分类"
+                      >
                         <template #action>
                           <n-button type="info" style="width: 100%" strong secondary>
-                            <img style="width: 16px" src="@/assets/images/Add.svg" />新增分类
+                            <img
+                              style="width: 16px"
+                              src="@/assets/images/Add.svg"
+                              alt="新增分类"
+                            />新增分类
                           </n-button>
                         </template>
                       </n-select>
@@ -41,10 +49,17 @@
               </div>
               <div class="introduction-box">
                 <n-form-item path="content">
-                  <n-input v-model:value="createForm.content" :autosize="{
-                    minRows: 8,
-                    maxRows: 24,
-                  }" type="textarea" placeholder="请输入内容..." show-count maxlength="800" />
+                  <n-input
+                    v-model:value="createForm.content"
+                    :autosize="{
+                      minRows: 8,
+                      maxRows: 24,
+                    }"
+                    type="textarea"
+                    placeholder="请输入内容..."
+                    show-count
+                    maxlength="800"
+                  />
                 </n-form-item>
               </div>
               <div class="photos-box">
@@ -53,15 +68,15 @@
                     :finish="createUploadFinish" :error="createUploadError" :headers="{
                       Authorization: `Bearer ${userInfoStore.data.token}`,
                     }"></n-upload> -->
-                    <n-upload
-            v-model:file-list="createForm.tempFile"
-              :max="10"
-              list-type="image-card"
-              name="files"
-              :headers="{
-                Authorization: `Bearer ${userInfoStore.data.token}`,
-              }"
-            ></n-upload>
+                  <n-upload
+                    v-model:file-list="createForm.tempFile"
+                    :max="10"
+                    list-type="image-card"
+                    name="files"
+                    :headers="{
+                      Authorization: `Bearer ${userInfoStore.data.token}`,
+                    }"
+                  ></n-upload>
                 </n-form-item>
               </div>
             </div>
@@ -79,7 +94,7 @@ import type { UploadFileInfo, FormInst, FormItemRule } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { createPhotoLibraryApi, uploadPhotoImageApi } from '@/http/photoLibrary'
-import { getCategoryTagsApi,  } from '@/http/categoryTags'
+import { getCategoryTagsApi } from '@/http/categoryTags'
 
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
@@ -111,9 +126,9 @@ const rules = {
       message: '请至少上传一张图片',
       trigger: 'blur',
       validator: (_rule: FormItemRule, value: unknown) => {
-        const files = value as UploadFileInfo[];
+        const files = value as UploadFileInfo[]
         if (!Array.isArray(files) || files.length === 0) {
-          throw new Error('请至少上传一张图片');
+          throw new Error('请至少上传一张图片')
         }
       },
     },
@@ -124,7 +139,7 @@ const rules = {
       message: '请选择分类',
       trigger: 'blur',
     },
-  ]
+  ],
 }
 
 interface CreateFormType {
@@ -191,7 +206,7 @@ const getCategoryTags = async () => {
         value: item,
       }
     })
-  }else {
+  } else {
     message.error(res.message)
   }
 }
@@ -199,34 +214,34 @@ const getCategoryTags = async () => {
 // 文件上传
 const uploadFile = async (id: string) => {
   if (!createForm.tempFile || createForm.tempFile.length === 0) {
-    return false;
+    return false
   }
 
-  const formData = new FormData();
+  const formData = new FormData()
   createForm.tempFile.forEach((file) => {
     if (file.file) {
-      formData.append('photos', file.file); // 使用统一的 key 'photos'
+      formData.append('photos', file.file) // 使用统一的 key 'photos'
     }
-  });
-  formData.append('_id', id);
+  })
+  formData.append('_id', id)
 
   try {
-    const response = await uploadPhotoImageApi(formData);
-    const res = response.data;
+    const response = await uploadPhotoImageApi(formData)
+    const res = response.data
     if (res.code === 200) {
-      createForm.photos = res.data.urls;
-      message.success(res.message);
-      return true;
+      createForm.photos = res.data.urls
+      message.success(res.message)
+      return true
     } else {
-      message.error(res.message);
-      return false;
+      message.error(res.message)
+      return false
     }
   } catch (err) {
-    message.error('图片上传失败，请重试');
-    console.error(err);
-    return false;
+    message.error('图片上传失败，请重试')
+    console.error(err)
+    return false
   }
-};
+}
 
 // 发布校验提交
 const confirmPublish = (e: MouseEvent) => {
@@ -254,8 +269,7 @@ const confirmPublish = (e: MouseEvent) => {
       } else {
         message.error(res.message)
       }
-    }
-    else {
+    } else {
       console.log(errors)
       message.error('确少必填项')
     }

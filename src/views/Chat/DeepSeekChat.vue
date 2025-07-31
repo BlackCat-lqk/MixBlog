@@ -14,9 +14,12 @@
     </div>
     <div class="chat-header-box">
       <n-button strong secondary round type="primary" @click="startNewChat"
-        ><img style="margin-right: 5px" width="24px" src="@/assets/images/NewChat.svg" />{{
-          $t('chat.startChat')
-        }}</n-button
+        ><img
+          style="margin-right: 5px"
+          width="24px"
+          src="@/assets/images/NewChat.svg"
+          alt="NewChat"
+        />{{ $t('chat.startChat') }}</n-button
       >
       <!-- <n-button strong secondary round type="primary"
         ><img
@@ -32,7 +35,12 @@
           <strong v-if="message.role === 'user'"> </strong>
           <strong v-else>
             <div style="display: flex; align-items: center">
-              <img width="32px" class="mix-ai-icon" src="@/assets/images/ChatsAI.svg" />
+              <img
+                width="32px"
+                class="mix-ai-icon"
+                src="@/assets/images/ChatsAI.svg"
+                alt="Mix AI"
+              />
             </div>
           </strong>
           <quill-view :content="message.content"></quill-view>
@@ -41,7 +49,12 @@
           <strong v-show="isLoading">
             <div style="display: flex; align-items: center">
               {{ $t('chat.padding') }}
-              <img width="20px" class="chat-loading-icon" src="@/assets/images/Loading.svg" />
+              <img
+                width="20px"
+                class="chat-loading-icon"
+                src="@/assets/images/Loading.svg"
+                alt="Loading"
+              />
             </div>
             <n-space vertical>
               <n-skeleton height="40px" width="66%" :sharp="false" />
@@ -69,7 +82,7 @@
         <div class="chat-option-send">
           <n-button strong secondary type="primary" @click="sendMessage" :disabled="isLoading">
             {{ isLoading ? 'Sending...' : 'Send' }}
-            <img width="32px" style="margin-left: 10px" src="@/assets/images/send.svg" />
+            <img width="32px" style="margin-left: 10px" src="@/assets/images/send.svg" alt="Send" />
           </n-button>
         </div>
       </div>

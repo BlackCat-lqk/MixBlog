@@ -8,7 +8,7 @@
           :placeholder="$t('common.usernamePlaceholder')"
         >
           <template #prefix>
-            <img width="20px" src="@/assets/images/username.svg" />
+            <img width="20px" src="@/assets/images/username.svg" alt="username" />
           </template>
         </n-input>
       </n-form-item>
@@ -19,7 +19,7 @@
           :placeholder="$t('common.emailPlaceholder')"
         >
           <template #prefix>
-            <img width="20px" src="@/assets/images/Email.svg" />
+            <img width="20px" src="@/assets/images/Email.svg" alt="Email" />
           </template>
         </n-input>
       </n-form-item>
@@ -30,7 +30,7 @@
           :placeholder="$t('common.codePlaceholder')"
         >
           <template #prefix>
-            <img width="20px" src="@/assets/images/Verification.svg" />
+            <img width="20px" src="@/assets/images/Verification.svg" alt="验证码" />
           </template>
         </n-input>
         <n-button
@@ -52,7 +52,7 @@
           :placeholder="$t('common.pwdPlaceholder')"
         >
           <template #prefix>
-            <img width="20px" src="@/assets/images/passWord.svg" />
+            <img width="20px" src="@/assets/images/passWord.svg" alt="password" />
           </template>
         </n-input>
       </n-form-item>

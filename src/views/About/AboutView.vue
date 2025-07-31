@@ -1,15 +1,15 @@
 <template>
   <div class="my-logo">
-    <img src="@/assets/images/ArrowBack.svg" @click="toHome" />
+    <img src="@/assets/images/ArrowBack.svg" @click="toHome" alt="return" />
   </div>
   <div :class="isPlaying ? 'music-box' : 'music-box-play'" @click="toggleMusic">
-    <img src="@/assets/images/Music.svg" />
+    <img src="@/assets/images/Music.svg" alt="music" />
   </div>
   <div class="about-main-box">
     <div class="background-layer" :style="'background-image:url(' + aboutData.cover + ')'">
       <div class="about-data-box">
         <div class="about-data-img-box">
-          <img src="@/assets/images/aboutAvatar.webp" />
+          <img src="@/assets/images/aboutAvatar.webp" alt="avatar" loading="lazy" />
         </div>
         <div class="about-data-tags-box">
           <n-space>
@@ -41,7 +41,7 @@
       </div>
       <div class="scroll-down">
         <n-icon size="80">
-          <img src="@/assets/images/AngleDoubleDownWhite.svg" alt="" />
+          <img src="@/assets/images/AngleDoubleDownWhite.svg" alt="scroll down" />
         </n-icon>
       </div>
     </div>
@@ -53,8 +53,22 @@
             <p>{{ item.content }}</p>
           </div>
           <div v-if="idx == 0" class="about-images-content">
-            <n-image :src="about2" width="200" height="240" object-fit="cover" />
-            <n-image :src="about3" width="200" height="240" object-fit="cover" />
+            <n-image
+              :src="about2"
+              width="200"
+              height="240"
+              object-fit="cover"
+              lazy="true"
+              alt="about"
+            />
+            <n-image
+              :src="about3"
+              width="200"
+              height="240"
+              object-fit="cover"
+              lazy="true"
+              alt="about"
+            />
           </div>
         </div>
       </div>

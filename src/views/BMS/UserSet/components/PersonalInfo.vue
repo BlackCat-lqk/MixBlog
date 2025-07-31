@@ -4,6 +4,7 @@
       <div class="personal-info">
         <div class="avatar-box">
           <n-image
+            alt="avatar"
             width="100"
             :src="userInfoStore.data.user.avatar"
             :previewed-img-props="{ style: { border: '8px solid white' } }"

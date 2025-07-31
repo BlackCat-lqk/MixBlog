@@ -4,12 +4,18 @@
     <div class="background-blur"></div>
     <div class="header-logo-search-box">
       <div class="header-logo-box">
-        <img v-if="themeStore.currentTheme == 'light'" :src="logoLight" />
-        <img v-else :src="logoNight" />
+        <div>
+          <img
+            v-if="themeStore.currentTheme == 'light'"
+            width="608px"
+            height="514px"
+            :src="logoLight"
+            alt="logoLight"
+          />
+          <img v-else width="608px" height="514px" :src="logoNight" alt="logoNight" />
+        </div>
       </div>
-      <span class="logo-name-text" style="padding-right: 10px">{{
-        sloganStore.sloganConfig.logoName
-      }}</span>
+
       <!-- <div class="search-box">
         <n-popselect
           v-model:value="state.searchQuery"
@@ -61,7 +67,7 @@
         <div class="menu-item-text">
           <n-dropdown trigger="hover" :options="moreData" @select="handleMoreSelect">
             <div class="more-item-box">
-              <img src="@/assets/images/moreiconfont.svg" />
+              <img src="@/assets/images/moreiconfont.svg" alt="more" />
             </div>
           </n-dropdown>
         </div>
@@ -79,8 +85,8 @@
           <n-dropdown :options="state.avatarOptions" @select="handleAvatarClick">
             <n-avatar round :size="40">
               <n-icon>
-                <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" />
-                <img v-else src="@/assets/images/UserAvatarFilled.svg" />
+                <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" alt="avatar" />
+                <img v-else src="@/assets/images/UserAvatarFilled.svg" alt="user avatar" />
               </n-icon>
             </n-avatar>
           </n-dropdown>
@@ -89,8 +95,8 @@
         <div v-else>
           <n-avatar round :size="40">
             <n-icon>
-              <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" />
-              <img v-else src="@/assets/images/UserAvatarFilled.svg" />
+              <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" alt="user avatar" />
+              <img v-else src="@/assets/images/UserAvatarFilled.svg" alt="user avatar" />
             </n-icon>
           </n-avatar>
           <span class="user-name" @click="jumpPage('/register-login')">{{ t('header.text') }}</span>
@@ -102,10 +108,10 @@
       <div class="switch-theme-box">
         <n-switch v-model:value="state.switchTheme" size="large" @update:value="handleChangeTheme">
           <template #checked-icon>
-            <img src="/src/assets/images/LightModeFilled.svg" />
+            <img src="/src/assets/images/LightModeFilled.svg" alt="LightModeFilled" />
           </template>
           <template #unchecked-icon>
-            <img src="/src/assets/images/NightlightRoundSharp.svg" />
+            <img src="/src/assets/images/NightlightRoundSharp.svg" alt="NightlightRoundSharp" />
           </template>
         </n-switch>
       </div>
@@ -118,8 +124,9 @@
             width="24px"
             v-if="themeStore.currentTheme == 'light'"
             src="@/assets/images/Github.svg"
+            alt="github"
           />
-          <img width="24px" v-else src="@/assets/images/GithubWhite.svg" />
+          <img width="24px" v-else src="@/assets/images/GithubWhite.svg" alt="github" />
         </n-icon>
       </div>
       <div
@@ -131,8 +138,9 @@
             width="24px"
             v-if="themeStore.currentTheme == 'light'"
             src="@/assets/images/Blibli.svg"
+            alt="Blibli"
           />
-          <img width="24px" v-else src="@/assets/images/BlibliWhite.svg" />
+          <img width="24px" v-else src="@/assets/images/BlibliWhite.svg" alt="Blibli" />
         </n-icon>
       </div>
     </div>
@@ -151,12 +159,10 @@ import { useUserInfoStore } from '@/stores/userInfo'
 // import { useGlobalSearchStore } from '@/stores/globalSearch'
 import { useMessage } from 'naive-ui'
 import { logOutUserApi } from '@/http/user'
-import { useSloganInfoStore } from '@/stores/configInfo'
 import SetUserInfo from './components/SetUserInfo.vue'
 import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
 
 const { locale, t } = useI18n()
-const sloganStore = useSloganInfoStore()
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
 const themeStore = useThemeStore()
@@ -371,19 +377,16 @@ onMounted(() => {
     height: 100%;
 
     .header-logo-box {
-      width: 120px;
+      width: auto;
+      display: flex;
       height: 100%;
-
       img {
-        width: 100%;
-        height: 100%;
+        aspect-ratio: attr(width) / attr(height); /* 动态读取原始宽高比 */
+        width: 10%; /* 或固定宽度 */
+        height: auto; /* 高度自适应 */
+        object-fit: contain; /* 保持比例，完整显示图片 */
+        padding: 5px 0 0 8px;
       }
-    }
-    .logo-name-text {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-color);
-      font-family: 'Courier New', Courier, monospace;
     }
 
     .search-box {

@@ -28,15 +28,20 @@
               </div>
               <div class="article-header-data-info">
                 <div style="cursor: pointer">
-                  <img width="32px" src="@/assets/images/likes.svg" @click="likeArticle" />
+                  <img
+                    width="32px"
+                    src="@/assets/images/likes.svg"
+                    @click="likeArticle"
+                    alt="likes"
+                  />
                   <span>{{ state.likes }}</span>
                 </div>
                 <div>
-                  <img width="32px" src="@/assets/images/views.svg" />
+                  <img width="32px" src="@/assets/images/views.svg" alt="views" />
                   <span>{{ state.views }}</span>
                 </div>
                 <div class="comment-animation" @click="showComment = !showComment">
-                  <img width="32px" src="@/assets/images/comment-pen.svg" />
+                  <img width="32px" src="@/assets/images/comment-pen.svg" alt="comment" />
                   <span>{{ state.comments }}</span>
                 </div>
               </div>
@@ -54,7 +59,12 @@
           </div>
           <div :class="showComment ? 'article-comment-area' : 'article-comment-hide'">
             <div class="comment-area-header">
-              <img width="32px" src="@/assets/images/close1.svg" @click="showComment = false" />
+              <img
+                width="32px"
+                src="@/assets/images/close1.svg"
+                @click="showComment = false"
+                alt="close"
+              />
             </div>
             <div class="comment-area-chat">
               <CommentsChat

@@ -28,7 +28,7 @@
           <div class="main-comment">
             <div class="comment-header">
               <div class="avatar">
-                <img :src="group.root.avatar" loading="lazy" />
+                <img :src="group.root.avatar" loading="lazy" alt="avatar" />
               </div>
               <span class="username">{{ group.root.userName }}</span>
               <span class="time">{{ formatTime(group.root.createdAt) }}</span>
@@ -49,14 +49,17 @@
               <div class="reply-item">
                 <div class="comment-header">
                   <div class="avatar">
-                    <img :src="reply.avatar" loading="lazy" />
+                    <img :src="reply.avatar" loading="lazy" alt="avatar" />
                   </div>
                   <span class="username">{{ reply.userName }}</span>
                   <span class="time">{{ formatTime(reply.createdAt) }}</span>
                 </div>
                 <div class="comment-content">
                   <!-- 如果是回复其他回复，显示回复信息 -->
-                  <span v-if="reply.parentId && reply.parentId !== group.root._id" class="reply-info">
+                  <span
+                    v-if="reply.parentId && reply.parentId !== group.root._id"
+                    class="reply-info"
+                  >
                     回复 {{ replyParentNames[reply._id] }}：
                   </span>
                   {{ reply.content }}
@@ -373,7 +376,8 @@ const cancelReply = () => {
   transform: translate3d(0, 0, 0);
 }
 
-.comment-group, .reply-item {
+.comment-group,
+.reply-item {
   transform: translateZ(0);
   backface-visibility: hidden;
 }

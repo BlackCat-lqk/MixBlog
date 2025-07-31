@@ -72,7 +72,12 @@
       <n-card content-class="vue-office-pdf-box" role="dialog" aria-modal="false">
         <template #header>
           <div class="preivew-card-header-close">
-            <img width="32px" src="@/assets/images/close1.svg" @click="showPreview = false" />
+            <img
+              width="32px"
+              src="@/assets/images/close1.svg"
+              @click="showPreview = false"
+              alt="close"
+            />
           </div>
         </template>
         <vue-office-pdf

@@ -10,11 +10,11 @@
       <div class="main-router-box">
         <div class="category">
           <div class="category-item">
-            <img src="@/assets/images/file/file.svg" />
+            <img src="@/assets/images/file/file.svg" alt="文件" />
             <span>全部{{ fileListData.length }}</span>
           </div>
           <div v-for="(val, key) in allCategory" :key="key" class="category-item">
-            <img src="@/assets/images/file/file.svg" />
+            <img src="@/assets/images/file/file.svg" alt="文件" />
             <span>{{ key }}: {{ val }}</span>
           </div>
         </div>

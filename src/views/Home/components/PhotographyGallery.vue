@@ -41,15 +41,15 @@
             <p>{{ _formatTime(photoItem.updatedAt) }}</p>
             <div class="views-comment-icon">
               <span>
-                <img width="20px" src="@/assets/images/likes.svg" />
+                <img width="20px" src="@/assets/images/likes.svg" alt="likes" />
                 {{ photoItem.likes.length }}
               </span>
               <span>
-                <img width="20px" src="@/assets/images/views.svg" />
+                <img width="20px" src="@/assets/images/views.svg" alt="views" />
                 {{ photoItem.views.length }}
               </span>
               <span>
-                <img width="20px" src="@/assets/images/comment.svg" />
+                <img width="20px" src="@/assets/images/comment.svg" alt="comment" />
                 {{ photoItem.comments.length }}
               </span>
             </div>
@@ -64,7 +64,7 @@
           <template #default>
             <div style="display: flex">
               <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
-                <img :src="item" />
+                <img :src="item" alt="photo" loading="lazy" />
               </div>
             </div>
           </template>

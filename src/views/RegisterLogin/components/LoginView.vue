@@ -7,10 +7,10 @@
           clearable
           :placeholder="$t('common.emailPlaceholder')"
         >
-        <template #prefix>
-          <img width="20px" src="@/assets/images/Email.svg">
-        </template>
-      </n-input>
+          <template #prefix>
+            <img width="20px" src="@/assets/images/Email.svg" alt="Email" />
+          </template>
+        </n-input>
       </n-form-item>
       <n-form-item :label="$t('common.pwd')" path="password">
         <n-input
@@ -20,18 +20,15 @@
           show-password-on="mousedown"
           :placeholder="$t('common.pwdPlaceholder')"
         >
-        <template #prefix>
-          <img width="20px" src="@/assets/images/passWord.svg">
-        </template>
-      </n-input>
+          <template #prefix>
+            <img width="20px" src="@/assets/images/passWord.svg" alt="password" />
+          </template>
+        </n-input>
       </n-form-item>
       <div>
         <span @click="handelforgotPwd">{{ $t('login.forgotPwd') }}</span>
         <div>
-          <n-checkbox
-            v-model:checked="formValue.rememberMe"
-            @update:checked="handleRemeberPwd"
-          >
+          <n-checkbox v-model:checked="formValue.rememberMe" @update:checked="handleRemeberPwd">
             记住我
           </n-checkbox>
         </div>
@@ -97,7 +94,7 @@ const checkSavedCredentials = () => {
       formValue.rememberMe = true
       console.log(formValue)
     }
-  }else {
+  } else {
     // 如果没有保存的凭据，则清空表单
     formValue.password = ''
     formValue.rememberMe = false

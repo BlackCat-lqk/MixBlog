@@ -8,7 +8,7 @@
       :class="{ active: item.active }"
       @click="() => router.push(item.path)"
     >
-      <img :src="item.icon" />
+      <img :src="item.icon" alt="侧边栏导航icon" />
       {{ item.name }}
     </n-button>
   </div>

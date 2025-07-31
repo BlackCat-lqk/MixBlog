@@ -3,8 +3,14 @@
     <span>{{ $t('footer.title') }}</span>
     <n-divider />
     <div class="technical-support" v-for="item in 1" :key="item">
-      <a class="technical-support-item-box" v-for="(item, idx) in supportData" :key="idx">
-        <img :src="item.img" />
+      <a
+        class="technical-support-item-box"
+        v-for="(item, idx) in supportData"
+        :key="idx"
+        :href="item.url"
+        target="_blank"
+      >
+        <img :src="item.img" :alt="item.alt" />
       </a>
     </div>
     <n-divider />
@@ -20,63 +26,103 @@
 const supportData = [
   {
     img: new URL('@/assets/images/footer/vue3.svg', import.meta.url).href,
+    url: 'https://v3.cn.vuejs.org/',
+    alt: 'vue3',
   },
   {
     img: new URL('@/assets/images/footer/typescript.svg', import.meta.url).href,
+    url: 'https://www.typescriptlang.org/',
+    alt: 'typescript',
   },
   {
     img: new URL('@/assets/images/footer/vite.svg', import.meta.url).href,
+    url: 'https://cn.vitejs.dev/',
+    alt: 'vitejs',
   },
   {
     img: new URL('@/assets/images/footer/Echarts.svg', import.meta.url).href,
+    url: 'https://echarts.apache.org/index.html',
+    alt: 'echarts',
   },
   {
     img: new URL('@/assets/images/footer/vant.svg', import.meta.url).href,
+    url: 'https://vant-ui.github.io/vant/',
+    alt: 'vant',
   },
   {
     img: new URL('@/assets/images/footer/JavaScript.svg', import.meta.url).href,
+    url: 'https://www.javascript.com/',
+    alt: 'javascript',
   },
   {
     img: new URL('@/assets/images/footer/Github.svg', import.meta.url).href,
+    url: 'https://github.com/',
+    alt: 'github',
   },
   {
     img: new URL('@/assets/images/footer/naive.svg', import.meta.url).href,
+    url: 'https://www.naiveui.com/',
+    alt: 'naive ui',
   },
   {
     img: new URL('@/assets/images/footer/pinia.svg', import.meta.url).href,
+    url: 'https://pinia.vuejs.org/',
+    alt: 'pinia',
   },
   {
     img: new URL('@/assets/images/footer/Nodejs.svg', import.meta.url).href,
+    url: 'https://nodejs.org/',
+    alt: 'nodejs',
   },
   {
     img: new URL('@/assets/images/footer/express.svg', import.meta.url).href,
+    url: 'https://expressjs.com/',
+    alt: 'express',
   },
   {
     img: new URL('@/assets/images/footer/scss.svg', import.meta.url).href,
+    url: 'https://sass-lang.com/',
+    alt: 'scss',
   },
   {
     img: new URL('@/assets/images/footer/deepseek.svg', import.meta.url).href,
+    url: 'https://www.deepseek.com/',
+    alt: 'deepseek',
   },
   {
     img: new URL('@/assets/images/footer/mongodb.svg', import.meta.url).href,
+    url: 'https://www.mongodb.com/',
+    alt: 'mongodb',
   },
   {
     img: new URL('@/assets/images/footer/esLint.svg', import.meta.url).href,
+    url: 'https://eslint.org/',
+    alt: 'eslint',
   },
   {
     img: new URL('@/assets/images/footer/unocss.svg', import.meta.url).href,
+    url: 'https://unocss.dev/',
+    alt: 'unocss',
   },
   {
     img: new URL('@/assets/images/footer/vuebits.svg', import.meta.url).href,
+    url: 'https://vue-bits.dev/',
+    alt: 'vuebits',
   },
   {
     img: new URL('@/assets/images/footer/quill.svg', import.meta.url).href,
+    url: 'https://quilljs.com/',
+    alt: 'quill',
   },
   {
     img: new URL('@/assets/images/footer/oxlint.svg', import.meta.url).href,
+    url: 'https://oxc.rs/docs/guide/usage/linter/config.html',
+    alt: 'oxlint',
   },
   {
     img: new URL('@/assets/images/footer/bt.svg', import.meta.url).href,
+    url: 'https://www.bt.cn/new/index.html',
+    alt: 'BT.CN',
   },
 ]
 </script>

@@ -22,12 +22,13 @@
                   height="160"
                   object-fit="cover"
                   :src="item.photos[0]"
+                  alt="cover about"
                 />
                 <div class="edit-delete-box">
-                  <img src="@/assets/images/EditHover.svg" @click="editImages(item)" />
+                  <img src="@/assets/images/EditHover.svg" @click="editImages(item)" alt="edit" />
                   <n-popconfirm @positive-click="deleteImages(item)">
                     <template #trigger>
-                      <img src="@/assets/images/DeleteHover.svg" />
+                      <img src="@/assets/images/DeleteHover.svg" alt="delete" />
                     </template>
                     确认删除？删除后数据将无法恢复
                   </n-popconfirm>
@@ -44,7 +45,7 @@
                   :key="idx"
                   class="footer-image-item"
                 >
-                  <n-image width="78" height="78" object-fit="cover" :src="photo" />
+                  <n-image width="78" height="78" object-fit="cover" :src="photo" alt="cover" />
                 </div>
                 <template v-if="item.photos.length < 3">
                   <div

@@ -7,8 +7,8 @@
       <n-button strong secondary type="primary" @click="showCreateInput">
         <template #icon>
           <n-icon>
-            <img v-if="!showCreateUrl" src="@/assets/images/add.svg" />
-            <img v-else src="@/assets/images/Subtract.svg" />
+            <img v-if="!showCreateUrl" src="@/assets/images/add.svg" alt="添加" />
+            <img v-else src="@/assets/images/Subtract.svg" alt="Subtract" />
           </n-icon>
         </template>
         添加站点</n-button
@@ -100,7 +100,7 @@
               <a @click.prevent="handleLinkClick(item.link)">
                 <h3>
                   <div class="link-logo">
-                    <img :src="item.icon" @error="webIconImageError" />
+                    <img :src="item.icon" @error="webIconImageError" alt="web icon" />
                   </div>
                   <span>{{ item.siteName }}</span>
                 </h3>
@@ -115,7 +115,7 @@
               >
                 <n-popconfirm @positive-click="delSiteNav(item._id)">
                   <template #trigger>
-                    <img width="20px" src="@/assets/images/deleteHover.svg" />
+                    <img width="20px" src="@/assets/images/deleteHover.svg" alt="删除" />
                   </template>
                   确认删除吗？
                 </n-popconfirm>

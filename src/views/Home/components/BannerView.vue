@@ -1,8 +1,25 @@
 <template>
   <div class="banner">
     <div class="banner-pic">
-      <img v-if="sloganStore.sloganConfig.cover" :src="sloganStore.sloganConfig.cover" />
-      <img v-else src="@/assets/images/logo2024.svg" />
+      <n-space v-if="imageLoading" vertical>
+        <n-skeleton height="512px" width="512px" />
+      </n-space>
+      <img
+        v-if="sloganStore.sloganConfig.cover"
+        :src="sloganStore.sloganConfig.cover"
+        :style="'display: ' + (imageLoading ? 'none' : 'block')"
+        alt="cover"
+        @load="onImageLoad"
+        @error="onImageError"
+      />
+      <img
+        v-else
+        src="@/assets/images/logo2024.svg"
+        @load="onImageLoad"
+        @error="onImageError"
+        :style="'display: ' + (imageLoading ? 'none' : 'block')"
+        alt="logo"
+      />
     </div>
     <div class="banner-left">
       <div>
@@ -25,8 +42,9 @@
             <img
               v-if="themeStore.currentTheme == 'light'"
               src="@/assets/images/AngleDoubleDown.svg"
+              alt="scroll Down"
             />
-            <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" />
+            <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" alt="scroll Down" />
           </n-icon>
         </div>
         <div class="chat-ai-btn" @click="router.push('/d-chat')">
@@ -55,7 +73,18 @@ import router from '@/router'
 const themeStore = useThemeStore()
 const sloganStore = useSloganInfoStore()
 
+// 图片加载状态
+const imageLoading = ref(true)
 const scrollStore = useScrollStore()
+
+// 图片加载完成事件
+const onImageLoad = () => {
+  imageLoading.value = false
+}
+// 图片加载失败事件
+const onImageError = () => {
+  imageLoading.value = false
+}
 const handelScrollDown = () => {
   const nowDate = new Date()
   scrollStore.scrollTo('scorll' + nowDate)
@@ -235,8 +264,8 @@ const handelScrollDown = () => {
     z-index: 1;
     flex: 1;
     img {
-      width: 80%;
-      height: 80%;
+      // width: 80%;
+      // height: 80%;
       object-fit: cover;
     }
   }

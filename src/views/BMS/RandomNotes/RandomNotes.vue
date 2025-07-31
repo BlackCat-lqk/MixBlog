@@ -15,7 +15,7 @@
               <div class="title-box">
                 <div class="title-box-left">
                   <h3>{{ item.title }}</h3>
-                  <img :src="weatherIconsURLs[item.weather]" />
+                  <img :src="weatherIconsURLs[item.weather]" alt="weather" />
                 </div>
                 <n-button
                   strong
@@ -25,12 +25,12 @@
                   class="delete-btn"
                   @click="handleDeleteNote(item._id)"
                 >
-                  <img src="@/assets/images/Delete.svg" />
+                  <img src="@/assets/images/Delete.svg" alt="delete" />
                 </n-button>
               </div>
               <span class="note-update-time">{{ item.updatedAt }}</span>
               <p class="note-content-detail-box">{{ item.content }}</p>
-              <div class="content-img-box"><img :src="item.cover" /></div>
+              <div class="content-img-box"><img :src="item.cover" alt="cover" /></div>
             </div>
           </div>
           <div class="edit-release-box">
@@ -55,7 +55,7 @@
                     />
                     <n-popover trigger="hover">
                       <template #trigger>
-                        <img :src="initWeather" />
+                        <img :src="initWeather" alt="weather" />
                       </template>
                       <div style="padding: 20px">
                         <n-grid :x-gap="24" :y-gap="24" :cols="4">
@@ -64,6 +64,7 @@
                               :src="weatherIconsURLs[item]"
                               style="cursor: pointer"
                               @click="changeWeatherIcon(item)"
+                              alt="weather"
                             />
                           </n-grid-item>
                         </n-grid>

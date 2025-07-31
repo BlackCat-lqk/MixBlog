@@ -7,7 +7,7 @@
           <div class="random-notes-date">
             <p>{{ _formatTime(props.notesDetail.updatedAt) }}</p>
             <n-icon size="20">
-              <img :src="weatherIconsURLs[props.notesDetail.weather]" />
+              <img :src="weatherIconsURLs[props.notesDetail.weather]" alt="weather" />
             </n-icon>
           </div>
         </div>
@@ -17,7 +17,7 @@
         <p>
           {{ props.notesDetail.content }}
         </p>
-        <img :src="props.notesDetail.cover" />
+        <img :src="props.notesDetail.cover" loading="lazy" alt="笔记内容图片" />
       </div>
     </n-card>
   </div>

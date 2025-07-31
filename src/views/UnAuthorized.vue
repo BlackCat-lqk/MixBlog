@@ -38,7 +38,6 @@
   $staff: #bf5507;
   $skin: #ffd8ad;
   $hair: #c2beb5;
-  $hair-dark: darken($hair, 10%);
   $lips: pink;
   $fire: black, #6c1305, #de8531, #efac41;
   $fire-reverse: #efac41, #de8531, #6c1305, black;
@@ -247,7 +246,6 @@
           content: '';
           position: absolute;
           background-color: $hair;
-          filter: drop-shadow(2px 5px 0 $hair-dark);
         }
 
         &::before {
@@ -282,7 +280,6 @@
         border-left: 35px solid transparent;
         border-right: 35px solid transparent;
         border-radius: 30px;
-        filter: drop-shadow(2px 5px 0 $hair-dark);
 
         &::before {
           // mouth

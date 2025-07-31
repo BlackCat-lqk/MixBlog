@@ -4,11 +4,11 @@
   </header>
   <div :class="showxq ? 'i-cover-image-xq-box' : 'i-cover-image-box'">
     <div v-if="!showSearchModel" class="filter-search-box" @click="showSearchModel = true">
-      <img src="@/assets/images/more.svg" />
+      <img src="@/assets/images/more.svg" alt="more" />
     </div>
     <div v-else class="search-options-box">
       <div class="close-img-box">
-        <img src="@/assets/images/close.svg" @click="showSearchModel = false" />
+        <img src="@/assets/images/close.svg" @click="showSearchModel = false" alt="close" />
       </div>
       <!-- <div class="search-input-box">
         <n-input placeholder="搜索">

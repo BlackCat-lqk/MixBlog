@@ -2,7 +2,7 @@
   <div class="header-view-box">
     <div class="logo-box">
       <div class="logo">
-        <img :src="logoUrl" />
+        <img :src="logoUrl" alt="mixblog Logo url" />
       </div>
       <n-gradient-text :size="16" type="info"> Mix Blog BMS </n-gradient-text>
       <n-button @click="router.push('/')" type="info"> 返回前台 </n-button>
@@ -11,10 +11,10 @@
       <div ref="timeDisplay">time</div>
       <div @click="changeTheme" class="theme-icon">
         <n-icon v-if="theme === 'light'" size="24">
-          <img src="@/assets/images/LightModeFilled.svg" />
+          <img src="@/assets/images/LightModeFilled.svg" alt="light mode" />
         </n-icon>
         <n-icon v-else size="24">
-          <img src="@/assets/images/NightlightRoundSharp.svg" />
+          <img src="@/assets/images/NightlightRoundSharp.svg" alt="dark mode" />
         </n-icon>
       </div>
       <div class="avatar-box">

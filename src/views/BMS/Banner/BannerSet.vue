@@ -17,7 +17,7 @@
           <div v-if="hasData" class="content-box">
             <div v-for="(item, index) in bannerData" :key="index" class="banner-item-box">
               <div class="banner-cover-box">
-                <img :src="item.cover" />
+                <img :src="item.cover" alt="封面" />
               </div>
               <div>{{ item.title }}</div>
               <div>{{ item.sub }}</div>
@@ -26,12 +26,12 @@
                 <n-button type="info">{{ item.mainBtnName }}</n-button>
                 <n-button strong secondary type="info">{{ item.childBtnName }}</n-button>
                 <n-button class="op-btn" strong secondary type="success" @click="editBanner(item)"
-                  ><img style="width: 18px" src="@/assets/images/Edit.svg" />
+                  ><img style="width: 18px" src="@/assets/images/Edit.svg" alt="编辑" />
                 </n-button>
                 <n-popconfirm @positive-click="handleDeleteBanner(item._id)">
                   <template #trigger>
                     <n-button class="op-btn" type="error" strong secondary
-                      ><img style="width: 18px" src="@/assets/images/Delete.svg" />
+                      ><img style="width: 18px" src="@/assets/images/Delete.svg" alt="删除" />
                     </n-button>
                   </template>
                   确认删除？删除后的数据将无法恢复

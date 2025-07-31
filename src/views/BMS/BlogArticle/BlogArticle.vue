@@ -23,6 +23,7 @@
                 <img
                   class="cover-img"
                   :src="item?.cover ? item?.cover : '@/assets/wallpaper/about.jpg'"
+                  alt="cover"
                 />
                 <div class="list-content-detail">
                   <div class="list-content-title">
@@ -43,15 +44,15 @@
                     </p>
                     <p>{{ _formatTime(item.updatedAt) }}</p>
                     <div>
-                      <img src="@/assets/images/View.svg" />
+                      <img src="@/assets/images/View.svg" alt="view" />
                       <span>{{ item.likes }}</span>
                     </div>
                     <div>
-                      <img src="@/assets/images/Like.svg" />
+                      <img src="@/assets/images/Like.svg" alt="like" />
                       <span>{{ item.views }}</span>
                     </div>
                     <div>
-                      <img src="@/assets/images/CommentOutlined.svg" />
+                      <img src="@/assets/images/CommentOutlined.svg" alt="comment" />
                       <span>0</span>
                     </div>
                   </div>
@@ -66,6 +67,7 @@
                         :src="getRollbackIcon(item.isHovered1, 1, item.status)"
                         @mouseenter="item.isHovered1 = true"
                         @mouseleave="item.isHovered1 = false"
+                        alt="publish"
                       />
                     </template>
                     {{ item.status === 'published' ? '取消发布' : '发布' }}
@@ -75,6 +77,7 @@
                     :src="getRollbackIcon(item.isHovered2, 2)"
                     @mouseenter="item.isHovered2 = true"
                     @mouseleave="item.isHovered2 = false"
+                    alt="edit"
                   />
                   <n-popconfirm @positive-click="deleteArticle(item._id)">
                     <template #trigger>
@@ -82,6 +85,7 @@
                         :src="getRollbackIcon(item.isHovered3, 3)"
                         @mouseenter="item.isHovered3 = true"
                         @mouseleave="item.isHovered3 = false"
+                        alt="delete"
                       />
                     </template>
                     确认删除？删除后的数据将无法恢复
@@ -94,7 +98,7 @@
             <div class="tags-title">
               <span>标签</span>
               <n-button secondary strong>
-                <img src=" @/assets/images/seting.svg" />
+                <img src=" @/assets/images/seting.svg" alt="seting" />
                 管理标签
               </n-button>
             </div>
@@ -110,7 +114,7 @@
               </div>
 
               <n-button v-else secondary round strong @click="isAddInput = !isAddInput">
-                <img src=" @/assets/images/Add.svg" />
+                <img src=" @/assets/images/Add.svg" alt="add" />
                 Add
               </n-button>
             </div>

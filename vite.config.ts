@@ -42,16 +42,13 @@ export default defineConfig({
     // 自动导入
     AutoImport({
       imports: ['vue', 'vue-router', 'vue-i18n'],
-      dts: 'src/auto-imports.d.ts'
+      dts: 'src/auto-imports.d.ts',
     }),
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
-  },
-  optimizeDeps: {
-    include: ['marked'],
   },
   css: {
     preprocessorOptions: {
@@ -80,7 +77,7 @@ export default defineConfig({
   },
   build: {
     cssMinify: true,
-    minify: 'esbuild',
+    minify: false,
     terserOptions: {
       compress: {
         drop_console: true,
@@ -101,75 +98,67 @@ export default defineConfig({
       ],
       external: ['fsevents'],
       output: {
-        manualChunks(id) {
-          // 1. 核心框架单独分包
-          if (id.includes('node_modules/vue') ||
-              id.includes('node_modules/vue-router') ||
-              id.includes('node_modules/pinia')) {
-            return 'vue-core'
-          }
-
-          // 2. 大型库单独分包
-          if (id.includes('node_modules/echarts')) {
-            return 'echarts'
-          }
-          if (id.includes('node_modules/lodash')) {
-            return 'lodash'
-          }
-          if (id.includes('node_modules/axios')) {
-            return 'axios'
-          }
-          if (id.includes('node_modules/highlight.js')) {
-            return 'highlight'
-          }
-
-          // 3. 富文本编辑器相关
-          if (id.includes('node_modules/quill') ||
-              id.includes('node_modules/@vueup/vue-quill')) {
-            return 'quill-editor'
-          }
-
-          // 4. Tiptap 编辑器相关
-          if (id.includes('node_modules/@tiptap')) {
-            return 'tiptap-editor'
-          }
-
-          // 5. Office 文档处理相关
-          if (id.includes('node_modules/@vue-office')) {
-            return 'office-viewer'
-          }
-
-          // 6. VueUse 工具库
-          if (id.includes('node_modules/@vueuse')) {
-            return 'vueuse'
-          }
-
-          // 7. 国际化相关
-          if (id.includes('node_modules/vue-i18n')) {
-            return 'i18n'
-          }
-
-          // 8. 3D 相关 (ogl)
-          if (id.includes('node_modules/ogl')) {
-            return 'webgl'
-          }
-
-          // 9. 其他 node_modules 中的依赖
-          if (id.includes('node_modules')) {
-            return 'vendor'
-          }
-
-          // 10. 按功能分包 - 可以根据您的项目结构调整这部分
-          if (id.includes('src/components')) {
-            return 'components'
-          }
-          if (id.includes('src/views') || id.includes('src/pages')) {
-            const match = id.match(/src\/(views|pages)\/([^/]+)/)
-            if (match && match[2]) {
-              return `view-${match[2]}`
-            }
-          }
-        }
+        // manualChunks(id) {
+        //   // 1. 核心框架单独分包
+        //   if (
+        //     id.includes('node_modules/vue') ||
+        //     id.includes('node_modules/vue-router') ||
+        //     id.includes('node_modules/pinia')
+        //   ) {
+        //     return 'vue-core'
+        //   }
+        //   // 2. 大型库单独分包
+        //   if (id.includes('node_modules/echarts')) {
+        //     return 'echarts'
+        //   }
+        //   if (id.includes('node_modules/lodash')) {
+        //     return 'lodash'
+        //   }
+        //   if (id.includes('node_modules/axios')) {
+        //     return 'axios'
+        //   }
+        //   if (id.includes('node_modules/highlight.js')) {
+        //     return 'highlight'
+        //   }
+        //   // 3. 富文本编辑器相关
+        //   if (id.includes('node_modules/quill') || id.includes('node_modules/@vueup/vue-quill')) {
+        //     return 'quill-editor'
+        //   }
+        //   // 4. Tiptap 编辑器相关
+        //   if (id.includes('node_modules/@tiptap')) {
+        //     return 'tiptap-editor'
+        //   }
+        //   // 5. Office 文档处理相关
+        //   if (id.includes('node_modules/@vue-office')) {
+        //     return 'office-viewer'
+        //   }
+        //   // 6. VueUse 工具库
+        //   if (id.includes('node_modules/@vueuse')) {
+        //     return 'vueuse'
+        //   }
+        //   // 7. 国际化相关
+        //   if (id.includes('node_modules/vue-i18n')) {
+        //     return 'i18n'
+        //   }
+        //   // 8. 3D 相关 (ogl)
+        //   if (id.includes('node_modules/ogl')) {
+        //     return 'webgl'
+        //   }
+        //   // 9. 其他 node_modules 中的依赖
+        //   if (id.includes('node_modules')) {
+        //     return 'vendor'
+        //   }
+        //   // 10. 按功能分包 - 可以根据您的项目结构调整这部分
+        //   if (id.includes('src/components')) {
+        //     return 'components'
+        //   }
+        //   if (id.includes('src/views') || id.includes('src/pages')) {
+        //     const match = id.match(/src\/(views|pages)\/([^/]+)/)
+        //     if (match && match[2]) {
+        //       return `view-${match[2]}`
+        //     }
+        //   }
+        // },
       },
     },
   },

@@ -33,7 +33,11 @@
                     >
                       <template #action>
                         <n-button type="info" style="width: 100%" strong secondary>
-                          <img style="width: 16px" src="@/assets/images/Add.svg" />新增分类
+                          <img
+                            style="width: 16px"
+                            src="@/assets/images/Add.svg"
+                            alt="新增分类"
+                          />新增分类
                         </n-button>
                       </template>
                     </n-select>
@@ -84,7 +88,7 @@
                     }"
                   >
                     <div class="cover-box-icon">
-                      <img src="@/assets/images/Add.svg" />
+                      <img src="@/assets/images/Add.svg" alt="新增封面" />
                       <span>封面800*600</span>
                     </div>
                   </n-upload>

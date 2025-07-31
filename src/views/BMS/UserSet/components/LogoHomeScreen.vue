@@ -91,6 +91,7 @@
     <div class="preview-box">
       <div class="logo-text-box">
         <n-image
+          alt="logo text"
           width="40"
           height="40"
           :src="
@@ -104,7 +105,10 @@
       </div>
       <div class="slogan-text-box">
         <div class="content-img-box">
-          <img :src="formValue?.cover ? formValue?.cover : '/uploads/defalut/logo1024.svg'" />
+          <img
+            :src="formValue?.cover ? formValue?.cover : '/uploads/defalut/logo1024.svg'"
+            alt="cover"
+          />
         </div>
         <div>
           <h3>
