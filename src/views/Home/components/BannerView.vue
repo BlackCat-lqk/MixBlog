@@ -1,13 +1,19 @@
 <template>
-  <div v-if="!imageLoading" class="banner skeleton-banner">
-    <n-skeleton class="skeleton-banner-box" height="512px" width="100%" />
-    <n-skeleton class="skeleton-banner-pic" width="412px" height="412px" />
-    <n-skeleton class="skeleton-text1" width="612px" height="40px" />
-    <n-skeleton class="skeleton-text2" width="612px" height="40px" />
-    <n-skeleton class="skeleton-text3" width="612px" height="40px" />
+  <div v-if="imageLoading" class="skeleton-banner">
+    <div class="skeleton1">
+      <n-skeleton height="calc(100% - 20px)" width="100%"  style="border-radius: 8px; top: 50%; transform: translate(10px, 0% );" />
+    </div>
+    <div class="skeleton2">
+      <n-skeleton height="86px" width="100%" round style="margin-top: 30px;" />
+      <n-skeleton height="72px" width="100%" round style="margin-top: 20px;" />
+      <n-skeleton height="72px" width="100%" round style="margin-top: 20px;" />
+      <div class="skeleton3">
+        <n-skeleton height="132px" width="64px" style="margin-top: 20px; border-radius: 34px; margin-right: 40px;" />
+        <n-skeleton height="132px" width="132px" round style="margin: 20px 0 0 30px;" />
+      </div>
+    </div>
   </div>
-
-  <div v-else class="banner">
+  <div v-show="!imageLoading" class="banner">
     <div class="banner-pic">
       <img
         v-if="sloganStore.sloganConfig.cover"
@@ -55,7 +61,7 @@
         </div>
       </div>
     </div>
-    <div class="relative overflow-hidden">
+    <div v-if="!imageLoading" class="relative overflow-hidden">
       <LiquidChrome
         class="ripple-grid"
         :baseColor="[0.1, 0.1, 0.3]"
@@ -82,6 +88,7 @@ const scrollStore = useScrollStore()
 
 // 图片加载完成事件
 const onImageLoad = () => {
+  console.log('图片加载完成')
   imageLoading.value = false
 }
 // 图片加载失败事件
@@ -113,6 +120,7 @@ const handelScrollDown = () => {
   width: 100%;
   display: flex;
   margin: 64px 0;
+  height: 512px;
   align-items: center;
   position: relative;
   background-color: var(--box-bg-color1);
@@ -267,32 +275,38 @@ const handelScrollDown = () => {
     z-index: 1;
     flex: 1;
     img {
-      // width: 80%;
-      // height: 80%;
+      width: 80%;
+      height: 80%;
       object-fit: cover;
     }
   }
 }
 .skeleton-banner {
+  width: 100%;
+  height: 512px;
+  margin: 64px 0;
   position: relative;
-  .skeleton-banner-box {
-    position: relative;
-    top: 0;
+  background-color: var(--box-bg-color1);
+  border-radius: 10px;
+  overflow: hidden;
+  .skeleton1 {
+    position: absolute;
     left: 0;
+    top: 0;
+    width: 512px;
+    height: 512px;
+    padding: 10px;
   }
-  .skeleton-banner-pic {
+  .skeleton2{
     position: absolute;
-    left: 4%;
-    top: 50%;
-    transform: translateY(-50%);
-    border-radius: 15px;
-  }
-  .skeleton-text1,
-  .skeleton-text2,
-  .skeleton-text3 {
-    position: absolute;
-    padding-top: 30px;
-    right: 6%;
+    top: 0;
+    left: 700px;
+    width: 512px;
+    height: 512px;
+    .skeleton3 {
+      display: flex;
+      margin-top: 10px;
+    }
   }
 }
 </style>
