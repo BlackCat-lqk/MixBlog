@@ -1,13 +1,17 @@
 <template>
-  <div class="banner">
+  <div v-if="!imageLoading" class="banner skeleton-banner">
+    <n-skeleton class="skeleton-banner-box" height="512px" width="100%" />
+    <n-skeleton class="skeleton-banner-pic" width="412px" height="412px" />
+    <n-skeleton class="skeleton-text1" width="612px" height="40px" />
+    <n-skeleton class="skeleton-text2" width="612px" height="40px" />
+    <n-skeleton class="skeleton-text3" width="612px" height="40px" />
+  </div>
+
+  <div v-else class="banner">
     <div class="banner-pic">
-      <n-space v-if="imageLoading" vertical>
-        <n-skeleton height="512px" width="512px" />
-      </n-space>
       <img
         v-if="sloganStore.sloganConfig.cover"
         :src="sloganStore.sloganConfig.cover"
-        :style="'display: ' + (imageLoading ? 'none' : 'block')"
         alt="cover"
         @load="onImageLoad"
         @error="onImageError"
@@ -17,7 +21,6 @@
         src="@/assets/images/logo2024.svg"
         @load="onImageLoad"
         @error="onImageError"
-        :style="'display: ' + (imageLoading ? 'none' : 'block')"
         alt="logo"
       />
     </div>
@@ -268,6 +271,28 @@ const handelScrollDown = () => {
       // height: 80%;
       object-fit: cover;
     }
+  }
+}
+.skeleton-banner {
+  position: relative;
+  .skeleton-banner-box {
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+  .skeleton-banner-pic {
+    position: absolute;
+    left: 4%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 15px;
+  }
+  .skeleton-text1,
+  .skeleton-text2,
+  .skeleton-text3 {
+    position: absolute;
+    padding-top: 30px;
+    right: 6%;
   }
 }
 </style>
