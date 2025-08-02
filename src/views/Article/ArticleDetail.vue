@@ -24,7 +24,7 @@
                   :bordered="false"
                   >{{ tag }}</n-tag
                 >
-                <p>{{ _formatTime(props.data.updatedAt) }}</p>
+                <p>{{ _formatTime(props.data.updatedAt).date }}</p>
               </div>
               <div class="article-header-data-info">
                 <div style="cursor: pointer">
@@ -82,13 +82,13 @@
 
 <script setup lang="ts">
 import { _formatTime } from '@/utils/publickFun'
-import QuillView from '@/components/QuillView.vue'
-import CommentsChat from '@/components/CommentsChat.vue'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { addArticleCommentApi, likeArticleApi, viewArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
 import _ from 'lodash'
+const QuillView = defineAsyncComponent(() => import('@/components/QuillView.vue'))
+const CommentsChat = defineAsyncComponent(() => import('@/components/CommentsChat.vue'))
 
 const router = useRouter()
 const deviceStore = useDeviceStore()
@@ -271,7 +271,7 @@ watch(
 :deep(.ql-toolbar) {
   display: none;
 }
-:deep(.ql-container) {
+:deep(.ql-snow) {
   border: none;
 }
 

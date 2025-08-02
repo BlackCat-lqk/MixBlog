@@ -78,6 +78,7 @@
         v-if="state.userInfo.role === 'admin' && state.userInfo.isLogin"
         type="info"
         @click="jumpPage('/bms/overview')"
+        alt="bms"
         >{{ t('header.btnText') }}</n-button
       >
       <div class="user-info-box">
@@ -106,7 +107,12 @@
         <n-select v-model:value="locale" :options="languages" @update:value="changeLanguage" />
       </div>
       <div class="switch-theme-box">
-        <n-switch v-model:value="state.switchTheme" size="large" @update:value="handleChangeTheme">
+        <n-switch
+          v-model:value="state.switchTheme"
+          alt="select theme"
+          size="large"
+          @update:value="handleChangeTheme"
+        >
           <template #checked-icon>
             <img src="/src/assets/images/LightModeFilled.svg" alt="LightModeFilled" />
           </template>
@@ -179,6 +185,12 @@ const logoLight = '/uploads/defalut/logo-transparent.webp'
 const changeLanguage = (lang: string) => {
   locale.value = lang
   localStorage.setItem('locale', lang)
+
+  // 设置html的lang属性
+  document.documentElement.lang = lang
+
+  // 如果需要，也可以设置dir属性（文字方向）
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
 }
 const moreData = [
   {

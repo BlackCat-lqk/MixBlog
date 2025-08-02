@@ -14,8 +14,8 @@
           <img :src="item.cover" alt="文章封面" loading="lazy" />
         </div>
         <div class="article-card-header-title">
-          <h3>{{ item.title }}</h3>
-          <p>{{ _formatTime(item.updatedAt) }}</p>
+          <p class="p-h3">{{ item.title }}</p>
+          <p>{{ _formatTime(item.updatedAt).date }}</p>
         </div>
       </div>
       <div class="article-card-content">
@@ -129,11 +129,6 @@ const articleClick = (data: articleDetailType) => {
     transition: all 0.2s;
     background-color: var(--box-bg-color1);
     box-shadow: 0 0 10px 0 var(--border-color);
-    &:hover {
-      .article-card-header-title h3 {
-        color: #0aa9db;
-      }
-    }
     .article-card-header {
       margin-top: -53px;
       display: flex;
@@ -153,7 +148,7 @@ const articleClick = (data: articleDetailType) => {
       .article-card-header-title {
         gap: 14px;
         padding-top: 16px;
-        h3 {
+        .p-h3 {
           padding-top: 16px;
           font-size: 20px;
           line-height: 1.4;
@@ -199,6 +194,13 @@ const articleClick = (data: articleDetailType) => {
           display: flex;
           align-items: center;
           gap: 8px;
+        }
+      }
+    }
+    &:hover {
+      .article-card-header-title {
+        .p-h3 {
+          color: #0aa9db;
         }
       }
     }

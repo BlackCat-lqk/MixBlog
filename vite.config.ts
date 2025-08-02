@@ -14,13 +14,42 @@ import preload from 'vite-plugin-preload'
 import terser from '@rollup/plugin-terser'
 // 使用unplugin-auto-import插件自动导入工具
 import AutoImport from 'unplugin-auto-import/vite'
+// 通过vite-plugin-pwa 实现资源缓存：
+import { VitePWA } from 'vite-plugin-pwa'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
     vueDevTools(),
-    preload(),
+    preload({
+      // 只预加载首页关键资源
+      shouldPreload: (chunk) => {
+        // 预加载所有JS和CSS资源，但可以通过更精细的控制只加载首页关键资源
+        if (chunk.type === 'asset' && chunk.fileName.endsWith('.css')) {
+          // 预加载所有CSS资源
+          return true
+        }
+        if (chunk.type === 'chunk' && chunk.fileName.endsWith('.js')) {
+          // 只预加载关键的JS chunks
+          // 预加载主入口文件、Vue核心库、路由相关文件
+          const isMainChunk =
+            chunk.name === 'main' || chunk.name === 'HomeView' || chunk.name === 'MixMain'
+          const isVueCore =
+            chunk.fileName.includes('vue') ||
+            chunk.fileName.includes('vue-router') ||
+            chunk.fileName.includes('pinia')
+          // 首页组件相关
+          const isHomeComponent =
+            chunk.fileName.includes('Home') ||
+            chunk.fileName.includes('Header') ||
+            chunk.fileName.includes('Footer')
+
+          return isMainChunk || isVueCore || isHomeComponent
+        }
+        return false
+      },
+    }),
     // 依赖可视化分析
     visualizer({
       gzipSize: true,
@@ -39,10 +68,27 @@ export default defineConfig({
       filter: /\.(js|mjs|json|css|html|svg)$/i, // 匹配文件
       verbose: true, // 是否打印压缩信息
     }),
+    // 专门为CSS文件添加一个压缩插件实例
+    viteCompression({
+      algorithm: 'gzip',
+      ext: '.gz',
+      threshold: 10240,
+      deleteOriginFile: false,
+      compressionOptions: { level: 9 },
+      filter: /\.(css)$/i,
+      verbose: true,
+    }),
     // 自动导入
     AutoImport({
       imports: ['vue', 'vue-router', 'vue-i18n'],
       dts: 'src/auto-imports.d.ts',
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        maximumFileSizeToCacheInBytes: 5000000, // 设置为 5MB
+      },
     }),
   ],
   resolve: {
@@ -76,9 +122,11 @@ export default defineConfig({
     },
   },
   build: {
+    sourcemap: 'hidden', // 源代码映射
     cssMinify: true,
-    minify: false,
+    minify: true,
     terserOptions: {
+      sourceMap: true, // 确保压缩时保留 source map
       compress: {
         drop_console: true,
         drop_debugger: true,
@@ -98,67 +146,18 @@ export default defineConfig({
       ],
       external: ['fsevents'],
       output: {
-        // manualChunks(id) {
-        //   // 1. 核心框架单独分包
-        //   if (
-        //     id.includes('node_modules/vue') ||
-        //     id.includes('node_modules/vue-router') ||
-        //     id.includes('node_modules/pinia')
-        //   ) {
-        //     return 'vue-core'
-        //   }
-        //   // 2. 大型库单独分包
-        //   if (id.includes('node_modules/echarts')) {
-        //     return 'echarts'
-        //   }
-        //   if (id.includes('node_modules/lodash')) {
-        //     return 'lodash'
-        //   }
-        //   if (id.includes('node_modules/axios')) {
-        //     return 'axios'
-        //   }
-        //   if (id.includes('node_modules/highlight.js')) {
-        //     return 'highlight'
-        //   }
-        //   // 3. 富文本编辑器相关
-        //   if (id.includes('node_modules/quill') || id.includes('node_modules/@vueup/vue-quill')) {
-        //     return 'quill-editor'
-        //   }
-        //   // 4. Tiptap 编辑器相关
-        //   if (id.includes('node_modules/@tiptap')) {
-        //     return 'tiptap-editor'
-        //   }
-        //   // 5. Office 文档处理相关
-        //   if (id.includes('node_modules/@vue-office')) {
-        //     return 'office-viewer'
-        //   }
-        //   // 6. VueUse 工具库
-        //   if (id.includes('node_modules/@vueuse')) {
-        //     return 'vueuse'
-        //   }
-        //   // 7. 国际化相关
-        //   if (id.includes('node_modules/vue-i18n')) {
-        //     return 'i18n'
-        //   }
-        //   // 8. 3D 相关 (ogl)
-        //   if (id.includes('node_modules/ogl')) {
-        //     return 'webgl'
-        //   }
-        //   // 9. 其他 node_modules 中的依赖
-        //   if (id.includes('node_modules')) {
-        //     return 'vendor'
-        //   }
-        //   // 10. 按功能分包 - 可以根据您的项目结构调整这部分
-        //   if (id.includes('src/components')) {
-        //     return 'components'
-        //   }
-        //   if (id.includes('src/views') || id.includes('src/pages')) {
-        //     const match = id.match(/src\/(views|pages)\/([^/]+)/)
-        //     if (match && match[2]) {
-        //       return `view-${match[2]}`
-        //     }
-        //   }
-        // },
+        manualChunks: {
+          // 核心框架：Vue相关的核心库
+          'vue-core': ['vue', 'vue-router', 'pinia', 'vue-i18n'],
+          // 状态管理相关
+          store: ['@/stores'],
+          // UI组件库（按需加载）
+          'naive-ui': ['naive-ui'],
+          // 工具库
+          utils: ['axios', 'lodash', '@vueuse/core'],
+          // 可视化和图表库
+          visualization: ['echarts', 'highlight.js'],
+        },
       },
     },
   },

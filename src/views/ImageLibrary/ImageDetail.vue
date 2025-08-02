@@ -16,7 +16,7 @@
             <div class="image-header-info-box">
               <div class="image-header-info">
                 <n-tag :bordered="false" type="info">{{ props.data.category }}</n-tag>
-                <p>{{ _formatTime(props.data.updatedAt) }}</p>
+                <p>{{ _formatTime(props.data.updatedAt).date }}</p>
               </div>
               <div class="image-header-data-info">
                 <div style="cursor: pointer">

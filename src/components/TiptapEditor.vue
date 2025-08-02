@@ -1,7 +1,4 @@
-/**
-  * QuillView.vue
-  * @description: 副文本编辑组件
-*/
+/** * QuillView.vue * @description: 副文本编辑组件 */
 <template>
   <QuillEditor
     theme="snow"
@@ -22,7 +19,6 @@ import hljs from 'highlight.js'
 import Syntax from 'quill/modules/syntax'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import 'highlight.js/styles/monokai-sublime.css'
-
 
 // 注册语法高亮模块
 Quill.register('modules/syntax', Syntax)
@@ -55,11 +51,10 @@ const toolbarOptions = [
 const Options = {
   // toolbar: toolbarOptions, // 使用自定义工具栏配置
   modules: {
-    toolbar: toolbarOptions,  // 隐藏工具栏
+    toolbar: toolbarOptions, // 隐藏工具栏
     syntax: {
       highlight: (text: string) => hljs.highlightAuto(text).value,
     },
   },
 }
-
 </script>

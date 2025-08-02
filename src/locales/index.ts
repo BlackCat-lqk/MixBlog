@@ -12,11 +12,24 @@ const messages = {
 // 获取本地存储的语言设置或浏览器默认语言
 function getDefaultLanguage() {
   const savedLang = localStorage.getItem('locale')
-  if (savedLang) return savedLang
+  if (savedLang) {
+    // 设置html的lang属性
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = savedLang
+    }
+    return savedLang
+  }
 
   const browserLang = navigator.language
-  if (browserLang.startsWith('zh')) return 'zh-CN'
-  return 'en-US'
+  let defaultLang = 'en-US'
+  if (browserLang.startsWith('zh')) defaultLang = 'zh-CN'
+  
+  // 设置html的lang属性
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = defaultLang
+  }
+  
+  return defaultLang
 }
 
 const i18n = createI18n({

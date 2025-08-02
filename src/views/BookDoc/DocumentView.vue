@@ -120,9 +120,10 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getBookDocApi } from '@/http/uploadFile'
 import { useMessage } from 'naive-ui'
-import VueOfficeDocx from '@vue-office/docx'
-import VueOfficeExcel from '@vue-office/excel'
-import VueOfficePdf from '@vue-office/pdf'
+// 动态导入文档处理组件
+const VueOfficeDocx = defineAsyncComponent(() => import('@vue-office/docx'))
+const VueOfficeExcel = defineAsyncComponent(() => import('@vue-office/excel'))
+const VueOfficePdf = defineAsyncComponent(() => import('@vue-office/pdf'))
 import NovelReader from '@/components/NovelReader.vue'
 import _ from 'lodash'
 const message = useMessage()

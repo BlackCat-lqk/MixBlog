@@ -1,41 +1,43 @@
 <template>
-  <div v-if="imageLoading" class="skeleton-banner">
-    <div class="skeleton1">
-      <n-skeleton height="calc(100% - 20px)" width="100%"  style="border-radius: 8px; top: 50%; transform: translate(10px, 0% );" />
-    </div>
-    <div class="skeleton2">
-      <n-skeleton height="86px" width="100%" round style="margin-top: 30px;" />
-      <n-skeleton height="72px" width="100%" round style="margin-top: 20px;" />
-      <n-skeleton height="72px" width="100%" round style="margin-top: 20px;" />
-      <div class="skeleton3">
-        <n-skeleton height="132px" width="64px" style="margin-top: 20px; border-radius: 34px; margin-right: 40px;" />
-        <n-skeleton height="132px" width="132px" round style="margin: 20px 0 0 30px;" />
+  <div class="banner">
+    <div v-show="!imageLoading" class="banner-pic">
+      <div class="skeleton1">
+        <n-skeleton
+          height="calc(100% - 20px)"
+          width="100%"
+          style="border-radius: 8px; top: 50%; transform: translate(10px, 0%)"
+        />
       </div>
     </div>
-  </div>
-  <div v-show="!imageLoading" class="banner">
-    <div class="banner-pic">
+    <div v-show="imageLoading" class="banner-pic">
       <img
-        v-if="sloganStore.sloganConfig.cover"
         :src="sloganStore.sloganConfig.cover"
         alt="cover"
         @load="onImageLoad"
         @error="onImageError"
       />
-      <img
-        v-else
-        src="@/assets/images/logo2024.svg"
-        @load="onImageLoad"
-        @error="onImageError"
-        alt="logo"
-      />
     </div>
-    <div class="banner-left">
+    <div v-show="!imageLoading" class="banner-left">
+      <div class="skeleton2">
+        <n-skeleton height="86px" width="100%" round style="margin-top: 30px" />
+        <n-skeleton height="72px" width="100%" round style="margin-top: 20px" />
+        <n-skeleton height="72px" width="100%" round style="margin-top: 20px" />
+        <div class="skeleton3">
+          <n-skeleton
+            height="132px"
+            width="64px"
+            style="margin-top: 20px; border-radius: 34px; margin-right: 40px"
+          />
+          <n-skeleton height="132px" width="132px" round style="margin: 20px 0 0 30px" />
+        </div>
+      </div>
+    </div>
+    <div v-show="imageLoading" class="banner-left">
       <div>
         <div>
-          <h1>
+          <p class="p-h1">
             {{ sloganStore.sloganConfig.sloganTitle }}
-          </h1>
+          </p>
           <p>
             {{ sloganStore.sloganConfig.sloganSub1 }}
           </p>
@@ -61,15 +63,14 @@
         </div>
       </div>
     </div>
-    <div v-if="!imageLoading" class="relative overflow-hidden">
-      <LiquidChrome
-        class="ripple-grid"
-        :baseColor="[0.1, 0.1, 0.3]"
-        :speed="0.3"
-        :amplitude="0.3"
-        :interactive="false"
-      />
-    </div>
+    <LiquidChrome
+      v-if="imageLoading"
+      class="ripple-grid"
+      :baseColor="[0.1, 0.1, 0.3]"
+      :speed="0.3"
+      :amplitude="0.3"
+      :interactive="false"
+    />
   </div>
 </template>
 
@@ -77,23 +78,25 @@
 import { useScrollStore } from '@/stores/scrollStore'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import { useThemeStore } from '@/stores/themeStore'
-import LiquidChrome from '@/views/VueBits/RippleGrid.vue'
+const LiquidChrome = defineAsyncComponent(() => import('@/views/VueBits/RippleGrid.vue'))
 import router from '@/router'
 const themeStore = useThemeStore()
 const sloganStore = useSloganInfoStore()
 
 // 图片加载状态
-const imageLoading = ref(true)
+const imageLoading = ref(false)
 const scrollStore = useScrollStore()
 
 // 图片加载完成事件
 const onImageLoad = () => {
   console.log('图片加载完成')
-  imageLoading.value = false
+  imageLoading.value = true
+  console.log('🚀 ~ onImageLoad ~ true:', true)
 }
 // 图片加载失败事件
 const onImageError = () => {
-  imageLoading.value = false
+  console.log('图片加载失败')
+  imageLoading.value = true
 }
 const handelScrollDown = () => {
   const nowDate = new Date()
@@ -169,7 +172,7 @@ const handelScrollDown = () => {
         animation: scrollDown 1.5s ease-in-out infinite;
       }
     }
-    h1 {
+    .p-h1 {
       font-size: 86px;
       font-weight: 700;
       letter-spacing: 0.24em;
@@ -281,32 +284,23 @@ const handelScrollDown = () => {
     }
   }
 }
-.skeleton-banner {
-  width: 100%;
+.skeleton1 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 512px;
   height: 512px;
-  margin: 64px 0;
-  position: relative;
-  background-color: var(--box-bg-color1);
-  border-radius: 10px;
-  overflow: hidden;
-  .skeleton1 {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 512px;
-    height: 512px;
-    padding: 10px;
-  }
-  .skeleton2{
-    position: absolute;
-    top: 0;
-    left: 700px;
-    width: 512px;
-    height: 512px;
-    .skeleton3 {
-      display: flex;
-      margin-top: 10px;
-    }
+  padding: 10px;
+}
+.skeleton2 {
+  position: absolute;
+  top: 0;
+  left: 700px;
+  width: 512px;
+  height: 512px;
+  .skeleton3 {
+    display: flex;
+    margin-top: 10px;
   }
 }
 </style>

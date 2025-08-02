@@ -13,7 +13,7 @@
         >
           <div class="random-notes-list-date">
             <div class="note-date">
-              <span>{{ _formatTime(item.updatedAt) }}</span>
+              <span>{{ _formatTime(item.updatedAt).time }}</span>
             </div>
             <div class="note-whter">
               <img :src="weatherIconsURLs[item.weather]" alt="weather" />

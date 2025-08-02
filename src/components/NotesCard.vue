@@ -5,7 +5,7 @@
         <div class="random-notes-title">
           <span>{{ props.notesDetail.title }}</span>
           <div class="random-notes-date">
-            <p>{{ _formatTime(props.notesDetail.updatedAt) }}</p>
+            <p>{{ _formatTime(props.notesDetail.updatedAt).time }}</p>
             <n-icon size="20">
               <img :src="weatherIconsURLs[props.notesDetail.weather]" alt="weather" />
             </n-icon>

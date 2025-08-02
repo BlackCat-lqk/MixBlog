@@ -97,7 +97,7 @@ const getAllNotes = async () => {
       notesList.value = res.data
       notesDetail.value = res.data[0]
       articleUpdateAt.value = res.data.map((item: NotesType) => {
-        const res = _formatTime(item.updatedAt)
+        const res = _formatTime(item.updatedAt).time
         return res.split(' ')[0]
       })
     }

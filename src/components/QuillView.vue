@@ -1,9 +1,12 @@
-/**
-  * QuillView.vue
-  * @description: 预览组件，不提供文本编辑功能
-*/
+/** * QuillView.vue * @description: 预览组件，不提供文本编辑功能 */
 <template>
-  <QuillEditor content-type="html" :content="editorContent" readonly :options="Options" />
+  <QuillEditor
+    content-type="html"
+    style="border: none"
+    :content="editorContent"
+    readonly
+    :options="Options"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -15,7 +18,6 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import 'highlight.js/styles/monokai-sublime.css'
 // 注册语法高亮模块
 Quill.register('modules/syntax', Syntax)
-
 
 const editorContent = ref('')
 const Options = {

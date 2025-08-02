@@ -64,7 +64,7 @@
                   <span>查看：{{ item.views }}</span>
                 </div>
 
-                <span>{{ _formatTime(item.updatedAt) }}</span>
+                <span>{{ _formatTime(item.updatedAt).date }}</span>
               </div>
             </div>
           </div>

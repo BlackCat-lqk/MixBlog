@@ -2,11 +2,11 @@
   <div class="photo-gallery-box">
     <div class="photo-gallery-switch-box">
       <div class="photo-gallery-title">
-        <h1>{{ $t('photo.title') }}</h1>
+        <p class="p-h1">{{ $t('photo.title') }}</p>
         <p>{{ $t('photo.subTitle') }}</p>
       </div>
       <div class="photo-gallery-switch">
-        <n-button tertiary round @click="getPrevious" :disabled="state.step <= 0">
+        <n-button tertiary round @click="getPrevious" :disabled="state.step <= 0" alt="prove">
           <n-icon>
             <img
               v-if="themeStore.currentTheme == 'light'"
@@ -16,7 +16,13 @@
             <img v-else src="@/assets/images/ArrowLeftWhite.svg" alt="prove" />
           </n-icon>
         </n-button>
-        <n-button tertiary round @click="getNext" :disabled="state.step >= state.dataCount">
+        <n-button
+          tertiary
+          round
+          @click="getNext"
+          :disabled="state.step >= state.dataCount"
+          alt="next"
+        >
           <n-icon>
             <img
               v-if="themeStore.currentTheme == 'light'"
@@ -36,9 +42,9 @@
       <div class="photo-gallery-bg"></div>
       <div class="photo-gallery-desc">
         <div class="photo-gallery-title">
-          <h1>{{ photoItem.title }}</h1>
+          <p class="p-h1">{{ photoItem.title }}</p>
           <div class="photo-gallery-title-data">
-            <p>{{ _formatTime(photoItem.updatedAt) }}</p>
+            <p>{{ _formatTime(photoItem.updatedAt).date }}</p>
             <div class="views-comment-icon">
               <span>
                 <img width="20px" src="@/assets/images/likes.svg" alt="likes" />
@@ -211,7 +217,7 @@ onMounted(() => {
     .photo-gallery-title {
       display: flex;
       align-items: center;
-      h1 {
+      .p-h1 {
         color: var(--text-color);
         font-size: 32px;
         line-height: 1.34;
@@ -253,7 +259,7 @@ onMounted(() => {
         display: flex;
         justify-content: space-between;
         flex-direction: column;
-        h1 {
+        .p-h1 {
           color: var(--text-color);
           font-size: 32px;
           line-height: 1.34;

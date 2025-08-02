@@ -42,7 +42,7 @@
                         >{{ tag }}</n-tag
                       >
                     </p>
-                    <p>{{ _formatTime(item.updatedAt) }}</p>
+                    <p>{{ _formatTime(item.updatedAt).date }}</p>
                     <div>
                       <img src="@/assets/images/View.svg" alt="view" />
                       <span>{{ item.likes }}</span>
