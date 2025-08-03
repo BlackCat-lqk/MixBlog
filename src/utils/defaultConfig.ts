@@ -16,6 +16,6 @@ export const sloganConfigData = () => {
     sloganTitle: 'Mix Blog',
     sloganSub1: '记录生活',
     sloganSub2: '学习充电',
-    cover: '/uploads/defalut/logo1024.svg',
+    cover: '/uploads/defalut/logo2024.webp',
   } as Slogan
 }

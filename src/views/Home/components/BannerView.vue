@@ -12,7 +12,7 @@
     <div v-show="imageLoading" class="banner-pic">
       <img
         :src="sloganStore.sloganConfig.cover"
-        alt="cover"
+        alt="slogan cover"
         @load="onImageLoad"
         @error="onImageError"
       />
@@ -96,12 +96,21 @@ const onImageLoad = () => {
 // 图片加载失败事件
 const onImageError = () => {
   console.log('图片加载失败')
-  imageLoading.value = true
+  imageLoading.value = false
 }
 const handelScrollDown = () => {
   const nowDate = new Date()
   scrollStore.scrollTo('scorll' + nowDate)
 }
+onBeforeMount(() => {
+  // 动态创建 preload 标签
+  const link = document.createElement('link')
+  link.rel = 'preload'
+  link.as = 'image'
+  link.href = sloganStore.sloganConfig.cover
+  document.head.appendChild(link)
+  console.log('🚀 ~ mounted ~ true:', true)
+})
 </script>
 
 <style scoped lang="scss">
@@ -138,6 +147,7 @@ const handelScrollDown = () => {
   }
   .banner-left {
     flex: 1;
+    min-width: 700px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -277,9 +287,11 @@ const handelScrollDown = () => {
   .banner-pic {
     z-index: 1;
     flex: 1;
+    min-width: 512px;
+    width: 512px;
     img {
-      width: 80%;
-      height: 80%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
   }

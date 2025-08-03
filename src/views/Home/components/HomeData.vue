@@ -117,7 +117,7 @@ const onImageLoad = () => {
 }
 // 图片加载失败事件
 const onImageError = () => {
-  stateLoading.image = true
+  stateLoading.image = false
 }
 // 获取banner图片数据
 const getBannerData = async () => {

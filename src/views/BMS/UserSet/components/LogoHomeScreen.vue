@@ -106,7 +106,7 @@
       <div class="slogan-text-box">
         <div class="content-img-box">
           <img
-            :src="formValue?.cover ? formValue?.cover : '/uploads/defalut/logo1024.svg'"
+            :src="formValue?.cover ? formValue?.cover : '/uploads/defalut/logo2024.svg'"
             alt="cover"
           />
         </div>

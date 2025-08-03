@@ -16,7 +16,7 @@ export const useSloganInfoStore = defineStore('sloganConfigInfo', {
       sloganTitle: '',
       sloganSub1: '',
       sloganSub2: '',
-      cover: '',
+      cover: '/uploads/defalut/logo2024.webp',
     } as Slogan,
   }),
   actions: {
