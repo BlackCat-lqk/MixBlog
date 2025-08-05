@@ -119,6 +119,7 @@
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getBookDocApi } from '@/http/uploadFile'
+import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
 // 动态导入文档处理组件
 const VueOfficeDocx = defineAsyncComponent(() => import('@vue-office/docx'))
@@ -127,7 +128,8 @@ const VueOfficePdf = defineAsyncComponent(() => import('@vue-office/pdf'))
 import NovelReader from '@/components/NovelReader.vue'
 import _ from 'lodash'
 const message = useMessage()
-
+const router = useRouter()
+const userInfoStore = useUserInfoStore()
 const bgKey = ref('all')
 const searchKeyword = ref('')
 const pdfOptions = {
@@ -198,6 +200,12 @@ const handleChangeSearch = _.debounce(async (value: string) => {
 
 // 下载文件
 const downloadFile = _.debounce((data: BookDocData) => {
+  // 检测是否登录
+  if (!userInfoStore.data.user.isLogin) {
+    message.error('请先登录')
+    router.push('/register-login')
+    return
+  }
   const link = document.createElement('a')
   link.href = data.path
   link.download = data.filename
