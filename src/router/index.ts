@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { isMobileDevice } from '@/utils/deviceUtils'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { verifyUserApi } from '@/http/user'
 
@@ -9,15 +8,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'mixMain',
-      component: () => import(`@/views/${isMobileDevice() ? 'MobileMixMain' : 'MixMain'}.vue`),
+      component: () => import('@/views/MixMain.vue'),
     },
     {
       path: '/register-login',
       name: 'register',
-      component: () =>
-        import(
-          '@/views/RegisterLogin/RegisterLogin.vue'
-        ),
+      component: () => import('@/views/RegisterLogin/RegisterLogin.vue'),
     },
     {
       path: '/articles',
@@ -170,7 +166,7 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: 'register' })
     }
   } catch (error) {
-    console.log("🚀 ~ error:", error)
+    console.log('🚀 ~ error:', error)
     userStore.removeUserInfo()
     return next({ name: 'register' })
   }

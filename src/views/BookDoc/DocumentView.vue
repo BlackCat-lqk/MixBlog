@@ -55,6 +55,7 @@
                 <span>时间：{{ item.updatedAt }}</span>
               </div>
               <div class="btn-box">
+                <!-- 下载需要登录 -->
                 <n-button type="primary" @click="downloadFile(item)">下载</n-button>
                 <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
               </div>
@@ -81,26 +82,26 @@
           </div>
         </template>
         <vue-office-pdf
-          v-if="previewData.suffix === 'pdf'"
+          v-if="previewData.suffix === 'pdf' || previewData.suffix === 'PDF'"
           :src="previewData.path"
           @error="handleError"
           style="height: 100% !important"
           :options="pdfOptions"
         />
         <vue-office-docx
-          v-else-if="previewData.suffix === 'docx'"
+          v-else-if="previewData.suffix === 'docx' || previewData.suffix === 'DOCX'"
           :src="previewData.path"
           @error="handleError"
           :options="pdfOptions"
         />
         <vue-office-excel
-          v-else-if="previewData.suffix === 'xlsx'"
+          v-else-if="previewData.suffix === 'xlsx' || previewData.suffix === 'XLSX'"
           :src="previewData.path"
           @error="handleError"
           :options="pdfOptions"
         />
         <novel-reader
-          v-else-if="previewData.suffix === 'txt'"
+          v-else-if="previewData.suffix === 'txt' || previewData.suffix === 'TXT'"
           :txt-url="previewData.path"
           :book-id="previewData._id"
         >
@@ -121,6 +122,9 @@ import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getBookDocApi } from '@/http/uploadFile'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
+import { useUserInfoStore } from '@/stores/userInfo'
+const userInfoStore = useUserInfoStore()
+const router = useRouter()
 // 动态导入文档处理组件
 const VueOfficeDocx = defineAsyncComponent(() => import('@vue-office/docx'))
 const VueOfficeExcel = defineAsyncComponent(() => import('@vue-office/excel'))
@@ -171,10 +175,15 @@ const showPreview = ref(false)
 // 根据文件后缀改变背景
 const changeBg = {
   pdf: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
+  PDF: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
   doc: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
   docx: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
+  DOC: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
+  DOCX: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
   xlsx: `url("${new URL('@/assets/images/file/excel.svg', import.meta.url).href}")`,
   txt: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
+  XLSX: `url("${new URL('@/assets/images/file/excel.svg', import.meta.url).href}")`,
+  TXT: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
 } as Record<string, string>
 
 // 搜索过滤文件
@@ -200,16 +209,15 @@ const handleChangeSearch = _.debounce(async (value: string) => {
 
 // 下载文件
 const downloadFile = _.debounce((data: BookDocData) => {
-  // 检测是否登录
-  if (!userInfoStore.data.user.isLogin) {
-    message.error('请先登录')
+  if (userInfoStore.data.user.isLogin) {
+    const link = document.createElement('a')
+    link.href = data.path
+    link.download = data.filename
+    link.click()
+  } else {
+    message.info('请先登录')
     router.push('/register-login')
-    return
   }
-  const link = document.createElement('a')
-  link.href = data.path
-  link.download = data.filename
-  link.click()
 }, 500)
 // 过滤文件
 const filterFiles = (key: string) => {
