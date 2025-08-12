@@ -122,7 +122,6 @@ import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getBookDocApi } from '@/http/uploadFile'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
-import { useUserInfoStore } from '@/stores/userInfo'
 const userInfoStore = useUserInfoStore()
 const router = useRouter()
 // 动态导入文档处理组件
@@ -132,8 +131,6 @@ const VueOfficePdf = defineAsyncComponent(() => import('@vue-office/pdf'))
 import NovelReader from '@/components/NovelReader.vue'
 import _ from 'lodash'
 const message = useMessage()
-const router = useRouter()
-const userInfoStore = useUserInfoStore()
 const bgKey = ref('all')
 const searchKeyword = ref('')
 const pdfOptions = {
