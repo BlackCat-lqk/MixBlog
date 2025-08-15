@@ -322,7 +322,7 @@ const closeAddTagInput = () => {
 
 // 获取文章列表数据
 const getArticleData = async () => {
-  const response = await getAllBlogArticleApi()
+  const response = await getAllBlogArticleApi('')
   const res = response.data
   if (res.code === 200) {
     state.articleData = res.data.list

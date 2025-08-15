@@ -54,7 +54,7 @@
           </div>
           <div class="article-content">
             <div class="article-content-inner">
-              <quill-view :content="props.data.content"></quill-view>
+              <quill-view :content="articleContent"></quill-view>
             </div>
           </div>
           <div :class="showComment ? 'article-comment-area' : 'article-comment-hide'">
@@ -87,6 +87,7 @@ import { addArticleCommentApi, likeArticleApi, viewArticleApi } from '@/http/blo
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
 import _ from 'lodash'
+import { getAllBlogArticleApi } from '@/http/blogArticle'
 const QuillView = defineAsyncComponent(() => import('@/components/QuillView.vue'))
 const CommentsChat = defineAsyncComponent(() => import('@/components/CommentsChat.vue'))
 
@@ -97,6 +98,7 @@ const userInfoStore = useUserInfoStore()
 const activeDrawer = ref(false)
 const emits = defineEmits(['update:showModal'])
 const showComment = ref(false)
+const articleContent = ref('')
 
 const props = defineProps({
   data: {
@@ -126,7 +128,7 @@ export interface LikeView {
 interface articleDetailType {
   _id: string
   title: string
-  content: string
+  content?: string
   intro: string
   category: string
   updatedAt: string
@@ -243,14 +245,27 @@ watch(
   },
 )
 
+const getArticleDetailSignal = async () => {
+  const response = await getAllBlogArticleApi(props.data._id)
+  const res = response.data
+  const resDetail = res.data.list[0]
+  if (res.code === 200) {
+    console.log(resDetail)
+    comments.value = resDetail.comments
+    state.comments = resDetail.comments.length
+    state.likes = resDetail.likes.length
+    state.views = resDetail.views.length
+    articleContent.value = resDetail.content
+  } else {
+    message.error(res.message)
+  }
+}
+
 watch(
   () => activeDrawer.value,
   (newVal) => {
     if (newVal) {
-      comments.value = props.data.comments
-      state.comments = props.data.comments.length
-      state.likes = props.data.likes.length
-      state.views = props.data.views.length
+      getArticleDetailSignal()
       viewArticle()
       emits('update:showModal', false)
     }

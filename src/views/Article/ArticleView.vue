@@ -53,7 +53,7 @@ interface articelDataType {
 }
 // 获取所有文章数据
 const getAllBlogArticleData = async () => {
-  const response = await getAllBlogArticleApi()
+  const response = await getAllBlogArticleApi('')
   const res = response.data
   if (res.code === 200) {
     const listData = res.data.list.filter((item: articelDataType) => item.status === 'published')

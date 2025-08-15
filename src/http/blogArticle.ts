@@ -29,8 +29,8 @@ export function createBlogArtileApi(params: {
 }
 
 // 获取所有BlogArticle文章
-export function getAllBlogArticleApi() {
-  return request.get('/articles-with-stats')
+export function getAllBlogArticleApi(params: string) {
+  return request.get(`/articles-with-stats?_id=${params}`)
 }
 
 /**

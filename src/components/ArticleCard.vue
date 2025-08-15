@@ -84,7 +84,6 @@ export interface LikeView {
 interface articleDetailType {
   _id: string
   title: string
-  content: string
   intro: string
   category: string
   updatedAt: string
@@ -96,7 +95,6 @@ interface articleDetailType {
 let articleDetail: articleDetailType = reactive({
   _id: '',
   title: '',
-  content: '',
   intro: '',
   category: '',
   updatedAt: '',
