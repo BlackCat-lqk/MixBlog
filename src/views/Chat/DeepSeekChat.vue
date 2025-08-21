@@ -76,8 +76,12 @@
       />
       <div class="chat-option">
         <div class="chat-option-item">
-          Use Streaming
+          使用流式对话
           <n-switch v-model:value="useStreaming" />
+        </div>
+        <div class="chat-option-item">
+          深度思考
+          <n-switch v-model:value="useThink" />
         </div>
         <div class="chat-option-send">
           <n-button strong secondary type="primary" @click="sendMessage" :disabled="isLoading">
@@ -116,6 +120,7 @@ const messages = ref<ChatMessage[]>([])
 const streamingResponse = ref('')
 const isLoading = ref(false)
 const useStreaming = ref(true)
+const useThink = ref(false)
 
 // 开启新对话
 const startNewChat = () => {
@@ -149,6 +154,7 @@ const sendMessage = _.debounce(async () => {
     if (useStreaming.value) {
       await streamChatWithDeepSeek(
         {
+          model: useThink ? 'deepseek-reasoner' : 'deepseek-chat',
           messages: [...messages.value],
         },
         (chunk) => {
@@ -163,6 +169,7 @@ const sendMessage = _.debounce(async () => {
       streamingResponse.value = ''
     } else {
       const response = await chatWithDeepSeek({
+        model: useThink ? 'deepseek-reasoner' : 'deepseek-chat',
         messages: [...messages.value],
       })
 
