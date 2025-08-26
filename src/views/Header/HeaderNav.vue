@@ -81,6 +81,13 @@
         alt="bms"
         >{{ t('header.btnText') }}</n-button
       >
+      <div style="display: flex; align-items: center; margin-right: 15px; cursor: pointer">
+        <router-link :to="{ path: '/mixlab' }" target="_blank" rel="noopener noreferrer">
+          <n-icon size="32">
+            <img width="32px" src="@/assets/images/lab.svg" alt="Laboratory" />
+          </n-icon>
+        </router-link>
+      </div>
       <div class="user-info-box">
         <div v-if="state.userInfo.isLogin">
           <n-dropdown :options="state.avatarOptions" @select="handleAvatarClick">

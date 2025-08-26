@@ -2,16 +2,31 @@
   <div class="footer-main-box">
     <span>{{ $t('footer.title') }}</span>
     <n-divider />
-    <div class="technical-support" v-for="item in 1" :key="item">
-      <a
-        class="technical-support-item-box"
-        v-for="(item, idx) in supportData"
-        :key="idx"
-        :href="item.url"
-        target="_blank"
-      >
-        <img :src="item.img" :alt="item.alt" />
-      </a>
+    <div class="technical-support">
+      <Vue3Marquee :duration="180" :pauseOnHover="true" style="width: 100%;">
+        <a
+          class="technical-support-item-box"
+          v-for="(item, idx) in supportData.slice(0, 10)"
+          :key="idx"
+          :href="item.url"
+          target="_blank"
+        >
+          <img :src="item.img" :alt="item.alt" />
+        </a>
+      </Vue3Marquee>
+    </div>
+    <div class="technical-support-reverse technical-support">
+      <Vue3Marquee direction="reverse" :duration="180" :pauseOnHover="true">
+        <a
+          class="technical-support-item-box"
+          v-for="(item, idx) in supportData.slice(10, 20)"
+          :key="idx"
+          :href="item.url"
+          target="_blank"
+        >
+          <img :src="item.img" :alt="item.alt" />
+        </a>
+      </Vue3Marquee>
     </div>
     <n-divider />
     <div class="footer-bottom-text">{{ $t('footer.content') }}</div>
@@ -23,6 +38,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Vue3Marquee } from 'vue3-marquee'
 const supportData = [
   {
     img: new URL('@/assets/images/footer/vue3.svg', import.meta.url).href,
@@ -132,7 +148,7 @@ const supportData = [
   background-color: var(--box-bg-color4);
   @include g.flexCenter;
   flex-direction: column;
-  padding: 10px 30vw;
+  padding: 10px 20vw;
   padding-bottom: 4vh;
   span {
     display: inline-block;
@@ -145,9 +161,6 @@ const supportData = [
     }
   }
   .technical-support {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
     .technical-support-item-box {
       height: 84px;
       background-color: var(--box-bg-color4);
@@ -160,6 +173,9 @@ const supportData = [
         object-fit: contain;
       }
     }
+  }
+  .technical-support-reverse {
+    margin-top: 10px;
   }
   .footer-bottom-text {
     color: var(--text-color);

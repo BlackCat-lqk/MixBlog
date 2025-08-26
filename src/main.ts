@@ -6,6 +6,7 @@ import { useThemeStore } from '@/stores/themeStore'
 import App from './App.vue'
 import router from './router'
 import i18n from './locales'
+
 // 注册指令
 import vPreventScrollPassthrough from './directives/preventScrollPassthrough'
 const app = createApp(App)

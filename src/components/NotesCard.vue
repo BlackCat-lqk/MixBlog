@@ -104,18 +104,18 @@ const hasNote = ref(true)
       text-decoration-color: #ccc;
       text-underline-offset: 10px;
       img {
-        width: 100%;
-        height: 500px;
+        margin-top: 20px;
+        width: auto;
+        max-width: 100%;
+        max-height: 500px;
+        height: auto;
         object-fit: cover;
         border-radius: 8px;
       }
     }
     .n-card__content {
-      overflow-y: hidden;
-      &:hover {
-        overflow-y: auto;
-        @include g.scrollbarCustom;
-      }
+      overflow-y: auto;
+      @include g.scrollbarCustom;
     }
   }
 }

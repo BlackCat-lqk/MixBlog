@@ -122,11 +122,8 @@ onMounted(() => {
       display: grid;
       gap: 24px;
       grid-template-columns: repeat(auto-fill, minmax(1, 1fr)); /* 每个子元素最小200px，自动换行 */
-      overflow: hidden;
-      &:hover {
-        @include g.scrollbarCustom;
-        overflow: auto;
-      }
+      overflow: auto;
+      @include g.scrollbarCustom;
       .random-notes-list-item {
         width: 100%;
         height: 100%;
@@ -198,7 +195,9 @@ onMounted(() => {
     flex: 1;
     background-color: var(--box-bg-color1);
     border-radius: 5px;
-    height: 920px;
+    width: auto;
+    height: auto;
+    max-height: 920px;
   }
 }
 </style>
