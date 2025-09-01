@@ -166,13 +166,8 @@ const handleClick = () => {
 
 <style scoped>
 .gradient-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  display: none;
+  position: relative;
+  display: block;
 }
 
 .mask-content {
@@ -190,12 +185,4 @@ const handleClick = () => {
   }
 }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .mask-content {
-    max-width: 90vw;
-    max-height: 90vh;
-    overflow: auto;
-  }
-}
 </style>

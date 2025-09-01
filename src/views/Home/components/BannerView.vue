@@ -64,12 +64,26 @@
       </div>
     </div>
     <LiquidChrome
-      v-if="imageLoading"
+      v-if="imageLoading && themeStore.currentTheme == 'light'"
       class="ripple-grid"
       :baseColor="[0.1, 0.1, 0.3]"
       :speed="0.3"
       :amplitude="0.3"
       :interactive="false"
+    />
+    <PrismaticBurst
+    v-if="imageLoading && themeStore.currentTheme == 'dark'"
+      animationType="rotate3d"
+      class="ripple-grid"
+      :intensity="2"
+      :speed="0.5"
+      :distort="1.0"
+      :paused="false"
+      :offset="{ x: 0, y: 0 }"
+      :hoverDampness="0.25"
+      :rayCount="24"
+      mixBlendMode="lighten"
+      :colors="['#ff007a', '#4d3dff', '#ffffff']"
     />
   </div>
 </template>
@@ -79,6 +93,7 @@ import { useScrollStore } from '@/stores/scrollStore'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import { useThemeStore } from '@/stores/themeStore'
 const LiquidChrome = defineAsyncComponent(() => import('@/views/VueBits/RippleGrid.vue'))
+const PrismaticBurst = defineAsyncComponent(() => import('@/views/VueBits/PrismaticBurst.vue'))
 import router from '@/router'
 const themeStore = useThemeStore()
 const sloganStore = useSloganInfoStore()
@@ -143,7 +158,7 @@ onBeforeMount(() => {
     top: 0%;
     left: 0%;
     width: 1480px;
-    height: 800px;
+    height: 640px;
   }
   .banner-left {
     flex: 1;

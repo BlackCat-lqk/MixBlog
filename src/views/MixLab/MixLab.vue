@@ -131,13 +131,17 @@
               :clickable="true"
               @click="showMask = false"
             >
-              <div class="custom-content">
+              <!-- <div class="custom-content">
                 <h3>自定义内容</h3>
                 <p>这里可以放置任何内容</p>
                 <button @click="showMask = false">关闭</button>
-              </div>
+              </div> -->
             </MaskLayer>
             <span style="color: #fff; position: absolute; bottom: 5%">遮罩层</span>
+          </div>
+          <div class="grid-custom-box">
+            <SearchPro></SearchPro>
+            <span style="color: #fff; position: absolute; bottom: 5%">搜索</span>
           </div>
         </div>
       </div>
@@ -154,6 +158,7 @@ import FrostedGlass from '@/views/MixLab/components/FrostedGlass.vue'
 import FollowMouse from '@/views/MixLab/components/FollowMouse.vue'
 import MessageNotify from '@/views/MixLab/components/MessageNotify.vue'
 import MaskLayer from '@/views/MixLab/components/MaskLayer.vue'
+import SearchPro from '@/views/MixLab/components/SearchPro.vue'
 const handleGradientBtn = () => {
   console.log('handleGradientBtn')
 }

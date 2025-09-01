@@ -3,7 +3,7 @@
     <span>{{ $t('footer.title') }}</span>
     <n-divider />
     <div class="technical-support">
-      <Vue3Marquee :duration="180" :pauseOnHover="true" style="width: 100%;">
+      <n-marquee auto-fill speed="4">
         <a
           class="technical-support-item-box"
           v-for="(item, idx) in supportData.slice(0, 10)"
@@ -11,12 +11,12 @@
           :href="item.url"
           target="_blank"
         >
-          <img :src="item.img" :alt="item.alt" />
+          <n-image width="80" height="80" preview-disabled :src="item.img" />
         </a>
-      </Vue3Marquee>
+      </n-marquee>
     </div>
     <div class="technical-support-reverse technical-support">
-      <Vue3Marquee direction="reverse" :duration="180" :pauseOnHover="true">
+      <n-marquee auto-fill speed="4">
         <a
           class="technical-support-item-box"
           v-for="(item, idx) in supportData.slice(10, 20)"
@@ -24,9 +24,9 @@
           :href="item.url"
           target="_blank"
         >
-          <img :src="item.img" :alt="item.alt" />
+          <n-image width="80" height="80" preview-disabled :src="item.img" />
         </a>
-      </Vue3Marquee>
+      </n-marquee>
     </div>
     <n-divider />
     <div class="footer-bottom-text">{{ $t('footer.content') }}</div>
@@ -38,7 +38,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Vue3Marquee } from 'vue3-marquee'
 const supportData = [
   {
     img: new URL('@/assets/images/footer/vue3.svg', import.meta.url).href,
@@ -161,9 +160,10 @@ const supportData = [
     }
   }
   .technical-support {
+    position: relative;
     .technical-support-item-box {
       height: 84px;
-      background-color: var(--box-bg-color4);
+      width: 84px;
       margin: 0 5px;
       border-radius: 2px;
       padding: 10px;
@@ -174,8 +174,23 @@ const supportData = [
       }
     }
   }
+  .technical-support::after {
+    content: '';
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: var(--box-bg-color8);
+  }
   .technical-support-reverse {
     margin-top: 10px;
+    :deep(.n-marquee .n-marquee__group) {
+      animation-direction: alternate-reverse;
+    }
   }
   .footer-bottom-text {
     color: var(--text-color);
