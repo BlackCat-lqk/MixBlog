@@ -4,16 +4,19 @@
     <div class="background-blur"></div>
     <div class="header-logo-search-box">
       <div class="header-logo-box">
-        <div>
+        <div style="width: 400px;">
           <img
             v-if="themeStore.currentTheme == 'light'"
-            width="608px"
+            width="400px"
             height="514px"
             :src="logoLight"
             alt="logoLight"
           />
           <img v-else width="608px" height="514px" :src="logoNight" alt="logoNight" />
         </div>
+        <div class="search-box" style="flex: 1;">
+        <AlgoliaSearch></AlgoliaSearch>
+      </div>
       </div>
 
       <!-- <div class="search-box">
@@ -174,6 +177,7 @@ import { useMessage } from 'naive-ui'
 import { logOutUserApi } from '@/http/user'
 import SetUserInfo from './components/SetUserInfo.vue'
 import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
+import AlgoliaSearch from '@/components/AlgoliaSearch.vue'
 
 const { locale, t } = useI18n()
 const router = useRouter()
@@ -398,13 +402,16 @@ onMounted(() => {
     .header-logo-box {
       width: auto;
       display: flex;
+      align-items: center;
       height: 100%;
+      justify-content: flex-start;
       img {
         aspect-ratio: attr(width) / attr(height); /* 动态读取原始宽高比 */
         width: 10%; /* 或固定宽度 */
         height: auto; /* 高度自适应 */
         object-fit: contain; /* 保持比例，完整显示图片 */
         padding: 5px 0 0 8px;
+
       }
     }
 
