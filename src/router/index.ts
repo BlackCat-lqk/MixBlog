@@ -61,6 +61,11 @@ const router = createRouter({
       component: () => import('@/views/MixLab/MixLab.vue'),
     },
     {
+      path: '/hookslab',
+      name: 'HooksLab',
+      component: () => import('@/views/MixLab/HooksLab.vue'),
+    },
+    {
       path: '/unauthorized',
       name: 'Unauthorized',
       component: () => import('@/views/UnAuthorized.vue'),

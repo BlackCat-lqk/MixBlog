@@ -64,17 +64,16 @@ const triggerShake = () => {
     setTimeout(() => {
       isExpanded.value = true
       hasUnread.value = false
-    }, 300)
-  }, 1000)
+    }, 200)
+  }, 300)
 }
 
 // 切换通知显示状态
 const toggleNotification = () => {
   if (!isExpanded.value) {
     triggerShake()
-  } else {
-    isExpanded.value = false
   }
+  isExpanded.value = false
 }
 
 // 关闭通知
@@ -82,14 +81,6 @@ const closeNotification = () => {
   isExpanded.value = false
   emits('update:show', false)
 }
-
-// 点击外部区域关闭通知
-// const handleClickOutside = (event: MouseEvent) => {
-//   const notification = document.querySelector('.global-notification') as HTMLElement
-//   if (notification && !notification.contains(event.target as Node)) {
-//     isExpanded.value = false
-//   }
-// }
 
 // 组件挂载后自动触发一次抖动
 onMounted(() => {
@@ -134,11 +125,6 @@ onMounted(() => {
 .notification-icon:hover {
   transform: scale(1.05);
 }
-
-/* .shaking {
-  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  animation-fill-mode: forwards;
-} */
 
 @keyframes shake {
   0%,

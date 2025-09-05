@@ -15,21 +15,39 @@
     <FollowMouse :size="250" :cursor="true" :opacity="0.6" color="rgba(100, 200, 255, 0.9)">
       <div class="mix-lab-content">
         <div class="mixlab-header">
-          <n-icon size="64">
-            <img width="64px" src="@/assets/images/lab.svg" alt="Laboratory" />
+          <n-icon size="48">
+            <img width="48px" src="@/assets/images/lab.svg" alt="Laboratory" />
           </n-icon>
           <span> 实验性项目，在这里尽情发挥想象... </span>
         </div>
-        <div class="mix-lab-card">
+        <div style="display: flex; justify-content: center; margin-bottom: 10px">
+          <GooeyNav
+            :items="gooeyNavItems"
+            :border="false"
+            backgroundColor="#032d49"
+            backgroundColorBtn="#032d49"
+            :borderBtn="true"
+            textColor="#fff"
+            textActiveColor="#000"
+            start-animation-color="#032d49"
+            end-animation-color="#f0ecf8"
+            annulusWidth="20px"
+            @click="handleNav"
+          ></GooeyNav>
+        </div>
+        <div v-show="showTabs == 0" class="mix-lab-card">
           <div class="grid-custom-box">
             <span style="color: #fff; position: absolute; bottom: 5%">流动渐变边框</span>
+            <div style="color: #fff; position: absolute; top: 5%; right: 2%; cursor: pointer;">
+              <img width="32px" src="@/assets/images/MixLab/codeView.svg" alt="code review">
+            </div>
             <GradientFlow class-name="gradient-box" @click="handleGradientBtn">
               <template #content>
-                <p>查看源码</p>
+                <p></p>
               </template>
             </GradientFlow>
           </div>
-          <div class="grid-custom-box">
+          <div class="grid-custom-drop-box">
             <DragDrop
               :initial-position="position"
               boundary-selector=".custom-spotlight-card"
@@ -123,13 +141,13 @@
             <MaskLayer
               v-if="showMask"
               direction="top"
-              :start-color="'#fff'"
-              :end-color="'#fff'"
-              size="30%"
+              start-color="#4cc28b"
+              end-color="#b0ff57"
+              size="100%"
               :animated="true"
               content-position="center"
               :clickable="true"
-              @click="showMask = false"
+              :opacity="0.3"
             >
               <!-- <div class="custom-content">
                 <h3>自定义内容</h3>
@@ -137,13 +155,24 @@
                 <button @click="showMask = false">关闭</button>
               </div> -->
             </MaskLayer>
-            <span style="color: #fff; position: absolute; bottom: 5%">遮罩层</span>
+            <span style="color: #fff; position: absolute; bottom: 5%">渐变遮罩层</span>
           </div>
           <div class="grid-custom-box">
-            <SearchPro></SearchPro>
-            <span style="color: #fff; position: absolute; bottom: 5%">搜索</span>
+            <GooeyNav
+              :border="true"
+              backgroundColor="#ffd642"
+              backgroundColorBtn="#ffd642"
+              :borderBtn="true"
+              textColor="#000"
+              textActiveColor="#fff"
+              start-animation-color="#ffd642"
+              end-animation-color="#d573fc"
+              annulusWidth="20px"
+            ></GooeyNav>
+            <span style="color: #fff; position: absolute; bottom: 5%">导航</span>
           </div>
         </div>
+        <HooksLab v-show="showTabs == 1"></HooksLab>
       </div>
     </FollowMouse>
   </div>
@@ -158,16 +187,21 @@ import FrostedGlass from '@/views/MixLab/components/FrostedGlass.vue'
 import FollowMouse from '@/views/MixLab/components/FollowMouse.vue'
 import MessageNotify from '@/views/MixLab/components/MessageNotify.vue'
 import MaskLayer from '@/views/MixLab/components/MaskLayer.vue'
-import SearchPro from '@/views/MixLab/components/SearchPro.vue'
+import GooeyNav from '@/views/MixLab/components/GooeyNav.vue'
+import HooksLab from '@/views/MixLab/HooksLab.vue'
 const handleGradientBtn = () => {
   console.log('handleGradientBtn')
 }
+
+const showTabs = ref(0)
+
+const gooeyNavItems = ['组件', 'Hooks']
 
 const isShowMessage = ref(false)
 const showMask = ref(true)
 
 // 拖拽组件
-const position = ref({ x: 30, y: 160 })
+const position = ref({ x: 35, y: 110 })
 const dragStatus = ref('等待拖拽')
 const onDragStart = (pos: { x: number; y: number }) => {
   position.value = pos
@@ -183,6 +217,15 @@ const onDragEnd = (pos: { x: number; y: number }) => {
   position.value = pos
   dragStatus.value = '拖拽结束'
 }
+
+interface NavItem {
+  index: number
+  title: string
+}
+const handleNav = (val: NavItem) => {
+  showTabs.value = val.index
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -224,6 +267,7 @@ const onDragEnd = (pos: { x: number; y: number }) => {
       display: flex;
       justify-content: center;
       align-items: center;
+      margin-bottom: 20px;
       span {
         color: #fff;
       }
@@ -235,20 +279,8 @@ const onDragEnd = (pos: { x: number; y: number }) => {
       place-items: center;
     }
     .card-gradient {
-      height: 400px;
+      height: 380px;
       width: 100%;
-    }
-    .custom-spotlight-card {
-      width: 100%;
-      height: 100%;
-      border: 1px solid #333;
-      border-radius: 8px;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      background-color: rgba(0, 0, 0, 0.7);
     }
     .gradient-box {
       width: 80%;
@@ -259,7 +291,6 @@ const onDragEnd = (pos: { x: number; y: number }) => {
       font-size: 18px;
     }
     .custom-drag-drop {
-      // width: 320px;
       width: 80%;
       height: 55px;
       background: rgba(255, 255, 255, 1);
@@ -345,7 +376,7 @@ const onDragEnd = (pos: { x: number; y: number }) => {
   }
   .click-effect-box {
     position: relative;
-    height: 400px;
+    height: 300px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -370,7 +401,7 @@ const onDragEnd = (pos: { x: number; y: number }) => {
   .frosted-glass-box {
     position: relative;
     // width: 400px;
-    height: 400px;
+    height: 300px;
     width: 100%;
     // height: 100%;
     // margin: 10px;
@@ -412,9 +443,9 @@ const onDragEnd = (pos: { x: number; y: number }) => {
       }
     }
   }
-  .grid-custom-box {
+  .grid-custom-drop-box {
     position: relative;
-    height: 400px;
+    height: 300px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -422,6 +453,18 @@ const onDragEnd = (pos: { x: number; y: number }) => {
     background-color: rgba(0, 0, 0, 0.7);
     border: 1px solid #333;
     border-radius: 8px;
+  }
+  .grid-custom-box {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
     .follow-mouse,
     .message-notify {
       display: flex;

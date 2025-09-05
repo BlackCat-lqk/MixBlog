@@ -1,5 +1,5 @@
 <template>
-  <div ref="searchContainer"></div>
+  <div ref="searchContainer" class="search-container"></div>
 </template>
 
 <script setup lang="ts">
@@ -20,3 +20,10 @@ onMounted(() => {
   }
 })
 </script>
+
+<style>
+.search-container {
+  min-height: 40px;
+  position: relative;
+}
+</style>

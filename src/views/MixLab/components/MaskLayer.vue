@@ -45,6 +45,8 @@ interface Props {
   contentPosition?: 'top' | 'bottom' | 'left' | 'right' | 'center'
   // 内容区域自定义样式
   contentStyle?: Record<string, string>
+  // 透明度
+  opacity?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -57,7 +59,8 @@ const props = withDefaults(defineProps<Props>(), {
   duration: 500,
   clickable: true,
   contentPosition: 'center',
-  contentStyle: () => ({})
+  contentStyle: () => ({}),
+  opacity: 1
 })
 
 const emit = defineEmits<{
@@ -71,7 +74,8 @@ const maskStyle = computed(() => {
     '--end-color': props.endColor,
     '--size': props.size,
     '--duration': `${props.duration}ms`,
-    'display': props.visible ? 'block' : 'none'
+    'display': props.visible ? 'block' : 'none',
+    'opacity': `${props.opacity}`
   }
 
   // 根据方向设置渐变
@@ -121,40 +125,6 @@ const maskStyle = computed(() => {
   return style
 })
 
-// 内容位置样式
-// const contentPositionStyle = computed(() => {
-//   const position: Record<string, string> = {}
-
-//   switch (props.contentPosition) {
-//     case 'top':
-//       position.top = '0'
-//       position.left = '50%'
-//       position.transform = 'translateX(-50%)'
-//       break
-//     case 'bottom':
-//       position.bottom = '0'
-//       position.left = '50%'
-//       position.transform = 'translateX(-50%)'
-//       break
-//     case 'left':
-//       position.left = '0'
-//       position.top = '50%'
-//       position.transform = 'translateY(-50%)'
-//       break
-//     case 'right':
-//       position.right = '0'
-//       position.top = '50%'
-//       position.transform = 'translateY(-50%)'
-//       break
-//     case 'center':
-//       position.top = '50%'
-//       position.left = '50%'
-//       position.transform = 'translate(-50%, -50%)'
-//       break
-//   }
-
-//   return position
-// })
 
 // 处理点击事件
 const handleClick = () => {
@@ -166,6 +136,8 @@ const handleClick = () => {
 
 <style scoped>
 .gradient-mask {
+  width: 100%;
+  height: 100%;
   position: relative;
   display: block;
 }
