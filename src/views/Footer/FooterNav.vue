@@ -1,6 +1,6 @@
 <template>
   <div class="footer-main-box">
-    <span>{{ $t('footer.title') }}</span>
+    <!-- <span>{{ $t('footer.title') }}</span> -->
     <n-divider />
     <div class="technical-support">
       <n-marquee auto-fill speed="4">
@@ -32,6 +32,7 @@
     <div class="footer-bottom-text">{{ $t('footer.content') }}</div>
     <div class="icp-filing-text">
       <span>备案/许可证</span>
+      <span>Recordation / License</span>
       <span><a href="https://beian.miit.gov.cn/#/Integrated/index">桂ICP备2025066402号</a></span>
     </div>
   </div>

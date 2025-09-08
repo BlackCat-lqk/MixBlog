@@ -58,6 +58,9 @@
             <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" alt="scroll Down" />
           </n-icon>
         </div>
+        <div class="scroll-down">
+
+        </div>
         <div class="chat-ai-btn" @click="router.push('/d-chat')">
           <span class="pure-text-glow">MIX AI</span>
         </div>
@@ -186,7 +189,7 @@ onBeforeMount(() => {
     }
     .scroll-down {
       height: 80px;
-      width: 64px;
+      width: 80px;
       border-radius: 34px;
       background-image: linear-gradient(180deg, g.$btnColor 0%, g.$btnColor 100%);
       text-align: center;

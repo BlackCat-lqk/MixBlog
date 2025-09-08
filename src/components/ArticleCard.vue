@@ -122,7 +122,7 @@ const articleClick = (data: articleDetailType) => {
   .article-card-box {
     border-radius: 16px;
     padding: 24px;
-    margin-top: 28px;
+    margin-top: 10px;
     cursor: pointer;
     transition: all 0.2s;
     background-color: var(--box-bg-color1);

@@ -4,8 +4,23 @@
   </header>
   <div class="article-menu-box">
     <classify-meun :classify="classify" @classifyEmit="handleClassify"></classify-meun>
+    <div class="search-box">
+      <GradientFlow class-name="gradient-box">
+        <template #content>
+          <n-input
+            style="--n-border-hover: none; --n-border-focus: none"
+            v-model:value="searchArticle"
+            type="text"
+            clearable
+            placeholder="输入文章标题/内容搜索"
+            @input="handleSearch"
+          />
+        </template>
+      </GradientFlow>
+    </div>
+
     <article-card :articleData="articleData"></article-card>
-    <div class="more-btn" v-if="!isClassify">
+    <div class="more-btn" v-if="!isClassify && articleData.data.length">
       <n-button
         v-if="articleData.data.length < articleData.deepData.length"
         tertiary
@@ -28,12 +43,14 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import ClassifyMeun from '@/components/ClassifyMeun.vue'
 import ArticleCard from '@/components/ArticleCard.vue'
+import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
 const { t } = useI18n()
 import _ from 'lodash'
 const message = useMessage()
 const isClassify = ref(false)
+const searchArticle = ref('')
 const articleData = reactive({
   data: [],
   columns: 3,
@@ -50,6 +67,8 @@ const classify = reactive([
 interface articelDataType {
   status: string
   category: string
+  title: string
+  intro: string
 }
 // 获取所有文章数据
 const getAllBlogArticleData = async () => {
@@ -91,6 +110,22 @@ const handleClassify = (name: string) => {
   }
 }
 
+// 搜索文章
+const handleSearch = _.debounce((value: string) => {
+  if (!value) {
+    handleClassify('全部')
+  } else {
+    const listData = _.cloneDeep(articleData.deepData)
+    articleData.data = listData.filter((item: articelDataType) => {
+      return (
+        item.title.toLowerCase().includes(value.toLowerCase()) ||
+        item.intro.toLowerCase().includes(value.toLowerCase())
+      )
+    })
+  }
+  console.log(value)
+}, 300)
+
 // 初始化文章数据
 onMounted(() => {
   getAllBlogArticleData()
@@ -103,6 +138,30 @@ onMounted(() => {
   max-width: 1480px;
   margin-top: 2vh;
   flex: 1;
+  .search-box {
+    width: 100%;
+    height: 40px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    .gradient-box {
+      width: 360px;
+      border-radius: 30px;
+      border: 2px solid transparent;
+      :deep(.n-input) {
+        width: 100%;
+        height: 100%;
+        border-radius: 30px;
+        .n-input__input-el {
+          height: 100%;
+        }
+        .n-input__input-el:hover {
+          border: none;
+        }
+      }
+    }
+  }
   .more-btn {
     @include g.flexCenter;
     margin: 50px;

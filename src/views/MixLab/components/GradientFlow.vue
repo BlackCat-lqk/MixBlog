@@ -14,9 +14,7 @@
     <div :class="['cyan-glow glow', colorClassNameArry[1]]"></div>
     <div :class="['purple-glow glow', colorClassNameArry[2]]"></div>
     <div :class="['white-glow glow', colorClassNameArry[3]]"></div>
-    <div>
       <slot name="content"> 默认文本 </slot>
-    </div>
   </div>
 </template>
 
