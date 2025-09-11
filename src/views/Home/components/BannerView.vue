@@ -47,20 +47,23 @@
         </div>
         <div></div>
       </div>
-      <div class="scroll-down-box">
-        <div class="scroll-down" @click="handelScrollDown">
-          <n-icon size="40">
+      <div class="advertising-box">
+        <div class="advertising" @click="redirectToExternal('https://github.com/BlackCat-lqk/X-Tools-exe/releases/tag/X-Tools1.0.0')" >
+          <!-- <n-icon size="40">
             <img
               v-if="themeStore.currentTheme == 'light'"
               src="@/assets/images/AngleDoubleDown.svg"
               alt="scroll Down"
             />
             <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" alt="scroll Down" />
-          </n-icon>
+          </n-icon> -->
+          <img src="@/assets/images/xtools.webp" alt="X-Tools">
         </div>
-        <div class="scroll-down">
-
-        </div>
+        <router-link :to="{ path: '/mixlab' }" target="_blank" rel="noopener noreferrer">
+          <div class="advertising">
+            <img width="32px" src="@/assets/images/lab.svg" alt="Laboratory" />
+          </div>
+        </router-link>
         <div class="chat-ai-btn" @click="router.push('/d-chat')">
           <span class="pure-text-glow">MIX AI</span>
         </div>
@@ -92,7 +95,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useScrollStore } from '@/stores/scrollStore'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import { useThemeStore } from '@/stores/themeStore'
 const LiquidChrome = defineAsyncComponent(() => import('@/views/VueBits/RippleGrid.vue'))
@@ -103,7 +105,6 @@ const sloganStore = useSloganInfoStore()
 
 // 图片加载状态
 const imageLoading = ref(false)
-const scrollStore = useScrollStore()
 
 // 图片加载完成事件
 const onImageLoad = () => {
@@ -116,9 +117,8 @@ const onImageError = () => {
   console.log('图片加载失败')
   imageLoading.value = false
 }
-const handelScrollDown = () => {
-  const nowDate = new Date()
-  scrollStore.scrollTo('scorll' + nowDate)
+const redirectToExternal = (url: string) => {
+  window.open(url, '_blank')
 }
 onBeforeMount(() => {
   // 动态创建 preload 标签
@@ -182,22 +182,26 @@ onBeforeMount(() => {
         transform: translateY(0);
       }
     }
-    .scroll-down-box {
+    .advertising-box {
       width: 100%;
       display: flex;
       margin-top: 10px;
+      align-items: center;
     }
-    .scroll-down {
+    .advertising {
       height: 80px;
-      width: 80px;
-      border-radius: 34px;
-      background-image: linear-gradient(180deg, g.$btnColor 0%, g.$btnColor 100%);
+      width:80px;
+      border-radius: 8px;
+      background-color: rgba(255,255,255,0.2);
+      backdrop-filter: blur(20px);
       text-align: center;
-      padding-top: 52px;
-      margin-right: 40px;
+      padding: 10px;
+      margin-right: 20px;
       cursor: pointer;
+      @include g.flexCenter;
       img {
-        animation: scrollDown 1.5s ease-in-out infinite;
+        // animation: scrollDown 1.5s ease-in-out infinite;
+        width: 80px;
       }
     }
     .p-h1 {
@@ -241,9 +245,9 @@ onBeforeMount(() => {
     }
     .chat-ai-btn {
       cursor: pointer;
-      margin-left: 30px;
       position: relative;
       width: 132px;
+      height: 132px;
       display: flex;
       justify-content: center;
       align-items: center;
