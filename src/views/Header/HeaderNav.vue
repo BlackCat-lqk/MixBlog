@@ -70,13 +70,13 @@
           </n-icon>
         </router-link>
       </div>
-      <n-divider vertical style="background-color: rgb(192 192 192);" />
+      <n-divider vertical style="background-color: rgb(192 192 192)" />
       <div class="language-select-box">
         <n-dropdown trigger="click" :options="languages" @select="changeLanguage">
           <img width="32px" src="@/assets/images/i18n.svg" alt="i18n" />
         </n-dropdown>
       </div>
-      <n-divider vertical style="background-color: rgb(192 192 192);" />
+      <n-divider vertical style="background-color: rgb(192 192 192)" />
       <div class="switch-theme-box">
         <n-switch
           v-model:value="state.switchTheme"
@@ -92,7 +92,7 @@
           </template>
         </n-switch>
       </div>
-      <n-divider vertical style="background-color: rgb(192 192 192);" />
+      <n-divider vertical style="background-color: rgb(192 192 192)" />
       <div
         class="address-img-box"
         @click="redirectToExternal('https://github.com/BlackCat-lqk/MixBlog')"
@@ -333,7 +333,8 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  backdrop-filter: blur(50px);
+  background-color: var(--box-bg-color4);
+  backdrop-filter: blur(10px);
   .header-logo-search-box {
     z-index: 1;
     @include g.flexCenter;

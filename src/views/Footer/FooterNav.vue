@@ -1,7 +1,6 @@
 <template>
   <div class="footer-main-box">
     <!-- <span>{{ $t('footer.title') }}</span> -->
-    <n-divider />
     <div class="technical-support">
       <n-marquee auto-fill speed="4">
         <a
@@ -28,11 +27,12 @@
         </a>
       </n-marquee>
     </div>
-    <n-divider />
     <div class="footer-bottom-text">{{ $t('footer.content') }}</div>
     <div class="icp-filing-text">
       <span>备案/许可证</span>
+      <br />
       <span>Recordation / License</span>
+      <br />
       <span><a href="https://beian.miit.gov.cn/#/Integrated/index">桂ICP备2025066402号</a></span>
     </div>
   </div>
@@ -148,8 +148,7 @@ const supportData = [
   background-color: var(--box-bg-color4);
   @include g.flexCenter;
   flex-direction: column;
-  padding: 10px 20vw;
-  padding-bottom: 4vh;
+  padding: 24px 20vw 4vh 20vw;
   span {
     display: inline-block;
     color: var(--sub-text-color);
@@ -189,19 +188,23 @@ const supportData = [
   }
   .technical-support-reverse {
     margin-top: 10px;
+    margin-bottom: 24px;
     :deep(.n-marquee .n-marquee__group) {
       animation-direction: alternate-reverse;
     }
   }
   .footer-bottom-text {
+    line-height: 1.54;
     color: var(--text-color);
+    padding-bottom: 10px;
   }
   .icp-filing-text {
+    text-align: center;
     span {
       color: var(--text-color3);
       font-size: 14px;
-      line-height: 1.54;
       font-weight: 400;
+      margin: 5px auto;
       a {
         padding-left: 10px;
         color: var(--text-color3);
