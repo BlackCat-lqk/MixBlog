@@ -38,17 +38,36 @@
           <p class="p-h1">
             {{ sloganStore.sloganConfig.sloganTitle }}
           </p>
-          <p>
+
+          <TextType
+            :text="[
+              '时光逝水轻抚过，岁月飘摇风雨中',
+              'Time flows, gently touched; Years adrift in wind and rain.',
+            ]"
+            :typingSpeed="100"
+            :pauseDuration="2000"
+            :showCursor="true"
+            cursorCharacter="▌"
+            className="p-h2"
+          />
+          <!-- <p>
             {{ sloganStore.sloganConfig.sloganSub1 }}
           </p>
           <p>
             {{ sloganStore.sloganConfig.sloganSub2 }}
-          </p>
+          </p> -->
         </div>
         <div></div>
       </div>
       <div class="advertising-box">
-        <div class="advertising" @click="redirectToExternal('https://github.com/BlackCat-lqk/X-Tools-exe/releases/tag/X-Tools1.0.0')" >
+        <div
+          class="advertising"
+          @click="
+            redirectToExternal(
+              'https://github.com/BlackCat-lqk/X-Tools-exe/releases/tag/X-Tools1.0.0',
+            )
+          "
+        >
           <!-- <n-icon size="40">
             <img
               v-if="themeStore.currentTheme == 'light'"
@@ -57,7 +76,7 @@
             />
             <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" alt="scroll Down" />
           </n-icon> -->
-          <img src="@/assets/images/xtools.webp" alt="X-Tools">
+          <img src="@/assets/images/xtools.webp" alt="X-Tools" />
         </div>
         <router-link :to="{ path: '/mixlab' }" target="_blank" rel="noopener noreferrer">
           <div class="advertising">
@@ -69,27 +88,30 @@
         </div>
       </div>
     </div>
-    <LiquidChrome
-      v-if="imageLoading && themeStore.currentTheme == 'light'"
+    <BitsGalaxy
       class="ripple-grid"
-      :baseColor="[0.1, 0.1, 0.3]"
-      :speed="0.3"
-      :amplitude="0.3"
-      :interactive="false"
+      v-if="imageLoading && themeStore.currentTheme == 'dark'"
+      :mouse-repulsion="false"
+      :mouse-interaction="true"
+      :density="1"
+      :glow-intensity="0.3"
+      :saturation="0"
+      :hue-shift="140"
     />
+
     <PrismaticBurst
-    v-if="imageLoading && themeStore.currentTheme == 'dark'"
+      v-if="imageLoading && themeStore.currentTheme == 'light'"
       animationType="rotate3d"
       class="ripple-grid"
-      :intensity="2"
+      :intensity="5"
       :speed="0.5"
-      :distort="1.0"
+      :distort="5.0"
       :paused="false"
       :offset="{ x: 0, y: 0 }"
       :hoverDampness="0.25"
-      :rayCount="24"
+      :rayCount="2"
       mixBlendMode="lighten"
-      :colors="['#ff007a', '#4d3dff', '#ffffff']"
+      :colors="['#ff007a', '#654ea3', '#f5af19']"
     />
   </div>
 </template>
@@ -97,8 +119,9 @@
 <script lang="ts" setup>
 import { useSloganInfoStore } from '@/stores/configInfo'
 import { useThemeStore } from '@/stores/themeStore'
-const LiquidChrome = defineAsyncComponent(() => import('@/views/VueBits/RippleGrid.vue'))
 const PrismaticBurst = defineAsyncComponent(() => import('@/views/VueBits/PrismaticBurst.vue'))
+const TextType = defineAsyncComponent(() => import('@/views/VueBits/TextType.vue'))
+const BitsGalaxy = defineAsyncComponent(() => import('@/views/VueBits/BitsGalaxy.vue'))
 import router from '@/router'
 const themeStore = useThemeStore()
 const sloganStore = useSloganInfoStore()
@@ -153,7 +176,7 @@ onBeforeMount(() => {
   height: 512px;
   align-items: center;
   position: relative;
-  background-color: var(--box-bg-color1);
+  background: var(--box-bg-color9);
   border-radius: 10px;
   overflow: hidden;
   .ripple-grid {
@@ -190,9 +213,9 @@ onBeforeMount(() => {
     }
     .advertising {
       height: 80px;
-      width:80px;
+      width: 80px;
       border-radius: 8px;
-      background-color: rgba(255,255,255,0.2);
+      background-color: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(20px);
       text-align: center;
       padding: 10px;
@@ -224,6 +247,13 @@ onBeforeMount(() => {
       span {
         display: inline;
       }
+    }
+
+    .p-h2 {
+      font-size: 42px;
+      height: 140px;
+      padding: 20px 0;
+      line-height: 1.54;
     }
 
     p {
