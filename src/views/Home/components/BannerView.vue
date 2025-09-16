@@ -43,6 +43,8 @@
             :text="[
               '时光逝水轻抚过，岁月飘摇风雨中',
               'Time flows, gently touched; Years adrift in wind and rain.',
+              '掌控你的身体和思想',
+              'Control your own mind and body'
             ]"
             :typingSpeed="100"
             :pauseDuration="2000"
@@ -338,7 +340,6 @@ onBeforeMount(() => {
   }
   .banner-pic {
     z-index: 1;
-    flex: 1;
     min-width: 512px;
     width: 512px;
     img {
