@@ -24,7 +24,7 @@
                   :bordered="false"
                   >{{ tag }}</n-tag
                 >
-                <p>{{ _formatTime(props.data.updatedAt).date }}</p>
+                <p>{{ _formatTime(props.data.createdAt).date }}</p>
               </div>
               <div class="article-header-data-info">
                 <div style="cursor: pointer">
@@ -131,7 +131,7 @@ interface articleDetailType {
   content?: string
   intro: string
   category: string
-  updatedAt: string
+  createdAt: string
   tags: string[]
   comments: Comment[]
   likes: LikeView[]

@@ -15,7 +15,7 @@
         </div>
         <div class="article-card-header-title">
           <p class="p-h3">{{ item.title }}</p>
-          <p>{{ _formatTime(item.updatedAt).date }}</p>
+          <p>{{ _formatTime(item.createdAt).date }}</p>
         </div>
       </div>
       <div class="article-card-content">
@@ -86,7 +86,7 @@ interface articleDetailType {
   title: string
   intro: string
   category: string
-  updatedAt: string
+  createdAt: string
   tags: string[]
   comments: Comment[]
   likes: LikeView[]
@@ -97,7 +97,7 @@ let articleDetail: articleDetailType = reactive({
   title: '',
   intro: '',
   category: '',
-  updatedAt: '',
+  createdAt: '',
   tags: [],
   comments: [],
   likes: [],

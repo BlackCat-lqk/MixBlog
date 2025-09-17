@@ -16,7 +16,7 @@
             <div class="image-header-info-box">
               <div class="image-header-info">
                 <n-tag :bordered="false" type="info">{{ props.data.category }}</n-tag>
-                <p>{{ _formatTime(props.data.updatedAt).date }}</p>
+                <p>{{ _formatTime(props.data.createdAt).date }}</p>
               </div>
               <div class="image-header-data-info">
                 <div style="cursor: pointer">
@@ -143,7 +143,7 @@ interface photoDetailType {
   title: string
   content: string
   category: string
-  updatedAt: string
+  createdAt: string
   photos: string[]
   comments: Comment[]
   likes: LikeView[]

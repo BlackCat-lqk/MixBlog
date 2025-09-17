@@ -77,6 +77,12 @@ const router = createRouter({
       meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
     },
     {
+      path: '/bms/FeedBackCenter',
+      name: 'FeedBack',
+      component: () => import('@/views/BMS/FeedBack/FeedbackView.vue'),
+      meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
+    },
+    {
       path: '/bms/overview',
       name: 'Overview',
       component: () => import('@/views/BMS/Overview/OverView.vue'),

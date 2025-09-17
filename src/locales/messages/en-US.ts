@@ -120,7 +120,7 @@ export default {
   },
   footer: {
     title: 'technical support',
-    content: 'Mix Blog 1.1.0 · Made by LQK',
+    content: 'Mix Blog 1.1.5 · Made by LQK',
   },
   about: {
     tagsList:

@@ -69,6 +69,11 @@ const menu = reactive(
       path: '/bms/LogCenter',
       icon: new URL('@/assets/images/LogCenter.svg', import.meta.url).href,
     },
+    {
+      name: '反馈信息',
+      path: '/bms/FeedBackCenter',
+      icon: new URL('@/assets/images/FeedBack.svg', import.meta.url).href,
+    },
   ].map((item) => ({
     ...item,
     active: computed(() => route.path === item.path),

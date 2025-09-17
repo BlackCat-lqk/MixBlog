@@ -44,7 +44,7 @@
         <div class="photo-gallery-title">
           <p class="p-h1">{{ photoItem.title }}</p>
           <div class="photo-gallery-title-data">
-            <p>{{ _formatTime(photoItem.updatedAt).date }}</p>
+            <p>{{ _formatTime(photoItem.createdAt).date }}</p>
             <div class="views-comment-icon">
               <span>
                 <img width="20px" src="@/assets/images/likes.svg" alt="likes" />
@@ -115,7 +115,7 @@ interface photoItemType {
   title: string
   photos: string[]
   content: string
-  updatedAt: string
+  createdAt: string
   category: string
   comments: Comment[]
   likes: LikeView[]
@@ -126,7 +126,7 @@ const photoItem = ref<photoItemType>({
   title: '',
   photos: [],
   content: '',
-  updatedAt: '',
+  createdAt: '',
   category: '',
   comments: [],
   likes: [],
@@ -142,7 +142,7 @@ let imagesDetail: photoItemType = reactive({
   title: '',
   content: '',
   category: '',
-  updatedAt: '',
+  createdAt: '',
   photos: [],
   comments: [],
   likes: [],

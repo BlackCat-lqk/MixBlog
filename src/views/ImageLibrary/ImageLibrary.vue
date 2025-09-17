@@ -78,7 +78,7 @@ interface dataType {
   content: string
   photos: string[]
   category: string
-  updatedAt: string
+  createdAt: string
   comments: Comment[]
   likes: LikeView[]
   views: LikeView[]
@@ -103,7 +103,7 @@ let imagesDetail: dataType = reactive({
   title: '',
   content: '',
   category: '',
-  updatedAt: '',
+  createdAt: '',
   photos: [],
   comments: [],
   likes: [],
