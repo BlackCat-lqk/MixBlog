@@ -47,6 +47,11 @@
               hoverable
               v-for="(item, idx) in state.userSiteData"
               :key="idx"
+              :style="
+                themeStore.currentTheme == 'dark'
+                  ? 'background: linear-gradient(to right, #5433ff, #20bdff, #a5fecb)'
+                  : 'background: linear-gradient(to right, #2980b9, #6dd5fa, #ffffff)'
+              "
               @click="getSiteCategoryData(item, 'user')"
             >
               {{ item.secondaryCategory }}
@@ -64,6 +69,11 @@
               v-for="(secondaryItem, idx) in item.primaryItem"
               :key="idx"
               hoverable
+              :style="
+                themeStore.currentTheme == 'dark'
+                  ? 'background: linear-gradient(to right, #5433ff, #20bdff, #a5fecb)'
+                  : 'background: linear-gradient(to right, #2980b9, #6dd5fa, #ffffff)'
+              "
               @click="getSiteCategoryData(secondaryItem, 'blog')"
               >{{ secondaryItem.secondaryCategory }}</n-card
             >
@@ -139,8 +149,10 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { createSiteApi, getSiteApi, delSiteNavApi } from '@/http/siteNav'
 import { useUserInfoStore } from '@/stores/userInfo'
+import { useThemeStore } from '@/stores/themeStore'
 import _ from 'lodash'
 
+const themeStore = useThemeStore()
 const notification = useNotification()
 const router = useRouter()
 const collapseName = ref('')
@@ -398,6 +410,9 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      :deep(.n-card) {
+        cursor: pointer;
+      }
     }
   }
   .site-content-main-box {
@@ -407,7 +422,16 @@ onMounted(() => {
     gap: 12px;
     border-radius: 8px;
     background-color: var(--box-bg-color1);
-    padding: 10px 15px;
+    // padding: 10px 15px;
+    width: 1480px;
+    &::after {
+      content: '';
+      width: 100%;
+      height: 10%;
+      background: var(--box-bg-color10);
+      border-radius: 8px;
+      bottom: 0;
+    }
     .site-content-search-box {
       display: flex;
       justify-content: center;
@@ -426,6 +450,7 @@ onMounted(() => {
     .site-card-box {
       height: 80vh;
       overflow: hidden;
+      padding: 10px 15px;
       &:hover {
         overflow-y: auto;
         @include g.scrollbarCustom;
@@ -448,7 +473,7 @@ onMounted(() => {
           gap: 30px;
           .card-item {
             cursor: pointer;
-            min-width: 168px;
+            width: 220px;
             max-width: 220px;
             height: 78px;
             padding: 18px;
@@ -491,8 +516,6 @@ onMounted(() => {
                 padding: 2px;
                 width: 30px;
                 height: 30px;
-                border-radius: 100%;
-                border: 1px solid #f4f5f6;
                 @include g.flexCenter;
                 img {
                   width: 90%;

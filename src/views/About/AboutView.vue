@@ -8,11 +8,12 @@
         <ProfileCard
           name="夜里的猫"
           :title="aboutData.intro"
-          :avatar-url="aboutData.cover"
+          avatar-url="/uploads/about/compressed/about-me.webp"
+          icon-url="/uploads/about/compressed/about-me.webp"
+          grain-url="/uploads/about/compressed/about-me.webp"
           :show-user-info="false"
           :show-behind-gradient="true"
-          :enable-tilt="true"
-          className="profile-card"
+          :enable-tilt="false"
         />
         <div class="avatar-name">
           <div class="about-data-tags-box">
@@ -74,7 +75,12 @@
           <div class="introduce-title-ten">
             <span class="press">
               时间进度
-              <n-number-animation ref="numberAnimationInstRef" :from="0" :to="couintDayPress" :precision="2" />
+              <n-number-animation
+                ref="numberAnimationInstRef"
+                :from="0"
+                :to="couintDayPress"
+                :precision="2"
+              />
               %</span
             >
             <span>10年之约</span>
@@ -146,10 +152,10 @@ const couintDayPress = computed(() => {
   const now = new Date().getTime()
   const start = new Date('2025-06-30 00:00:00').getTime()
   const end = new Date('2035-06-30 00:00:00').getTime()
-  const totalSpan = end - start;
-  const targetPosition = now - start;
-  const percentage = (targetPosition / totalSpan) * 100;
-  return percentage.toFixed(2);
+  const totalSpan = end - start
+  const targetPosition = now - start
+  const percentage = (targetPosition / totalSpan) * 100
+  return percentage.toFixed(2)
 })
 
 // 获取About页面的配置
@@ -229,15 +235,6 @@ onBeforeUnmount(() => {
     .avatar-box {
       width: 260px;
       height: 260px;
-      position: relative;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(172, 171, 171, 0.5);
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-      }
       .avatar-name {
         display: flex;
         flex-direction: column;
@@ -329,7 +326,7 @@ onBeforeUnmount(() => {
           left: 0;
           width: 100%;
           height: 40%;
-          background:  rgba(255, 69, 0, 0.1);
+          background: rgba(255, 69, 0, 0.1);
           animation: shine 1.6s infinite;
         }
         /* 光晕动画 */
