@@ -49,8 +49,8 @@
               :key="idx"
               :style="
                 themeStore.currentTheme == 'dark'
-                  ? 'background: linear-gradient(to right, #5433ff, #20bdff, #a5fecb)'
-                  : 'background: linear-gradient(to right, #2980b9, #6dd5fa, #ffffff)'
+                  ? 'background: linear-gradient(to right, #004e92, #191d21)'
+                  : 'background: linear-gradient(to right, #2980b9, #ffffff)'
               "
               @click="getSiteCategoryData(item, 'user')"
             >
@@ -71,8 +71,8 @@
               hoverable
               :style="
                 themeStore.currentTheme == 'dark'
-                  ? 'background: linear-gradient(to right, #5433ff, #20bdff, #a5fecb)'
-                  : 'background: linear-gradient(to right, #2980b9, #6dd5fa, #ffffff)'
+                  ? 'background: linear-gradient(to right, #004e92, #191d21)'
+                  : 'background: linear-gradient(to right, #2980b9, #ffffff)'
               "
               @click="getSiteCategoryData(secondaryItem, 'blog')"
               >{{ secondaryItem.secondaryCategory }}</n-card
@@ -175,7 +175,7 @@ const cardItemBgDark = [
 ]
 const cardItemBgLight = [
   'background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6)',
-  'background: linear-gradient(to right, #373b44, #4286f4)',
+  'background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4)',
 ]
 const cardItemStyle = (idx: number) => {
   const i = idx % 2 ? 1 : 0
@@ -431,6 +431,7 @@ onMounted(() => {
       gap: 8px;
       :deep(.n-card) {
         cursor: pointer;
+        border: none;
       }
     }
   }

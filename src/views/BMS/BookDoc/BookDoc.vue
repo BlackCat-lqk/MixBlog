@@ -73,6 +73,17 @@
                   }"
                 ></n-upload>
               </n-form-item>
+              <n-form-item label="封面上传">
+                <n-upload
+                  :default-file-list="fileCover"
+                  :max="1"
+                  list-type="image-card"
+                  :custom-request="createCoverCustomUpload"
+                  :headers="{
+                    Authorization: `Bearer ${userInfoStore.data.token}`,
+                  }"
+                ></n-upload>
+              </n-form-item>
               <n-button :disabled="btnStatus" @click="handleUploadFile">开始上传</n-button>
             </n-form>
           </div>
@@ -109,10 +120,20 @@ const fileList = reactive([
   },
 ])
 
+const fileCover = reactive([
+  {
+    id: 'createFileCover',
+    name: 'createFileCover',
+    url: '',
+    status: 'finished',
+  },
+])
+
 interface formType {
   category: string
   description: string
   tempFile: UploadFileInfo | null
+  tempFileCover: UploadFileInfo | null
 }
 
 // 表单数据
@@ -120,6 +141,7 @@ const fileForm: formType = reactive({
   category: '',
   description: '',
   tempFile: null,
+  tempFileCover: null,
 })
 
 interface bookDocType {
@@ -134,7 +156,6 @@ interface bookDocType {
 }
 
 const handleInputCategory = _.debounce((val: string) => {
-  console.log(val)
   if (val) {
     btnStatus.value = false
   } else {
@@ -146,6 +167,11 @@ const handleInputCategory = _.debounce((val: string) => {
 const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
   fileForm.tempFile = file
 }
+
+const createCoverCustomUpload = ({ file }: { file: UploadFileInfo }) => {
+  fileForm.tempFileCover = file
+}
+
 // 根据文件后缀改变背景
 const changeBg = {
   pdf: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
@@ -177,20 +203,24 @@ const deleteBookDoc = async (data: bookDocType) => {
 const handleUploadFile = async () => {
   if (!fileForm.category) return
   // 调用文件上传接口
+  const formData = new FormData()
+  if (fileForm.tempFileCover && fileForm.tempFileCover.file){
+    formData.append('file', fileForm.tempFileCover?.file)
+  }
   if (fileForm.tempFile && fileForm.tempFile.file) {
-    const formData = new FormData()
     formData.append('file', fileForm.tempFile?.file)
     formData.append('category', fileForm.category)
     formData.append('description', fileForm.description)
-    const response = await uploadBookDocApi(formData)
-    const res = response.data
-    if (res.code === 200) {
-      fileList[0].url = res.data.path
-      message.success(res.message)
-      getBookDocList()
-    } else {
-      message.error(res.message)
-    }
+    console.log(formData)
+    // const response = await uploadBookDocApi(formData)
+    // const res = response.data
+    // if (res.code === 200) {
+    //   fileList[0].url = res.data.path
+    //   message.success(res.message)
+    //   getBookDocList()
+    // } else {
+    //   message.error(res.message)
+    // }
   }
 }
 

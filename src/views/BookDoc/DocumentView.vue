@@ -4,14 +4,17 @@
   </header>
   <div class="document-box">
     <div class="search-box">
-      <h3>{{ $t('bookDoc.title') }}</h3>
-      <n-input
-        clearable
-        round
-        :placeholder="$t('bookDoc.inputTip')"
-        v-model:value="searchKeyword"
-        @input="handleChangeSearch"
-      />
+      <GradientFlow class-name="search-box">
+        <template #content>
+          <n-input
+            clearable
+            round
+            :placeholder="$t('bookDoc.inputTip')"
+            v-model:value="searchKeyword"
+            @input="handleChangeSearch"
+          />
+        </template>
+      </GradientFlow>
     </div>
     <div class="content-box">
       <div class="classify-box">
@@ -122,6 +125,7 @@ import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getBookDocApi } from '@/http/uploadFile'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
+import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
 const userInfoStore = useUserInfoStore()
 const router = useRouter()
 // 动态导入文档处理组件
@@ -264,6 +268,9 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: 30px;
     h3 {
       color: var(--text-color1);
       line-height: 1.34;
