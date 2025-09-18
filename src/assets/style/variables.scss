@@ -32,7 +32,7 @@ $color-box-light8: linear-gradient(
   rgba(255, 255, 255, 1) 100%
 );
 $color-box-light9: linear-gradient(to right, #005c97, #363795);
-$color-box-light10: linear-gradient(to top, rgba(9, 168, 125, 0.2), rgba(153, 242, 200, 0));
+$color-box-light10: linear-gradient(to top, rgba(9, 168, 125, 0.3), rgba(153, 242, 200, 0.1));
 $scrollbar-color-light: rgba(0, 0, 0, 0.5);
 $color-border-light: rgba(0, 0, 0, 0.1);
 
@@ -66,6 +66,6 @@ $color-box-dark8: linear-gradient(
   #0d0d0d 100%
 );
 $color-box-dark9: #191d21;
-$color-box-dark10: linear-gradient(to top, rgba(33, 147, 176, 0.05), rgba(109, 213, 237, 0));
+$color-box-dark10: linear-gradient(to top, rgba(33, 147, 176, 0.3), rgba(109, 213, 237, 0));
 $scrollbar-color-dark: rgba(250, 250, 250, 0.5);
 $color-border-dark: rgba(255, 255, 255, 0.1);

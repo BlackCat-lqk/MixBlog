@@ -7,8 +7,8 @@
       <n-button strong secondary type="primary" @click="showCreateInput">
         <template #icon>
           <n-icon>
-            <img v-if="!showCreateUrl" src="@/assets/images/add.svg" alt="添加" />
-            <img v-else src="@/assets/images/Subtract.svg" alt="Subtract" />
+            <img width="20px" v-if="!showCreateUrl" src="@/assets/images/add.svg" alt="添加" />
+            <img width="20px" v-else src="@/assets/images/Subtract.svg" alt="Subtract" />
           </n-icon>
         </template>
         添加站点</n-button
@@ -175,7 +175,7 @@ const cardItemBgDark = [
 ]
 const cardItemBgLight = [
   'background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6)',
-  'background: linear-gradient(to right, #00c3ff, #ffff1c)',
+  'background: linear-gradient(to right, #373b44, #4286f4)',
 ]
 const cardItemStyle = (idx: number) => {
   const i = idx % 2 ? 1 : 0
@@ -414,6 +414,10 @@ onMounted(() => {
     border-radius: 8px;
     height: 88vh;
     overflow: hidden;
+    img {
+      width: 20px;
+      height: 20px;
+    }
     &:hover {
       overflow-y: auto;
       @include g.scrollbarCustom;
@@ -442,10 +446,10 @@ onMounted(() => {
     &::after {
       content: '';
       width: 100%;
-      height: 10%;
+      height: 2%;
       background: var(--box-bg-color10);
-      border-radius: 8px;
-      bottom: 0;
+      border-radius: 0 0 8px 8px;
+      opacity: 0.5;
     }
     .site-content-search-box {
       display: flex;
@@ -463,7 +467,7 @@ onMounted(() => {
       }
     }
     .site-card-box {
-      height: 80vh;
+      height: 86vh;
       overflow: hidden;
       padding: 10px 15px;
       &:hover {
