@@ -24,7 +24,11 @@
               <n-grid-item v-for="(item, idx) in fileListData" :key="idx">
                 <n-card
                   hoverable
-                  :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 60%; background-position: center center;`"
+                  :style="
+                    item.docCover
+                      ? `background:url('/${item.docCover}') no-repeat;background-size: cover;`
+                      : `background:${changeBg[item.suffix]} no-repeat;background-size: 60%;`
+                  "
                 >
                   <h3>{{ item.filename }}</h3>
                   <p>描述：{{ item.description }}</p>
@@ -153,6 +157,7 @@ interface bookDocType {
   updatedAt: string
   suffix: string
   description: string
+  docCover: string
 }
 
 const handleInputCategory = _.debounce((val: string) => {
@@ -204,23 +209,22 @@ const handleUploadFile = async () => {
   if (!fileForm.category) return
   // 调用文件上传接口
   const formData = new FormData()
-  if (fileForm.tempFileCover && fileForm.tempFileCover.file){
+  if (fileForm.tempFileCover && fileForm.tempFileCover.file) {
     formData.append('file', fileForm.tempFileCover?.file)
   }
   if (fileForm.tempFile && fileForm.tempFile.file) {
     formData.append('file', fileForm.tempFile?.file)
     formData.append('category', fileForm.category)
     formData.append('description', fileForm.description)
-    console.log(formData)
-    // const response = await uploadBookDocApi(formData)
-    // const res = response.data
-    // if (res.code === 200) {
-    //   fileList[0].url = res.data.path
-    //   message.success(res.message)
-    //   getBookDocList()
-    // } else {
-    //   message.error(res.message)
-    // }
+    const response = await uploadBookDocApi(formData)
+    const res = response.data
+    if (res.code === 200) {
+      fileList[0].url = res.data.path
+      message.success(res.message)
+      getBookDocList()
+    } else {
+      message.error(res.message)
+    }
   }
 }
 
@@ -291,10 +295,11 @@ a
       border-radius: 5px;
       min-width: 220px;
       box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
+      background-position: center center;
       .n-card__content {
         border-radius: 5px;
         background-color: var(--box-bg-color7);
-        backdrop-filter: blur(2px);
+        // backdrop-filter: blur(2px);
       }
       h3 {
         font-size: 14px;

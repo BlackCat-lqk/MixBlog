@@ -38,7 +38,11 @@
           <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
             <n-card
               hoverable
-              :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 50%; background-position: center center;`"
+              :style="
+                item.docCover
+                  ? `background:url('/${item.docCover}') no-repeat center;background-size: cover;`
+                  : `background:${changeBg[item.suffix]} no-repeat center;background-size: cover;`
+              "
             >
               <n-tooltip trigger="hover">
                 <template #trigger>
@@ -160,6 +164,7 @@ interface BookDocData {
   updatedAt: string
   suffix: string
   description: string
+  docCover: string
 }
 const previewData = ref({
   _id: '',
@@ -341,7 +346,10 @@ onMounted(() => {
         .n-card__content {
           border-radius: 5px;
           background-color: var(--box-bg-color7);
-          backdrop-filter: blur(2px);
+          margin: 16px;
+          &:hover {
+            backdrop-filter: blur(10px);
+          }
         }
         h3 {
           font-size: 16px;
