@@ -106,6 +106,7 @@
               :key="idx"
               @mouseenter="hoverItem = idxf + '-' + idx"
               @mouseleave="hoverItem = ''"
+              :style="cardItemStyle(idx)"
             >
               <a @click.prevent="handleLinkClick(item.link)">
                 <h3>
@@ -168,7 +169,21 @@ const allSiteNavData = ref({
   user: [],
   blog: [],
 })
-
+const cardItemBgDark = [
+  'background: linear-gradient(to right, #000428, #004e92)',
+  'background: linear-gradient(to right, #360033, #0b8793)',
+]
+const cardItemBgLight = [
+  'background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6)',
+  'background: linear-gradient(to right, #00c3ff, #ffff1c)',
+]
+const cardItemStyle = (idx: number) => {
+  const i = idx % 2 ? 1 : 0
+  if (themeStore.currentTheme == 'dark') {
+    return cardItemBgDark[i]
+  }
+  return cardItemBgLight[i]
+}
 interface FormValue {
   type: string
   primaryCategory: string
