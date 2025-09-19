@@ -40,8 +40,8 @@
               hoverable
               :style="
                 item.docCover
-                  ? `background:url('/${item.docCover}') no-repeat center;background-size: cover;`
-                  : `background:${changeBg[item.suffix]} no-repeat center;background-size: cover;`
+                  ? `background:url('/${item.docCover}') no-repeat center;background-size: contain;`
+                  : `background:${changeBg[item.suffix]} no-repeat center;background-size: contain;`
               "
             >
               <n-tooltip trigger="hover">
@@ -338,15 +338,25 @@ onMounted(() => {
         @include g.flexCenter;
       }
       > div {
-        width: 260px;
-        height: 200px;
+        width: 240px;
+        height: 320px;
       }
       :deep(.n-card) {
         border-radius: 5px;
+        box-shadow:var(--shadow-color);
+        transition: all 0.3s ease;
+        width: 240px;
+        height: 320px;
+        &:hover {
+          scale: 1.05;
+        }
         .n-card__content {
           border-radius: 5px;
           background-color: var(--box-bg-color7);
-          margin: 16px;
+          width: 100%;
+          height: 56%;
+          position: absolute;
+          bottom: 0;
           &:hover {
             backdrop-filter: blur(10px);
           }

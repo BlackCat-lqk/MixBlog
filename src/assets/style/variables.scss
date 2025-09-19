@@ -35,6 +35,9 @@ $color-box-light9: linear-gradient(to right, #005c97, #363795);
 $color-box-light10: linear-gradient(to top, rgba(9, 168, 125, 0.3), rgba(153, 242, 200, 0.1));
 $scrollbar-color-light: rgba(0, 0, 0, 0.5);
 $color-border-light: rgba(0, 0, 0, 0.1);
+$color-shadow-light: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+          rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+          rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 
 // dark theme
 $color-bg-dark: #1a1a1a;
@@ -69,3 +72,6 @@ $color-box-dark9: #191d21;
 $color-box-dark10: linear-gradient(to top, rgba(33, 147, 176, 0.3), rgba(109, 213, 237, 0));
 $scrollbar-color-dark: rgba(250, 250, 250, 0.5);
 $color-border-dark: rgba(255, 255, 255, 0.1);
+$color-shadow-dark: rgba(236, 236, 241, 0.25) 0px 50px 100px -20px,
+          rgba(252, 249, 249, 0.3) 0px 30px 60px -30px,
+          rgba(237, 238, 238, 0.35) 0px -2px 6px 0px inset;
