@@ -87,24 +87,54 @@
               alt="close"
             />
           </div>
+          <div class="zoom-controls">
+            <button @click="zoomOut" class="zoom-button" :disabled="loading">-</button>
+            <span class="zoom-level">{{ Math.round(scale * 100) }}%</span>
+            <button @click="zoomIn" class="zoom-button" :disabled="loading">+</button>
+          </div>
         </template>
+        <div v-if="loading" class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>正在加载文件...</p>
+          <p class="debug-info">文件路径: {{ previewData.path }}</p>
+        </div>
         <vue-office-pdf
           v-if="previewData.suffix === 'pdf' || previewData.suffix === 'PDF'"
           :src="previewData.path"
           @error="handleError"
-          style="height: 100% !important"
+          @rendered="onPdfRendered"
+          :style="[
+            {
+              transform: `scale(${scale})`,
+              height: '100% !important',
+            },
+          ]"
           :options="pdfOptions"
         />
         <vue-office-docx
           v-else-if="previewData.suffix === 'docx' || previewData.suffix === 'DOCX'"
           :src="previewData.path"
           @error="handleError"
+          :style="[
+            {
+              transform: `scale(${scale})`,
+              height: '100% !important',
+            },
+          ]"
+          @rendered="onPdfRendered"
           :options="pdfOptions"
         />
         <vue-office-excel
           v-else-if="previewData.suffix === 'xlsx' || previewData.suffix === 'XLSX'"
           :src="previewData.path"
           @error="handleError"
+          :style="[
+            {
+              transform: `scale(${scale})`,
+              height: '100% !important',
+            },
+          ]"
+          @rendered="onPdfRendered"
           :options="pdfOptions"
         />
         <novel-reader
@@ -151,8 +181,11 @@ const pdfOptions = {
 
 const documentBox = ref<string | HTMLElement>('')
 
-const handleError = (err: unknown) => {
-  console.error('加载失败:', err)
+const handleError = (error: unknown) => {
+  console.error('PDF加载错误:', error)
+  loading.value = false
+  loadError.value = error instanceof Error ? error.message : String(error)
+  console.error('加载失败:', error)
 }
 
 interface BookDocData {
@@ -175,6 +208,10 @@ const previewData = ref({
 const bookDocData = ref([] as BookDocData[])
 const bookDocAllData = ref([] as BookDocData[])
 const bookCategories = ref({})
+// 缩放相关状态
+const scale = ref(1)
+const loading = ref(true)
+const loadError = ref<string | null>(null)
 
 const showPreview = ref(false)
 
@@ -213,6 +250,27 @@ const handleChangeSearch = _.debounce(async (value: string) => {
   }
 }, 300)
 
+// 放大
+const zoomIn = () => {
+  scale.value = Math.min(scale.value + 0.1, 3)
+}
+
+// 缩小
+const zoomOut = () => {
+  scale.value = Math.max(scale.value - 0.1, 0.5)
+}
+
+// PDF渲染完成回调
+const onPdfRendered = () => {
+  loading.value = false
+}
+
+// 重置状态
+const resetState = () => {
+  loading.value = true
+  loadError.value = null
+}
+
 // 下载文件
 const downloadFile = _.debounce((data: BookDocData) => {
   if (userInfoStore.data.user.isLogin) {
@@ -234,6 +292,8 @@ const filterFiles = (key: string) => {
 }
 // 获取预览信息
 const getPreviewDetail = (data: BookDocData) => {
+  // 初始化加载状态
+  resetState()
   showPreview.value = true
   previewData.value.path = data.path
   previewData.value.filename = data.filename
@@ -401,6 +461,40 @@ onMounted(() => {
     }
     .vue-office-pdf {
       height: 100% !important;
+    }
+  }
+  .loading-placeholder,
+  .error-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: #f8fafc;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #4f46e5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 }
