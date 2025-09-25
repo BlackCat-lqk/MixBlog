@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, withDefaults } from 'vue'
+import { computed } from 'vue'
 
 // 渐变方向类型
 type GradientDirection =

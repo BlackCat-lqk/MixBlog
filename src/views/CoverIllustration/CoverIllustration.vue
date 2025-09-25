@@ -2,7 +2,10 @@
   <header>
     <HeaderNav></HeaderNav>
   </header>
-  <div :class="showxq ? 'i-cover-image-xq-box' : 'i-cover-image-box'">
+  <div
+    :class="showxq ? 'i-cover-image-xq-box' : 'i-cover-image-box'"
+    :style="{backgroundImage: showxq ? 'url(' + imageArrayxq4[2] + ')' : 'url(' + imageArray1[0] + ')'}"
+  >
     <div v-if="!showSearchModel" class="filter-search-box" @click="showSearchModel = true">
       <img src="@/assets/images/more.svg" alt="more" />
     </div>
@@ -21,11 +24,13 @@
         <n-grid :x-gap="12" :y-gap="8" :cols="2">
           <n-grid-item>
             <n-card hoverable class="xq-bg" @click="showxq = true"
+            :style="{background: 'url(' + imageArrayxq4[2] + ')'}"
               ><span class="card-text">星球大战</span>
             </n-card>
           </n-grid-item>
           <n-grid-item>
             <n-card hoverable @click="showxq = false"
+              :style="{background: 'url(' + imageArray1[0] + ')'}"
               ><span class="card-text">ZZZ 绝区零</span>
             </n-card>
           </n-grid-item>
@@ -114,7 +119,6 @@ const imageArrayxq4 = [
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url('/uploads/fileList/juequ1.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -188,7 +192,6 @@ const imageArrayxq4 = [
       @include g.scrollbarCustom;
       :deep(.n-card) {
         @include g.borderRadius(10px);
-        background: url('/uploads/fileList/juequ3.webp');
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -208,7 +211,6 @@ const imageArrayxq4 = [
         }
       }
       .xq-bg {
-        background: url('/uploads/fileList/xq12.webp');
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
@@ -235,8 +237,5 @@ const imageArrayxq4 = [
       object-fit: cover;
     }
   }
-}
-.i-cover-image-xq-box {
-  background-image: url('/uploads/fileList/xq12.webp');
 }
 </style>

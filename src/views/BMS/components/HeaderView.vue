@@ -33,7 +33,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { logOutUserApi } from '@/http/user'
 import { useMessage } from 'naive-ui'
 
-const logoUrl = new URL('./assets/images/logo-transparent.webp', import.meta.url).href
+const logoUrl = '/uploads/defalut/logo-transparent.svg'
 const userInfoStore = useUserInfoStore()
 const message = useMessage()
 const avatar = userInfoStore.data.user.avatar

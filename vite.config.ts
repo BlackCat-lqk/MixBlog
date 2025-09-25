@@ -157,6 +157,10 @@ export default defineConfig({
           utils: ['axios', 'lodash', '@vueuse/core'],
           // 可视化和图表库
           visualization: ['echarts', 'highlight.js'],
+          // 将@vue-office/pdf和pdfjs-dist这种大型库打包在一起
+          'pdf-bundle': [
+            '@vue-office/pdf',
+          ],
         },
       },
     },
