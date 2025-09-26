@@ -54,8 +54,16 @@
             >
               Blog
             </n-button>
-            <n-button type="error" :disabled="checkedRowKeys.length <= 0" @click="bitchDelData">
+            <n-button
+              style="margin-right: 20px; margin-bottom: 10px"
+              type="error"
+              :disabled="checkedRowKeys.length <= 0"
+              @click="bitchDelData"
+            >
               批量删除
+            </n-button>
+            <n-button type="info" :disabled="checkedRowKeys.length !== 1" @click="bitchEdit">
+              编辑
             </n-button>
             <n-data-table
               :columns="columns"
@@ -77,7 +85,8 @@ import { useMessage } from 'naive-ui'
 import { getFavicon } from '@/utils/getFavicon'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import { createSiteApi, getSiteAdminApi, delSiteNavApi } from '@/http/siteNav'
+import { createSiteApi, getSiteAdminApi, delSiteNavApi, updateSiteNavApi } from '@/http/siteNav'
+import { _formatTime } from '@/utils/publickFun'
 
 const faviconLink = ref('')
 const formRef = ref<FormInst | null>(null)
@@ -106,6 +115,11 @@ interface RowData {
   desc: string
   createdAt: string
 }
+
+interface RowID {
+  _id: string
+}
+
 function createColumns(): DataTableColumns<RowData> {
   return [
     {
@@ -122,6 +136,10 @@ function createColumns(): DataTableColumns<RowData> {
     {
       title: 'updatedAt',
       key: 'updatedAt',
+      render: (row) => {
+        const time = _formatTime(row.updatedAt).date
+        return time
+      }
     },
     {
       title: 'siteName',
@@ -153,7 +171,9 @@ const columns = createColumns()
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedRowKeysRef.value = rowKeys
 }
-const rowKey = (row: RowData) => row._id
+const rowKey = (row: RowData) => row
+
+
 
 interface FormValue {
   primaryCategory: string
@@ -183,10 +203,28 @@ const rules = {
 }
 // 批量删除
 const bitchDelData = async () => {
+  const IDS = []
+  checkedRowKeys.value.forEach((item) => {
+    IDS.push(item._id)
+  })
   const params = {
-    ids: checkedRowKeys.value,
+    ids: IDS,
   }
   const result = await delSiteNavApi(params)
+  const res = result.data
+  if (res.code === 200) {
+    message.success(res.message)
+    getSiteNavData()
+    checkedRowKeys.value = []
+  } else {
+    message.error(res.message)
+  }
+}
+
+// 编辑更新
+const bitchEdit = async () => {
+  console.log(checkedRowKeys.value)
+  const result = await updateSiteNavApi(params)
   const res = result.data
   if (res.code === 200) {
     message.success(res.message)
@@ -272,6 +310,8 @@ onMounted(() => {
   .site-nav-box {
     display: flex;
     gap: 24px;
+    height: 800px;
+    max-height: 800px;
     .create-site-nav {
       width: 220px;
       background-color: var(--box-bg-color);

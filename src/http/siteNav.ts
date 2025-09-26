@@ -33,3 +33,12 @@ export function getSiteAdminApi() {
 export function delSiteNavApi(params: object) {
   return request.post('/deleteSiteNav', params)
 }
+
+/**
+ * 根据ID更新导航数据
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function updateSiteNavApi(id: string, params: object) {
+  return request.post(`/updateSiteNav/id=${id}`, params)
+}
