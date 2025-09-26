@@ -15,7 +15,7 @@
             </div>
             <div class="article-header-info-box">
               <div class="article-header-info">
-                <n-tag :bordered="false">{{ props.data.category }}</n-tag>
+                <n-tag :bordered="false" type="success">{{ props.data.category }}</n-tag>
                 <n-tag
                   v-for="(tag, idx) in props.data.tags"
                   :key="idx"

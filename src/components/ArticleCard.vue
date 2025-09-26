@@ -26,7 +26,7 @@
       <div class="article-card-footer">
         <span>
           分类:
-          <n-tag :bordered="false">{{ item.category }}</n-tag>
+          <n-tag :bordered="false" type="success">{{ item.category }}</n-tag>
           &nbsp;标签:
           <n-tag
             style="margin-right: 5px"
@@ -117,7 +117,7 @@ const articleClick = (data: articleDetailType) => {
 <style lang="scss" scoped>
 .article-cards-box {
   display: grid;
-  gap: 32px 40px;
+  gap: 54px 40px;
   justify-content: center;
   .article-card-box {
     border-radius: 16px;
@@ -126,7 +126,8 @@ const articleClick = (data: articleDetailType) => {
     cursor: pointer;
     transition: all 0.2s;
     background-color: var(--box-bg-color1);
-    box-shadow: 0 0 10px 0 var(--border-color);
+    box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+    padding-bottom: 16px;
     .article-card-header {
       margin-top: -53px;
       display: flex;
@@ -135,8 +136,11 @@ const articleClick = (data: articleDetailType) => {
       .article-card-header-img {
         width: 160px;
         height: 120px;
+        min-width: 160px;
         border-radius: 5px;
         overflow: hidden;
+        backdrop-filter: blur(5px);
+        padding: 5px;
         img {
           width: 100%;
           height: 100%;
@@ -178,7 +182,8 @@ const articleClick = (data: articleDetailType) => {
     .article-card-footer {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 16px;
       span {
         font-size: 14px;
         line-height: 1.54;
@@ -188,6 +193,7 @@ const articleClick = (data: articleDetailType) => {
         display: flex;
         align-items: center;
         gap: 15px;
+        justify-content: flex-end;
         span {
           display: flex;
           align-items: center;

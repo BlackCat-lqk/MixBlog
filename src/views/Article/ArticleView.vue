@@ -144,7 +144,7 @@ onMounted(() => {
     position: relative;
     display: flex;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 80px;
     .gradient-box {
       width: 360px;
       border-radius: 30px;

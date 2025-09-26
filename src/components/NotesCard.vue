@@ -64,7 +64,7 @@ const hasNote = ref(true)
   background-color: var(--box-bg-color1);
   border-radius: 15px;
   @include g.borderRadius(10px);
-  box-shadow: -4px 4px 8px 2px rgba(147, 146, 146, 0.5);
+  box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
   :deep(.n-card.n-card--bordered) {
     height: 100%;
     .n-card-header {

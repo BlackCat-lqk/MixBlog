@@ -256,6 +256,7 @@ onBeforeMount(() => {
       height: 140px;
       padding: 20px 0;
       line-height: 1.54;
+      color: yellow;
     }
 
     p {
