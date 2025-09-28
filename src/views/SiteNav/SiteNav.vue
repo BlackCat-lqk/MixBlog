@@ -171,14 +171,14 @@ const allSiteNavData = ref({
 })
 const cardItemBgDark = [
   'background: linear-gradient(to right, #000428, #004e92)',
-  'background: linear-gradient(to right, #360033, #0b8793)',
+  'background: linear-gradient(to right, #000428, #004e92)',
 ]
 const cardItemBgLight = [
-  'background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6)',
+  'background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4)',
   'background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4)',
 ]
 const cardItemStyle = (idx: number) => {
-  const i = idx % 2 ? 1 : 0
+  const i = idx % 2
   if (themeStore.currentTheme == 'dark') {
     return cardItemBgDark[i]
   }
@@ -536,6 +536,9 @@ onMounted(() => {
                 padding: 2px;
                 width: 30px;
                 height: 30px;
+                background: var(--box-bg-color7);
+                backdrop-filter: blur(30px);
+                border-radius: 4px;
                 @include g.flexCenter;
                 img {
                   width: 90%;
