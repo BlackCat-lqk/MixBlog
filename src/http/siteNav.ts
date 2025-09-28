@@ -40,5 +40,5 @@ export function delSiteNavApi(params: object) {
  * @returns {Promise}
  */
 export function updateSiteNavApi(id: string, params: object) {
-  return request.post(`/updateSiteNav/id=${id}`, params)
+  return request.put(`/updateSiteNav/${id}`, params)
 }

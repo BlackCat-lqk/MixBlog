@@ -62,7 +62,7 @@
             >
               批量删除
             </n-button>
-            <n-button type="info" :disabled="checkedRowKeys.length !== 1" @click="bitchEdit">
+            <n-button type="info" :disabled="checkedRowKeys.length !== 1" @click="showEidtModal">
               编辑
             </n-button>
             <n-data-table
@@ -72,6 +72,51 @@
               :row-key="rowKey"
               @update:checked-row-keys="handleCheck"
             />
+            <n-modal
+              v-model:show="showModal"
+              class="custom-card"
+              preset="card"
+              title="编辑"
+              style="width: 50%;"
+              size="huge"
+              :bordered="false"
+              :segmented="segmented"
+            >
+              <n-form ref="formRef" :model="editForm" :rules="rules">
+                <n-form-item label="一级分类名称" path="primaryCategory">
+                  <n-input
+                    v-model:value="editForm.primaryCategory"
+                    maxlength="100"
+                    show-count
+                    clearable
+                  />
+                </n-form-item>
+                <n-form-item label="二级分类名称" path="secondaryCategory">
+                  <n-input
+                    v-model:value="editForm.secondaryCategory"
+                    maxlength="100"
+                    show-count
+                    clearable
+                  />
+                </n-form-item>
+                <n-form-item label="URL" path="url">
+                  <n-input v-model:value="editForm.link" placeholder="输入URL链接..." clearable />
+                </n-form-item>
+                <n-form-item label="icon URL" path="url">
+                  <n-input v-model:value="editForm.icon" placeholder="输入icon图标链接..." clearable />
+                </n-form-item>
+                <n-form-item label="名称" path="siteName">
+                  <n-input v-model:value="editForm.siteName" maxlength="300" show-count clearable />
+                </n-form-item>
+                <n-form-item label="描述">
+                  <n-input v-model:value="editForm.desc" maxlength="500" show-count clearable />
+                </n-form-item>
+                <n-form-item>
+                  <n-button @click="showModal = false" style="margin-right: 20px;"> 取消 </n-button>
+                  <n-button type="primary" @click="bitchEdit"> 确认 </n-button>
+                </n-form-item>
+              </n-form>
+            </n-modal>
           </div>
         </div>
       </div>
@@ -94,6 +139,11 @@ const message = useMessage()
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const checkedRowKeys = checkedRowKeysRef
 const tableData = ref([])
+const showModal = ref(false) // 编辑弹窗标志
+const segmented = {
+  content: 'soft',
+  footer: 'soft',
+} as const
 interface uploader {
   _id: string
   email: string
@@ -116,17 +166,17 @@ interface RowData {
   createdAt: string
 }
 
-interface RowID {
-  _id: string
-}
-
 function createColumns(): DataTableColumns<RowData> {
   return [
     {
       type: 'selection',
     },
     {
-      title: 'type',
+      title: 'ID',
+      key: '_id',
+    },
+    {
+      title: '类型',
       key: 'type',
     },
     {
@@ -134,36 +184,44 @@ function createColumns(): DataTableColumns<RowData> {
       key: 'uploader.email',
     },
     {
-      title: 'updatedAt',
+      title: '更新时间',
       key: 'updatedAt',
       render: (row) => {
         const time = _formatTime(row.updatedAt).date
         return time
-      }
+      },
     },
     {
-      title: 'siteName',
+      title: '名称',
       key: 'siteName',
     },
     {
-      title: 'primaryCategory',
+      title: '一级分类名称',
       key: 'primaryCategory',
     },
     {
-      title: 'secondaryCategory',
+      title: '二级分类名称',
       key: 'secondaryCategory',
     },
     {
-      title: 'link',
+      title: '链接',
       key: 'link',
     },
     {
-      title: 'desc',
+      title: 'icon图标',
+      key: 'icon',
+    },
+    {
+      title: '描述',
       key: 'desc',
     },
     {
-      title: 'createdAt',
+      title: '创建时间',
       key: 'createdAt',
+      render: (row) => {
+        const time = _formatTime(row.createdAt).date
+        return time
+      },
     },
   ]
 }
@@ -171,9 +229,8 @@ const columns = createColumns()
 const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedRowKeysRef.value = rowKeys
 }
-const rowKey = (row: RowData) => row
 
-
+const rowKey = (row: RowData) => row._id
 
 interface FormValue {
   primaryCategory: string
@@ -195,6 +252,17 @@ const formValue: FormValue = reactive({
   icon: '',
 })
 
+const editForm = reactive({
+  _id: '',
+  link: '',
+  primaryCategory: '',
+  secondaryCategory: '',
+  siteName: '',
+  type: '',
+  icon: '',
+  desc: '',
+})
+
 const rules = {
   primaryCategory: [{ required: true, message: '请输入一级分类名称', trigger: 'blur' }],
   secondaryCategory: [{ required: true, message: '请输入二级分类名称', trigger: 'blur' }],
@@ -203,14 +271,7 @@ const rules = {
 }
 // 批量删除
 const bitchDelData = async () => {
-  const IDS = []
-  checkedRowKeys.value.forEach((item) => {
-    IDS.push(item._id)
-  })
-  const params = {
-    ids: IDS,
-  }
-  const result = await delSiteNavApi(params)
+  const result = await delSiteNavApi(checkedRowKeys.value)
   const res = result.data
   if (res.code === 200) {
     message.success(res.message)
@@ -221,15 +282,33 @@ const bitchDelData = async () => {
   }
 }
 
+// 弹出编辑弹窗并赋值
+const showEidtModal = () => {
+  // 根据 _id 查找完整行数据
+  tableData.value.find((row: RowData) => {
+    if (row._id === checkedRowKeys.value[0]) {
+      editForm._id = row._id
+      editForm.link = row.link
+      editForm.primaryCategory = row.primaryCategory
+      editForm.secondaryCategory = row.secondaryCategory
+      editForm.siteName = row.siteName
+      editForm.type = row.type
+      editForm.icon = row.icon
+      editForm.desc = row.desc
+    }
+  })
+  showModal.value = true
+}
+
 // 编辑更新
 const bitchEdit = async () => {
-  console.log(checkedRowKeys.value)
-  const result = await updateSiteNavApi(params)
+  const result = await updateSiteNavApi(editForm._id, editForm)
   const res = result.data
   if (res.code === 200) {
     message.success(res.message)
     getSiteNavData()
     checkedRowKeys.value = []
+    showModal.value = false
   } else {
     message.error(res.message)
   }
@@ -256,7 +335,7 @@ const handleCreateSite = (e: MouseEvent) => {
         message.error('站点创建失败')
       }
     } else {
-      message.error('Invalid')
+      message.error('表单验证失败')
     }
   })
 }
