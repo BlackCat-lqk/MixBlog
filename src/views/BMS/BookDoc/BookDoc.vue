@@ -47,12 +47,16 @@
           </div>
           <div class="upload-box">
             <n-form ref="formRef" :model="fileForm" :rules="rules">
+              <n-form-item label="是否为私人文件夹">
+                <n-select v-model:value="fileForm.privateFile" placeholder="请选择" :options="options" @update:value="changePrivateFile" />
+              </n-form-item>
               <n-form-item label="分类" path="category">
                 <n-input
                   v-model:value="fileForm.category"
                   maxlength="10"
                   show-count
                   clearable
+                  :disabled="fileForm.privateFile === 'true'"
                   placeholder="新建或选择分类"
                   @input="handleInputCategory"
                 />
@@ -102,7 +106,7 @@ import type { UploadFileInfo } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import { uploadBookDocApi, getBookDocApi, deleteBookDocApi } from '@/http/uploadFile'
+import { uploadBookDocApi, getBookDocApi, deleteBookDocApi, getPrivateBookDocApi } from '@/http/uploadFile'
 import { useMessage } from 'naive-ui'
 import _ from 'lodash'
 const message = useMessage()
@@ -114,6 +118,16 @@ const rules = {
     trigger: 'blur',
   },
 }
+const options = [
+  {
+    label: '是',
+    value: 'true',
+  },
+  {
+    label: '否',
+    value: 'false',
+  },
+]
 const btnStatus = ref(true)
 const fileList = reactive([
   {
@@ -133,7 +147,9 @@ const fileCover = reactive([
   },
 ])
 
+
 interface formType {
+  privateFile: string
   category: string
   description: string
   tempFile: UploadFileInfo | null
@@ -142,6 +158,7 @@ interface formType {
 
 // 表单数据
 const fileForm: formType = reactive({
+  privateFile: 'false',
   category: '',
   description: '',
   tempFile: null,
@@ -171,6 +188,17 @@ const handleInputCategory = _.debounce((val: string) => {
 // 自定义上传函数（不实际上传）
 const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
   fileForm.tempFile = file
+}
+
+// 是否私人文件夹选择的回调
+const changePrivateFile = (val: string) => {
+  if (val == 'true') {
+    fileForm.category = '私人文件夹'
+    btnStatus.value = false
+  }else {
+    fileForm.category = ''
+    btnStatus.value = true
+  }
 }
 
 const createCoverCustomUpload = ({ file }: { file: UploadFileInfo }) => {
@@ -214,6 +242,7 @@ const handleUploadFile = async () => {
   }
   if (fileForm.tempFile && fileForm.tempFile.file) {
     formData.append('file', fileForm.tempFile?.file)
+    formData.append('privateFile', fileForm.privateFile)
     formData.append('category', fileForm.category)
     formData.append('description', fileForm.description)
     const response = await uploadBookDocApi(formData)
@@ -232,11 +261,19 @@ const handleUploadFile = async () => {
 const fileListData = ref([] as bookDocType[])
 const allCategory = ref({} as object)
 const getBookDocList = async () => {
+  // 获取文件列表
   const response = await getBookDocApi({})
   const res = response.data
   if (res.code === 200) {
     fileListData.value = res.data
     allCategory.value = res.categories
+    // 获取私有文件列表
+    const privates = await getPrivateBookDocApi({})
+    const privateRes = privates.data
+    if(privateRes.code === 200){
+      fileListData.value = fileListData.value.concat(privateRes.data)
+      Object.assign(allCategory.value, privateRes.categories);
+    }
   } else {
     message.error(res.message)
   }

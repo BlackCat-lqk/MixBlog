@@ -156,7 +156,7 @@
 <script lang="ts" setup>
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
-import { getBookDocApi } from '@/http/uploadFile'
+import { getBookDocApi, getPrivateBookDocApi } from '@/http/uploadFile'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
@@ -290,6 +290,7 @@ const filterFiles = (key: string) => {
   if (key === 'all') return (bookDocData.value = bookDocAllData.value)
   bookDocData.value = bookDocAllData.value.filter((item) => item.category == key)
 }
+
 // 获取预览信息
 const getPreviewDetail = (data: BookDocData) => {
   // 初始化加载状态
@@ -308,6 +309,16 @@ const getBookDocDataList = async () => {
     bookDocData.value = res.data
     bookDocAllData.value = res.data
     bookCategories.value = res.categories
+    // 是否已登录且是管理员？
+    if (userInfoStore.data.user.isLogin && userInfoStore.data.user.role == 'admin') {
+      const privates = await getPrivateBookDocApi({})
+      const privateRes = privates.data
+      if(privateRes.code === 200){
+        bookDocData.value = res.data.concat(privateRes.data)
+        bookDocAllData.value = res.data.concat(privateRes.data)
+        Object.assign(bookCategories.value , privateRes.categories);
+      }
+    }
   } else {
     message.error(res.message)
   }
@@ -349,7 +360,7 @@ onMounted(() => {
     gap: 24px;
     width: 100%;
     .classify-box {
-      width: 280px;
+      width: 200px;
       max-height: 70vh;
       height: 70vh;
       border-radius: 8px;
@@ -357,25 +368,33 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 10px 20px;
+      padding: 15px 20px;
       overflow: auto;
+      box-shadow:
+        rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+        rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
       @include g.scrollbarCustom;
-      .classify-item-box {
+      .classify-item-box,
+      .classify-admin-box {
         display: flex;
         align-items: center;
-        padding: 30px 10px;
+        padding: 20px 10px;
         background-color: var(--box-bg-color1);
-        border-radius: 8px;
+        border-radius: 4px;
         border: 1px solid var(--border-color);
         cursor: pointer;
         &:hover {
           background-color: var(--box-bg-color5);
         }
         span {
-          font-size: 18px;
+          font-size: 14px;
           font-weight: 500;
           color: var(--text-color);
         }
+      }
+      .classify-admin-box {
+        background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);
+        background-color: transparent;
       }
       .active-classify-item {
         background-color: var(--box-bg-color5);
@@ -389,24 +408,27 @@ onMounted(() => {
       @include g.scrollbarCustom;
       background-color: var(--box-bg-color4);
       border-radius: 8px;
-      padding: 10px;
+      padding: 15px 20px;
       max-height: 70vh;
       height: 70vh;
+      box-shadow:
+        rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+        rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
       .n-empty {
         width: 100%;
         height: 100%;
         @include g.flexCenter;
       }
       > div {
-        width: 240px;
-        height: 320px;
+        width: 200px;
+        height: 280px;
       }
       :deep(.n-card) {
         border-radius: 5px;
-        box-shadow:var(--shadow-color);
+        box-shadow: var(--shadow-color);
         transition: all 0.3s ease;
-        width: 240px;
-        height: 320px;
+        width: 200px;
+        height: 280px;
         &:hover {
           scale: 1.05;
         }
@@ -414,7 +436,7 @@ onMounted(() => {
           border-radius: 5px;
           background-color: var(--box-bg-color7);
           width: 100%;
-          height: 56%;
+          height: 62%;
           position: absolute;
           bottom: 0;
           &:hover {
@@ -422,7 +444,7 @@ onMounted(() => {
           }
         }
         h3 {
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 600;
           white-space: nowrap;
           overflow: hidden;
