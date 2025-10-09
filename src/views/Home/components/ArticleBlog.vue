@@ -15,6 +15,7 @@
 import ArticleCard from '@/components/ArticleCard.vue'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
+import type { HomeArticleBlogType as articelDataType } from '@/tsInterface'
 const message = useMessage()
 
 const router = useRouter()
@@ -24,9 +25,6 @@ const articleData = reactive({
 })
 const moreArticle = () => {
   router.push('/articles')
-}
-interface articelDataType {
-  status: string
 }
 // 获取所有文章数据
 const getAllBlogArticleData = async () => {

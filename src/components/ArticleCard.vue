@@ -61,37 +61,8 @@
 <script setup lang="ts">
 import { _formatTime } from '@/utils/publickFun'
 import ArticleDetail from '@/views/Article/ArticleDetail.vue'
+import type { IArticleCardArticleDetailType as articleDetailType } from '@/tsInterface'
 const showActiveDrawer = ref(false)
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
-
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-
-interface articleDetailType {
-  _id: string
-  title: string
-  intro: string
-  category: string
-  createdAt: string
-  tags: string[]
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
 let articleDetail: articleDetailType = reactive({
   _id: '',
   title: '',

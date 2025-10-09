@@ -105,6 +105,7 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
+import type { IChatMessage as ChatMessage } from '@/tsInterface'
 
 const router = useRouter()
 const message = useMessage()
@@ -112,10 +113,6 @@ const userInfoStore = useUserInfoStore()
 import _ from 'lodash'
 
 const userInput = ref('')
-interface ChatMessage {
-  role: 'user' | 'assistant'
-  content: string
-}
 const messages = ref<ChatMessage[]>([])
 const streamingResponse = ref('')
 const isLoading = ref(false)

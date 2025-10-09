@@ -50,39 +50,11 @@ import ClassifyMeun from '@/components/ClassifyMeun.vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
 import { useMessage } from 'naive-ui'
 import _ from 'lodash'
+import type { ImagePhotoDetailType as dataType } from '@/tsInterface'
 const { t } = useI18n()
 const showActiveDrawer = ref(false)
 const message = useMessage()
 const isClassify = ref(false)
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
-
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-interface dataType {
-  _id: string
-  title: string
-  content: string
-  photos: string[]
-  category: string
-  createdAt: string
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
 const photoData = reactive({
   data: [] as dataType[],
   columns: 3,

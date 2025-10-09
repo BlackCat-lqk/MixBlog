@@ -96,19 +96,7 @@
 
 <script setup lang="ts">
 import { formatTime } from '@/utils/commentUtils'
-
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  email?: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
-
+import type { ICommentChat as Comment } from '@/tsInterface'
 // 定义组件的 props
 const props = defineProps<{
   comments: Comment[] // 从父组件传入的评论数据

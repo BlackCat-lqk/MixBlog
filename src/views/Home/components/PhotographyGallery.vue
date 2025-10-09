@@ -89,38 +89,11 @@ import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
 import { useThemeStore } from '@/stores/themeStore'
 import { _formatTime } from '@/utils/publickFun'
+import type { HomePhotoItemType as photoItemType } from '@/tsInterface'
 const themeStore = useThemeStore()
 const router = useRouter()
 const showActiveDrawer = ref(false)
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
 
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-interface photoItemType {
-  _id: string
-  title: string
-  photos: string[]
-  content: string
-  createdAt: string
-  category: string
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
 const photoItem = ref<photoItemType>({
   _id: '',
   title: '',

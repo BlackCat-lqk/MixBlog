@@ -115,23 +115,10 @@ import about3 from '@/assets/wallpaper/about3.jpg'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getAboutConfigApi } from '@/http/about'
+import type { aboutDataType } from '@/tsInterface'
 const ProfileCard = defineAsyncComponent(() => import('@/views/VueBits/ProfileCard.vue'))
 const TextType = defineAsyncComponent(() => import('@/views/VueBits/TextType.vue'))
-
 const audio = ref<HTMLAudioElement | null>(null)
-
-interface modulesType {
-  title: string
-  content: string
-  image: string[]
-}
-interface aboutDataType {
-  intro: string
-  tags: string
-  cover: string
-  audio: string
-  modules: [modulesType]
-}
 const aboutData: aboutDataType = reactive({
   intro: '',
   tags: '',

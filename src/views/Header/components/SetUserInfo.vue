@@ -103,6 +103,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { validateEmail, validateUsername } from '@/utils/validate'
 import { updateUsers } from '@/http/user'
 import _ from 'lodash'
+import type { SetUserInfoEditFormType as editFormType } from '@/tsInterface'
 const { t } = useI18n()
 
 const personalInfoBox = ref(null)
@@ -126,16 +127,7 @@ watch(
 const state = reactive({
   showModal: false,
 })
-// 类型接口
-interface editFormType {
-  _id: string
-  userName: string
-  email: string
-  desc: string
-  avatar: string
-  sex: string
-  birthday: null
-}
+
 // 表单
 const editFormValue: editFormType = reactive({
   _id: '',

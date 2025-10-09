@@ -32,6 +32,7 @@
 
 <script lang="ts" setup>
 import { _formatTime } from '@/utils/publickFun'
+import type { IWeatherIcons as WeatherIcons } from '@/tsInterface'
 
 const props = defineProps({
   notesDetail: {
@@ -39,10 +40,6 @@ const props = defineProps({
     default: () => ({}),
   },
 })
-
-interface WeatherIcons {
-  [key: string]: string
-}
 const weatherIconsURLs: WeatherIcons = {
   cloudy: new URL('@/assets/images/Weather/cloudy.svg', import.meta.url).href,
   overcast: new URL('@/assets/images/Weather/overcast.svg', import.meta.url).href,
@@ -64,7 +61,12 @@ const hasNote = ref(true)
   background-color: var(--box-bg-color1);
   border-radius: 15px;
   @include g.borderRadius(10px);
-  box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
+  box-shadow:
+    rgba(240, 46, 170, 0.4) -5px 5px,
+    rgba(240, 46, 170, 0.3) -10px 10px,
+    rgba(240, 46, 170, 0.2) -15px 15px,
+    rgba(240, 46, 170, 0.1) -20px 20px,
+    rgba(240, 46, 170, 0.05) -25px 25px;
   :deep(.n-card.n-card--bordered) {
     height: 100%;
     .n-card-header {

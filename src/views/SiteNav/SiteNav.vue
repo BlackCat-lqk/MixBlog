@@ -82,20 +82,6 @@
       </n-collapse>
     </div>
     <div class="site-content-main-box">
-      <!-- <div class="site-content-search-box">
-        <n-input
-          clearable
-          round
-          size="large"
-          v-model:value="searchKeyWord"
-          placeholder="输入关键字搜索..."
-          @input="handleSearch"
-        >
-          <template #suffix>
-            <img src="@/assets/images/searchIconfont.svg" alt="search nav" />
-          </template>
-        </n-input>
-      </div> -->
       <div class="site-card-box">
         <div v-for="(f, idxf) in state.siteData" :key="idxf" class="site-content-main">
           <h3>{{ f.secondaryCategory }}</h3>
@@ -151,13 +137,18 @@ import FooterNav from '@/views/Footer/FooterNav.vue'
 import { createSiteApi, getSiteApi, delSiteNavApi } from '@/http/siteNav'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useThemeStore } from '@/stores/themeStore'
+import type {
+  INavFormValue as FormValue,
+  INavPrimaryItem as primaryItem,
+  INavBlogSiteData as BlogSiteData,
+  INavSiteNav as siteNav
+} from '@/tsInterface'
 import _ from 'lodash'
 
 const themeStore = useThemeStore()
 const notification = useNotification()
 const router = useRouter()
 const collapseName = ref('')
-// const searchKeyWord = ref('')
 const hoverItem = ref('')
 const showDelBtn = ref(false)
 const userInfoStore = useUserInfoStore()
@@ -184,16 +175,6 @@ const cardItemStyle = (idx: number) => {
   }
   return cardItemBgLight[i]
 }
-interface FormValue {
-  type: string
-  primaryCategory: string
-  secondaryCategory: string
-  link: string
-  siteName: string
-  desc: string
-  icon: string
-}
-
 const formValue: FormValue = reactive({
   type: 'user',
   primaryCategory: 'mysite',
@@ -203,25 +184,6 @@ const formValue: FormValue = reactive({
   desc: '',
   icon: '',
 })
-
-interface SiteData {
-  siteName: string
-  link: string
-  desc: string
-  icon: string
-  _id: string
-}
-
-interface primaryItem {
-  secondaryCategory: string
-  data: SiteData[]
-}
-
-interface BlogSiteData {
-  primaryCategory: string
-  primaryItem: primaryItem[]
-}
-
 const state = reactive({
   userSiteData: [] as primaryItem[],
   blogSiteData: [] as BlogSiteData[],
@@ -341,20 +303,6 @@ const getSiteCategoryData = (data: primaryItem, type: string) => {
     showDelBtn.value = false
   }
   state.siteData = [data]
-}
-
-// 搜索
-// const handleSearch = (val: string) => {
-//   state.siteData = state.siteData.filter((item: siteNav) => {
-//     item.primaryItem.some((item: primaryItem) => {
-//       return item.siteName.includes(val)
-//     })
-//   })
-// }
-
-interface siteNav {
-  primaryCategory: string
-  primaryItem: []
 }
 // 获取站点数据
 const getSiteNavData = async () => {

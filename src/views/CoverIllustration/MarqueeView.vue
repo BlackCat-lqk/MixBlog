@@ -20,24 +20,13 @@
 
 <script lang="ts" setup>
 import type { CSSProperties } from 'vue'
-
-type Direction = 'left' | 'right'
-
-interface MarqueeProps {
-  items: string[]
-  direction?: Direction
-  speed?: number // px/s
-  itemWidth?: number
-  itemHeight?: number
-}
-
+import type { IMarqueeProps as MarqueeProps } from '@/tsInterface'
 const props = withDefaults(defineProps<MarqueeProps>(), {
   direction: 'left',
   speed: 30,
   itemWidth: 384,
   itemHeight: 216,
 })
-
 const isPlaying = ref(true)
 const containerRef = ref<HTMLElement | null>(null)
 const contentRef = ref<HTMLElement | null>(null)

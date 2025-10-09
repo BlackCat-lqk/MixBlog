@@ -60,15 +60,8 @@ import NotesCard from '@/components/NotesCard.vue'
 import { getNotesApi } from '@/http/notes'
 import { _formatTime } from '@/utils/publickFun'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
+import type { INotesType as NotesType, IWeatherIcons as WeatherIcons } from '@/tsInterface'
 import _ from 'lodash'
-interface NotesType {
-  id: string
-  title: string
-  content: string
-  updatedAt: string
-  weather: string
-  cover: string
-}
 const notesList = ref<NotesType[]>([])
 const notesDetail = ref<NotesType>({
   id: '',
@@ -96,9 +89,6 @@ const handleSearch = _.debounce((value: string) => {
 
 const handleNotesDetail = (item: NotesType) => {
   notesDetail.value = item
-}
-interface WeatherIcons {
-  [key: string]: string
 }
 const weatherIconsURLs: WeatherIcons = {
   cloudy: new URL('@/assets/images/Weather/cloudy.svg', import.meta.url).href,

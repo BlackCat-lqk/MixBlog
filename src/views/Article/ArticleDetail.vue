@@ -88,6 +88,7 @@ import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
 import _ from 'lodash'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
+import type { IarticleDetailType as articleDetailType, IComment as Comment } from '@/tsInterface'
 const QuillView = defineAsyncComponent(() => import('@/components/QuillView.vue'))
 const CommentsChat = defineAsyncComponent(() => import('@/components/CommentsChat.vue'))
 
@@ -116,39 +117,6 @@ const state = reactive({
   views: 0,
   comments: 0,
 })
-
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-
-interface articleDetailType {
-  _id: string
-  title: string
-  content?: string
-  intro: string
-  category: string
-  createdAt: string
-  tags: string[]
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
-
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
-
 // 评论数据
 const comments = ref<Comment[]>([])
 

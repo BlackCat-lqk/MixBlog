@@ -2,9 +2,7 @@
  * naive ui 配置, 全局按需引入
  */
 import {
-  // create naive ui
   create,
-  // component
   NButton,
   NDropdown,
   NAvatar,

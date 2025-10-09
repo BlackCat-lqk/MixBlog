@@ -16,14 +16,10 @@
 </template>
 
 <script setup lang="ts">
+import type { IClassifyItem as ClassifyItem } from '@/tsInterface'
 const { t } = useI18n()
 const isSelected = ref(t('common.all'))
 const emit = defineEmits(['classifyEmit'])
-
-interface ClassifyItem {
-  name: string
-  number: number
-}
 // 过滤分类
 const classifyClick = (name: string) => {
   emit('classifyEmit', name)

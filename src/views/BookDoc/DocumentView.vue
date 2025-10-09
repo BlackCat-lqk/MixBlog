@@ -160,6 +160,7 @@ import { getBookDocApi, getPrivateBookDocApi } from '@/http/uploadFile'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
+import type { IBookDocData as BookDocData } from '@/tsInterface'
 const userInfoStore = useUserInfoStore()
 const router = useRouter()
 // 动态导入文档处理组件
@@ -186,18 +187,6 @@ const handleError = (error: unknown) => {
   loading.value = false
   loadError.value = error instanceof Error ? error.message : String(error)
   console.error('加载失败:', error)
-}
-
-interface BookDocData {
-  _id: string
-  filename: string
-  category: string
-  path: string
-  size: number
-  updatedAt: string
-  suffix: string
-  description: string
-  docCover: string
 }
 const previewData = ref({
   _id: '',

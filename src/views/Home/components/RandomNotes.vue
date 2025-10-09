@@ -32,6 +32,7 @@ import { addDays } from 'date-fns'
 import NotesCard from '@/components/NotesCard.vue'
 import { getNotesApi } from '@/http/notes'
 import { _formatTime } from '@/utils/publickFun'
+import type { HomeNotesType as NotesType } from '@/tsInterface'
 
 const router = useRouter()
 const value = ref(addDays(Date.now(), 1).valueOf())
@@ -39,14 +40,6 @@ const articleUpdateAt = ref<string[]>([])
 
 const moreNotes = () => {
   router.push('/random-notes')
-}
-interface NotesType {
-  id: string
-  title: string
-  content: string
-  updatedAt: string
-  weather: string
-  cover: string
 }
 const notesList = ref<NotesType[]>([])
 const notesDetail = ref<NotesType>({

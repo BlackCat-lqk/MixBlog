@@ -105,6 +105,7 @@ import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
 import _ from 'lodash'
 import { useThemeStore } from '@/stores/themeStore'
+import type { ImageComment as Comment, ImagePhotoDetailType as photoDetailType } from '@/tsInterface'
 
 const themeStore = useThemeStore()
 const router = useRouter()
@@ -120,36 +121,6 @@ const state = reactive({
   comments: 0,
 })
 const emits = defineEmits(['update:showModal'])
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
-
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-interface photoDetailType {
-  _id: string
-  title: string
-  content: string
-  category: string
-  createdAt: string
-  photos: string[]
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
-
 // Drawer 关闭后的回调
 const closeDrawer = () => {
   showComment.value = false

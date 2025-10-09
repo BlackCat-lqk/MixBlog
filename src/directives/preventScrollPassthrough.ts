@@ -1,3 +1,7 @@
+/**
+ * 监听点击元素，滚动视图窗口
+ *
+ */
 // src/directives/preventScrollPassthrough.ts
 import type { Directive } from 'vue'
 

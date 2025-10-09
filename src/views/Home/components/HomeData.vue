@@ -88,18 +88,9 @@ import { ref, watch, onMounted, reactive } from 'vue'
 import { useScrollStore } from '@/stores/scrollStore'
 import { getAllBanners } from '@/http/banner'
 import { getVisitStatsApi } from '@/http/visit'
+import type { HomeDataBannerDataType as bannerDataType } from '@/tsInterface'
 const scrollStore = useScrollStore()
 const homeDataRef = ref()
-interface bannerDataType {
-  title: string
-  sub: string
-  introduction: string
-  mainBtnName: string
-  childBtnName: string
-  mainBtnUrl: string
-  childBtnUrl: string
-  cover: string
-}
 const state = reactive({
   banners: [] as bannerDataType[],
   totalCount: 0,

@@ -109,33 +109,10 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { upsertFeedbackApi } from '@/http/feedback'
-
-// 类型定义
-interface FeedbackType {
-  value: string
-  label: string
-}
-
-interface FeedbackFormData {
-  feedbackType: string
-  subject: string
-  description: string
-  screenshots: string[] | []
-  environment: {
-    url: string
-    userAgent: string
-    viewport: string
-    timestamp: string
-  }
-  contact: string
-}
-
-interface Props {
-  positionBottom?: number
-  positionRight?: number
-  title?: string
-  apiUrl?: string
-}
+import type { IFeedbackType as FeedbackType,
+  IFeedbackFormData as FeedbackFormData,
+  IFeedbackProps as Props
+ } from '@/tsInterface'
 
 // 组件属性
 const props = withDefaults(defineProps<Props>(), {
