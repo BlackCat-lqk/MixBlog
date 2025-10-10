@@ -13,7 +13,10 @@
         </template>
         添加站点</n-button
       >
-      <div v-show="showCreateUrl">
+      <div
+        v-show="showCreateUrl"
+        v-loading="{ show: buttonLoading, showText: true, text: '创建中...', width: 40 }"
+      >
         <n-form ref="formRef" :model="formValue" :rules="rules">
           <n-form-item label="分类名称" path="secondaryCategory">
             <n-input
@@ -141,10 +144,11 @@ import type {
   INavFormValue as FormValue,
   INavPrimaryItem as primaryItem,
   INavBlogSiteData as BlogSiteData,
-  INavSiteNav as siteNav
+  INavSiteNav as siteNav,
 } from '@/tsInterface'
 import _ from 'lodash'
 
+const buttonLoading = ref(false)
 const themeStore = useThemeStore()
 const notification = useNotification()
 const router = useRouter()
@@ -222,6 +226,7 @@ const handleCreateSite = _.debounce((e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
+      buttonLoading.value = true
       const faviconResult = await faviconFetching(formValue.link)
       if (faviconResult) formValue.icon = faviconLink.value
       const result = await createSiteApi(formValue)
@@ -239,6 +244,7 @@ const handleCreateSite = _.debounce((e: MouseEvent) => {
       } else {
         message.error('站点创建失败')
       }
+      buttonLoading.value = false
     } else {
       message.error('提交失败，请检查输入信息')
     }

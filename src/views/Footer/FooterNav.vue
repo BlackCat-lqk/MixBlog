@@ -1,8 +1,7 @@
 <template>
   <div class="footer-main-box">
-    <!-- <span>{{ $t('footer.title') }}</span> -->
     <div class="technical-support">
-      <n-marquee auto-fill speed="4">
+      <n-marquee auto-fill :speed="4">
         <a
           class="technical-support-item-box"
           v-for="(item, idx) in supportData.slice(0, 10)"
@@ -15,7 +14,7 @@
       </n-marquee>
     </div>
     <div class="technical-support-reverse technical-support">
-      <n-marquee auto-fill speed="4">
+      <n-marquee auto-fill :speed="4">
         <a
           class="technical-support-item-box"
           v-for="(item, idx) in supportData.slice(10, 20)"

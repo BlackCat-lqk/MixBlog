@@ -12,7 +12,7 @@
         :key="index"
         :style="{ width: props.itemWidth + 'px', height: props.itemHeight + 'px' }"
       >
-        <n-image :src="item" class="marquee-image" alt="marquee image" lazy="true" />
+        <n-image :src="item" class="marquee-image" alt="marquee image" :lazy="true" />
       </div>
     </div>
   </div>

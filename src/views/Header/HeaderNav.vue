@@ -278,7 +278,7 @@ const initUserData = () => {
     }
   }
 }
-const jumpPage = (path: string, idx?: number | undefined) => {
+const jumpPage = async (path: string, idx?: number | undefined) => {
   router.push(path)
   if (idx != undefined) {
     state.activeRouter = idx

@@ -53,7 +53,7 @@
                 object-fit="cover"
                 width="100%"
                 alt="photo"
-                lazy="true"
+                :lazy="true"
               />
             </div>
           </div>

@@ -34,7 +34,7 @@
               width="200"
               height="240"
               object-fit="cover"
-              lazy="true"
+              :lazy="true"
               alt="about"
             />
             <n-image
@@ -42,7 +42,7 @@
               width="200"
               height="240"
               object-fit="cover"
-              lazy="true"
+              :lazy="true"
               alt="about"
             />
           </div>
@@ -110,8 +110,8 @@
 </template>
 
 <script setup lang="ts">
-import about2 from '@/assets/wallpaper/about2.jpg'
-import about3 from '@/assets/wallpaper/about3.jpg'
+import about2 from '@/assets/wallpaper/about2.webp'
+import about3 from '@/assets/wallpaper/about3.webp'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getAboutConfigApi } from '@/http/about'
@@ -142,7 +142,7 @@ const couintDayPress = computed(() => {
   const totalSpan = end - start
   const targetPosition = now - start
   const percentage = (targetPosition / totalSpan) * 100
-  return percentage.toFixed(2)
+  return Number(percentage.toFixed(2))
 })
 
 // 获取About页面的配置

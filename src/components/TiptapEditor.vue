@@ -21,14 +21,14 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import 'highlight.js/styles/monokai-sublime.css'
 
 // 注册语法高亮模块
-Quill.register('modules/syntax', Syntax)
+Quill.register('modules/syntax', Syntax, true)
 Quill.register('formats/bold', bold)
 Quill.register('formats/italic', italic)
 Quill.register('formats/underline', underline)
 
 // 可选：如果你需要语法高亮
 import syntax from 'quill/modules/syntax'
-Quill.register('modules/syntax', syntax)
+Quill.register('modules/syntax', syntax, true)
 
 const editorContent = ref('')
 

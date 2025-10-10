@@ -32,5 +32,3 @@ onMounted(() => {
   getSloganData()
 })
 </script>
-
-<style scoped lang="scss"></style>

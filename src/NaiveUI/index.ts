@@ -52,9 +52,8 @@ import {
   NPopover,
   NP,
   NQrCode,
-  NModalProvider
+  NModalProvider,
 } from 'naive-ui'
-
 const naive = create({
   components: [
     NButton,
@@ -106,7 +105,7 @@ const naive = create({
     NPopover,
     NP,
     NQrCode,
-    NModalProvider
+    NModalProvider,
   ],
 })
 

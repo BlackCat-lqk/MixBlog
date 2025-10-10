@@ -133,13 +133,10 @@ const imageLoading = ref(false)
 
 // 图片加载完成事件
 const onImageLoad = () => {
-  console.log('图片加载完成')
   imageLoading.value = true
-  console.log('🚀 ~ onImageLoad ~ true:', true)
 }
 // 图片加载失败事件
 const onImageError = () => {
-  console.log('图片加载失败')
   imageLoading.value = false
 }
 const redirectToExternal = (url: string) => {
@@ -152,7 +149,6 @@ onBeforeMount(() => {
   link.as = 'image'
   link.href = sloganStore.sloganConfig.cover
   document.head.appendChild(link)
-  console.log('🚀 ~ mounted ~ true:', true)
 })
 </script>
 

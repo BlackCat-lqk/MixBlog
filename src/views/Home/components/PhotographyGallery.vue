@@ -67,13 +67,11 @@
       </div>
       <div v-if="photoItem.photos.length > 0" class="photo-gallery-preview">
         <n-marquee auto-fill>
-          <template #default>
             <div style="display: flex">
               <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
                 <img :src="item" alt="photo" loading="lazy" />
               </div>
             </div>
-          </template>
         </n-marquee>
       </div>
     </div>
