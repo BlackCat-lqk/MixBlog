@@ -38,8 +38,8 @@
         <div v-show="showTabs == 0" class="mix-lab-card">
           <div class="grid-custom-box">
             <span style="color: #fff; position: absolute; bottom: 5%">流动渐变边框</span>
-            <div style="color: #fff; position: absolute; top: 5%; right: 2%; cursor: pointer;">
-              <img width="32px" src="@/assets/images/MixLab/codeView.svg" alt="code review">
+            <div style="color: #fff; position: absolute; top: 5%; right: 2%; cursor: pointer">
+              <img width="32px" src="@/assets/images/MixLab/codeView.svg" alt="code review" />
             </div>
             <GradientFlow class-name="gradient-box" @click="handleGradientBtn">
               <template #content>
@@ -171,6 +171,10 @@
             ></GooeyNav>
             <span style="color: #fff; position: absolute; bottom: 5%">导航</span>
           </div>
+          <div class="grid-custom-box">
+            <WaterBall :progressData="waterBallData" unitText="%"></WaterBall>
+            <span style="color: #fff; position: absolute; bottom: 5%">波浪水球</span>
+          </div>
         </div>
         <HooksLab v-show="showTabs == 1"></HooksLab>
       </div>
@@ -188,6 +192,7 @@ import FollowMouse from '@/views/MixLab/components/FollowMouse.vue'
 import MessageNotify from '@/views/MixLab/components/MessageNotify.vue'
 import MaskLayer from '@/views/MixLab/components/MaskLayer.vue'
 import GooeyNav from '@/views/MixLab/components/GooeyNav.vue'
+import WaterBall from '@/views/MixLab/components/WaterBall.vue'
 import HooksLab from '@/views/MixLab/HooksLab.vue'
 const handleGradientBtn = () => {
   console.log('handleGradientBtn')
@@ -226,6 +231,24 @@ const handleNav = (val: NavItem) => {
   showTabs.value = val.index
 }
 
+// 波浪水球模拟数据
+const waterBallData = ref(0)
+let timer: any
+const initWaterBallData = () => {
+  timer = setInterval(() => {
+    waterBallData.value += 2
+    if (waterBallData.value >= 100) {
+      waterBallData.value = 0
+    }
+  }, 1000)
+}
+
+onMounted(() => {
+  initWaterBallData()
+})
+onBeforeUnmount(() => {
+  clearInterval(timer)
+})
 </script>
 
 <style lang="scss" scoped>
