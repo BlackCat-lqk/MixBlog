@@ -175,6 +175,10 @@
             <WaterBall :progressData="waterBallData" unitText="%"></WaterBall>
             <span style="color: #fff; position: absolute; bottom: 5%">波浪水球</span>
           </div>
+          <div class="grid-custom-box">
+            <ProgressBar :progressData="waterBallData" unitText="%"></ProgressBar>
+            <span style="color: #fff; position: absolute; bottom: 5%">进度条</span>
+          </div>
         </div>
         <HooksLab v-show="showTabs == 1"></HooksLab>
       </div>
@@ -193,6 +197,7 @@ import MessageNotify from '@/views/MixLab/components/MessageNotify.vue'
 import MaskLayer from '@/views/MixLab/components/MaskLayer.vue'
 import GooeyNav from '@/views/MixLab/components/GooeyNav.vue'
 import WaterBall from '@/views/MixLab/components/WaterBall.vue'
+import ProgressBar from '@/views/MixLab/components/ProgressBar.vue'
 import HooksLab from '@/views/MixLab/HooksLab.vue'
 const handleGradientBtn = () => {
   console.log('handleGradientBtn')
