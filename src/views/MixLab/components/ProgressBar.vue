@@ -24,7 +24,7 @@ const initWaterBall = () => {
     const wave = progressRef.value
     if (!wave) return
     wave.style.setProperty('--progress', progress.value.toString())
-    if (progress.value >= 100) {
+    if (progress.value > 100) {
       wave.style.setProperty('--progress', '100')
     }
   }
@@ -44,10 +44,14 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .progress-border {
-  padding: 4px;
+  padding: 1px;
   width: 400px;
   height: 32px;
-  border: 3px solid #fff;
+  border: 2px solid #fff;
+  box-shadow:
+    rgba(1, 230, 246, 0.2) 0px 30px 60px -12px inset,
+    rgba(34, 0, 253, 0.2) 0px 18px 36px -18px inset,
+    rgba(46, 253, 0, 0.1) 0px 48px 28px -16px inset;
   border-radius: 999px;
   overflow: hidden;
   margin: 0 20px;
@@ -77,7 +81,7 @@ onMounted(() => {
   }
   .progress-text {
     position: relative;
-    font-size: 16px;
+    font-size: 1rem;
     color: #fff;
     display: flex;
     justify-content: flex-end;

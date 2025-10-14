@@ -23,7 +23,7 @@ const initWaterBall = () => {
     const wave = waveRef.value
     if (!wave) return
     wave.style.setProperty('--progress', progress.value.toString())
-    if (progress.value >= 100) {
+    if (progress.value > 100) {
       wave.style.setProperty('--progress', '100')
     }
   }
