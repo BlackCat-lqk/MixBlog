@@ -180,9 +180,9 @@
             <span style="color: #fff; position: absolute; bottom: 5%">进度条</span>
           </div>
           <div class="grid-custom-box">
-            <TextToImage :uploadedImage="uploadedImage"></TextToImage>
-            <input type="file" id="imageUpload" accept="image/*" @change="handleImageUpload" />
-            <span style="color: #fff; position: absolute; bottom: 5%">Canvas画布: 数据生图</span>
+            <TextToImage :data="textToImageData"></TextToImage>
+            <span style="color: #fff; position: absolute; bottom: 5%; background-color: #000;">Canvas画布: 数据生图</span>
+            <input type="file" id="imageUpload" accept="image/*" style="color: #fff; background-color: #000; position: absolute; bottom: 15%;" @change="handleImageUpload" />
           </div>
         </div>
         <HooksLab v-show="showTabs == 1"></HooksLab>
@@ -242,28 +242,26 @@ const handleNav = (val: NavItem) => {
   showTabs.value = val.index
 }
 
-const uploadedImage = ref('')
+const textToImageData = reactive({
+  text: 'Hello, World 标题',
+  uploadedImage: '',
+  width: '456px',
+  height: '300px',
+  content: '描述文字'
+})
 
 // 处理Canvas图片上传
-const handleImageUpload = (event: unknown) => {
+const handleImageUpload = (event: Event) => {
   const reader = new FileReader()
-  const file = event.target.files[0]
+  const file = (event.target as HTMLInputElement).files?.[0]
   if (file) {
     reader.onload = (e) => {
       if(!e.target) return
-      uploadedImage.value = e.target.result
+      textToImageData.uploadedImage = e.target.result as string
     }
     reader.readAsDataURL(file)
   }
 }
-// const handleImageUpload = (imageFile) => {
-//   const reader = new FileReader()
-//   reader.onload = (e) => {
-//     uploadedImage.value = e.target.result
-//   }
-//   reader.readAsDataURL(imageFile)
-// }
-
 // 波浪水球模拟数据
 const waterBallData = ref(0)
 let timer: any
