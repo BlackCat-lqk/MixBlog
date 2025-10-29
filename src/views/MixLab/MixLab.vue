@@ -179,6 +179,11 @@
             <ProgressBar :progressData="waterBallData" unitText="%"></ProgressBar>
             <span style="color: #fff; position: absolute; bottom: 5%">进度条</span>
           </div>
+          <div class="grid-custom-box">
+            <TextToImage :data="textToImageData"></TextToImage>
+            <span style="color: #fff; position: absolute; bottom: 5%; background-color: #000;">Canvas画布: 数据生图</span>
+            <input type="file" id="imageUpload" accept="image/*" style="color: #fff; background-color: #000; position: absolute; bottom: 15%;" @change="handleImageUpload" />
+          </div>
         </div>
         <HooksLab v-show="showTabs == 1"></HooksLab>
       </div>
@@ -198,6 +203,7 @@ import MaskLayer from '@/views/MixLab/components/MaskLayer.vue'
 import GooeyNav from '@/views/MixLab/components/GooeyNav.vue'
 import WaterBall from '@/views/MixLab/components/WaterBall.vue'
 import ProgressBar from '@/views/MixLab/components/ProgressBar.vue'
+import TextToImage from '@/views/MixLab/components/TextToImage.vue'
 import HooksLab from '@/views/MixLab/HooksLab.vue'
 const handleGradientBtn = () => {
   console.log('handleGradientBtn')
@@ -236,6 +242,26 @@ const handleNav = (val: NavItem) => {
   showTabs.value = val.index
 }
 
+const textToImageData = reactive({
+  text: 'Hello, World 标题',
+  uploadedImage: '',
+  width: '456px',
+  height: '300px',
+  content: '描述文字'
+})
+
+// 处理Canvas图片上传
+const handleImageUpload = (event: Event) => {
+  const reader = new FileReader()
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (file) {
+    reader.onload = (e) => {
+      if(!e.target) return
+      textToImageData.uploadedImage = e.target.result as string
+    }
+    reader.readAsDataURL(file)
+  }
+}
 // 波浪水球模拟数据
 const waterBallData = ref(0)
 let timer: any
