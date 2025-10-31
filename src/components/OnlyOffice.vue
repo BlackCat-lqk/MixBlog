@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <n-modal
     v-model="dialogVisible"
     title="OnlyOffice 编辑器"
     width="90%"
@@ -8,41 +8,48 @@
     top="5vh"
     @close="handleClose"
   >
-    <div :loading="loading"   class="editor-container">
+    <div :loading="loading" class="editor-container">
       <div id="onlyoffice-editor" ref="editorRef"></div>
     </div>
-  </el-dialog>
+  </n-modal>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch, onBeforeUnmount, nextTick } from 'vue'
-import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   realPath: {
     type: String,
-    required: true
+    required: true,
   },
+  showOnlyOffice: {
+    type: Boolean,
+    default: false
+  }
 })
 
-const emit = defineEmits(['update:modelValue', 'save'])
+const emit = defineEmits(['update:showOnlyOffice', 'save'])
 
 const dialogVisible = ref(false)
 const loading = ref(false)
 const editorRef = ref(null)
-let docEditor = null
+let docEditor: any = null
 
-// 监听 modelValue 变化
-watch(() => props.modelValue, (val) => {
-  dialogVisible.value = val
-  if (val) {
-    initEditor()
-  }
-})
+// 监听 showOnlyOffice 变化
+watch(
+  () => props.showOnlyOffice,
+  (val) => {
+    console.log('showOnlyOffice', val)
+    dialogVisible.value = val
+    if (val) {
+      initEditor()
+    }
+  },
+)
 
 // 监听 dialogVisible 变化，同步到父组件
 watch(dialogVisible, (val) => {
-  emit('update:modelValue', val)
+  emit('update:showOnlyOffice', val)
   if (!val) {
     destroyEditor()
   }
@@ -61,16 +68,30 @@ const initEditor = async () => {
       await loadOnlyOfficeScript()
     }
 
-    // 调用接口获取配置
-    const res = await onlyOfficeConfig({
-      isEdit: props.isEdit,
-      fileId: props.fileId,
-      realPath: props.realPath
-    })
+    // 配置
+    const config = {
+        document: {
+          title: '软件部9月第四周任务.txt',
+          fileType: 'epub',
+          key: '166793',
+          url: props.realPath,
+          permissions: {
+            edit: false,
+            print: false,
+            download: false,
+            fillForms: false,
+            review: false,
+          },
+        },
+        type: 'desktop',
+        token: null,
+        height: '100%',
+        width: '100%',
+        documentServer: 'https://mixblog.cn/',
+    }
 
-    if (res.code === 200 && res.data) {
-      const config = res.data
-      config.document.url = `https://mixblog.cn/` + config.document.url
+    if (props.realPath) {
+      config.document.url = `https://mixblog.cn/` + props.realPath
       // config.editorConfig.callbackUrl = `https://mixblog.cn/` + config.editorConfig.callbackUrl
       // console.log('配置地址',config.document.url);
 
@@ -80,44 +101,39 @@ const initEditor = async () => {
         width: '100%',
         height: '100%',
         events: {
-          onReady: function() {
-            // console.log('文档已加载')
+          onReady: function () {
+            console.log('文档已加载')
             loading.value = false
-            ElMessage.success('文档加载成功')
           },
-          onDocumentStateChange: function(event) {
+          onDocumentStateChange: function (event: any) {
             console.log('文档状态改变', event)
           },
-          onSave: function(event) {
-            // console.log('用户手动保存触发', event)
-            ElMessage.success('保存成功')
+          onSave: function (event: any) {
+            console.log('保存成功', event)
             emit('save', event)
           },
-          onError: function(error) {
+          onError: function (error: any) {
             console.error('编辑器错误', error)
             loading.value = false
-            ElMessage.error('编辑器加载失败: ' + (error.data || '未知错误'))
           },
-          onWarning: function(warning) {
+          onWarning: function (warning: any) {
             console.warn('编辑器警告', warning)
-            ElMessage.warning('编辑器警告: ' + (warning.data || ''))
-          }
-        }
+          },
+        },
       })
     } else {
-      throw new Error(res.message || '获取配置失败')
+      throw new Error('获取配置失败')
     }
   } catch (error) {
     console.error('初始化编辑器失败:', error)
     loading.value = false
-    ElMessage.error('初始化编辑器失败: ' + (error.message || '未知错误'))
     dialogVisible.value = false
   }
 }
 
 // 动态加载 OnlyOffice API 脚本
 const loadOnlyOfficeScript = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     // 检查脚本是否已存在
     const existingScript = document.querySelector('script[src*="documents/api.js"]')
     if (existingScript) {
@@ -175,7 +191,7 @@ onBeforeUnmount(() => {
 }
 
 :deep(.el-dialog__header) {
-  background: linear-gradient(90deg, #308CED 0%, #5BA3F5 100%);
+  background: linear-gradient(90deg, #308ced 0%, #5ba3f5 100%);
   padding: 15px 20px;
 
   .el-dialog__title {
@@ -201,4 +217,3 @@ onBeforeUnmount(() => {
   padding: 0;
 }
 </style>
-

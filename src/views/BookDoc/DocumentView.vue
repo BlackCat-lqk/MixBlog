@@ -143,12 +143,19 @@
           :book-id="previewData._id"
         >
         </novel-reader>
+        <only-office
+          v-else-if="previewData.suffix === 'epub' || previewData.suffix === 'EPUB'"
+          v-model:showOnlyOffice="showOnlyOffice"
+          :fileId="randomStr(16)"
+          :realPath="previewData.path"
+        ></only-office>
+
         <div v-else class="preview-error-tip">预览出错啦！请下载文档查看吧</div>
-        <epub-read
+        <!-- <epub-read
           v-show="previewData.suffix === 'epub' || previewData.suffix === 'EPUB'"
           :url="previewData.path"
         >
-        </epub-read>
+        </epub-read> -->
       </n-card>
     </n-modal>
   </div>
@@ -172,9 +179,12 @@ const router = useRouter()
 const VueOfficeDocx = defineAsyncComponent(() => import('@vue-office/docx'))
 const VueOfficeExcel = defineAsyncComponent(() => import('@vue-office/excel'))
 const VueOfficePdf = defineAsyncComponent(() => import('@vue-office/pdf'))
-const EpubRead = defineAsyncComponent(() => import('@/components/EpubRead.vue'))
+// const EpubRead = defineAsyncComponent(() => import('@/components/EpubRead.vue'))
+import OnlyOffice from '@/components/OnlyOffice.vue'
 import NovelReader from '@/components/NovelReader.vue'
+import { randomStr } from '@/utils/commentUtils'
 import _ from 'lodash'
+const showOnlyOffice = ref(false)
 const message = useMessage()
 const bgKey = ref('all')
 const searchKeyword = ref('')
@@ -296,6 +306,8 @@ const getPreviewDetail = (data: BookDocData) => {
   previewData.value.filename = data.filename
   previewData.value.suffix = data.suffix
   previewData.value._id = data._id
+  console.log('获取预览信息', data)
+  showOnlyOffice.value = data.suffix === 'epub' || data.suffix === 'EPUB'
 }
 // 获取文件列表
 const getBookDocDataList = async () => {
