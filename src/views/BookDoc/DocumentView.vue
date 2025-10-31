@@ -144,6 +144,11 @@
         >
         </novel-reader>
         <div v-else class="preview-error-tip">预览出错啦！请下载文档查看吧</div>
+        <epub-read
+          v-show="previewData.suffix === 'epub' || previewData.suffix === 'EPUB'"
+          :url="previewData.path"
+        >
+        </epub-read>
       </n-card>
     </n-modal>
   </div>
@@ -167,6 +172,7 @@ const router = useRouter()
 const VueOfficeDocx = defineAsyncComponent(() => import('@vue-office/docx'))
 const VueOfficeExcel = defineAsyncComponent(() => import('@vue-office/excel'))
 const VueOfficePdf = defineAsyncComponent(() => import('@vue-office/pdf'))
+const EpubRead = defineAsyncComponent(() => import('@/components/EpubRead.vue'))
 import NovelReader from '@/components/NovelReader.vue'
 import _ from 'lodash'
 const message = useMessage()
@@ -181,7 +187,6 @@ const pdfOptions = {
 }
 
 const documentBox = ref<string | HTMLElement>('')
-
 const handleError = (error: unknown) => {
   console.error('PDF加载错误:', error)
   loading.value = false
@@ -216,6 +221,8 @@ const changeBg = {
   txt: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
   XLSX: `url("${new URL('@/assets/images/file/excel.svg', import.meta.url).href}")`,
   TXT: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
+  epub: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
+  EPUB: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
 } as Record<string, string>
 
 // 搜索过滤文件
@@ -302,10 +309,10 @@ const getBookDocDataList = async () => {
     if (userInfoStore.data.user.isLogin && userInfoStore.data.user.role == 'admin') {
       const privates = await getPrivateBookDocApi({})
       const privateRes = privates.data
-      if(privateRes.code === 200){
+      if (privateRes.code === 200) {
         bookDocData.value = res.data.concat(privateRes.data)
         bookDocAllData.value = res.data.concat(privateRes.data)
-        Object.assign(bookCategories.value , privateRes.categories);
+        Object.assign(bookCategories.value, privateRes.categories)
       }
     }
   } else {
