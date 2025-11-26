@@ -87,7 +87,7 @@
               alt="close"
             />
           </div>
-          <div class="zoom-controls">
+          <div class="zoom-controls" v-if="!((showTxtReader && !showOnlyOffice) || (showOnlyOffice && !showTxtReader))">
             <button @click="zoomOut" class="zoom-button" :disabled="loading">-</button>
             <span class="zoom-level">{{ Math.round(scale * 100) }}%</span>
             <button @click="zoomIn" class="zoom-button" :disabled="loading">+</button>
@@ -145,7 +145,7 @@
         >
         </novel-reader>
         <book-reader
-          v-if="showOnlyOffice && !showTxtReader"
+          v-show="showOnlyOffice && !showTxtReader"
           :url="previewData.path"
         ></book-reader>
 
@@ -260,7 +260,6 @@ const zoomOut = () => {
 
 // PDF渲染完成回调
 const onPdfRendered = () => {
-  console.log('PDF渲染完成')
   loading.value = false
 }
 
@@ -302,8 +301,6 @@ const getPreviewDetail = (data: BookDocData) => {
   const suffix = ['FB2', 'fb2', 'CBZ', 'cbz', 'KF8', 'kf8', 'epub', 'EPUB']
   showOnlyOffice.value = suffix.includes(data.suffix)
   showTxtReader.value = data.suffix === 'txt' || data.suffix === 'TXT'
-  console.log(showOnlyOffice.value)
-  console.log('获取预览信息', data)
 }
 // 获取文件列表
 const getBookDocDataList = async () => {

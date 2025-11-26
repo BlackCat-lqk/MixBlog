@@ -8,5 +8,3 @@ export const dynamicImportVueOfficeExcel = () => import('@vue-office/excel')
 export const dynamicImportVueOfficePdf = () => import('@vue-office/pdf')
 
 export const dynamicImportOGL = () => import('@/views/VueBits/RippleGrid.vue')
-
-export const EpubRead = () => import('@/components/EpubRead.vue')
