@@ -86,7 +86,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { addArticleCommentApi, likeArticleApi, viewArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
-import _ from 'lodash'
+import debounce from 'lodash/debounce';
 import { getAllBlogArticleApi } from '@/http/blogArticle'
 import type { IarticleDetailType as articleDetailType, IComment as Comment } from '@/tsInterface'
 const QuillView = defineAsyncComponent(() => import('@/components/QuillView.vue'))
@@ -121,7 +121,7 @@ const state = reactive({
 const comments = ref<Comment[]>([])
 
 // 处理提交评论事件
-const handleSubmitComment = _.debounce(async (data: { content: string; parentId?: string }) => {
+const handleSubmitComment = debounce(async (data: { content: string; parentId?: string }) => {
   // 调用 API 提交评论
   const params = {
     articleId: props.data._id,
@@ -155,7 +155,7 @@ const handleSubmitComment = _.debounce(async (data: { content: string; parentId?
   }
 }, 300)
 // 处理点赞事件
-const likeArticle = _.debounce(async () => {
+const likeArticle = debounce(async () => {
   const params = {
     articleId: props.data._id,
     userId: userInfoStore.data.user._id,
@@ -164,7 +164,6 @@ const likeArticle = _.debounce(async () => {
   }
   const result = await likeArticleApi(params)
   const res = result.data
-  console.log(res)
   if (res.code === 200) {
     if (res.type == 'like') {
     } else {
@@ -218,7 +217,6 @@ const getArticleDetailSignal = async () => {
   const res = response.data
   const resDetail = res.data.list[0]
   if (res.code === 200) {
-    console.log(resDetail)
     comments.value = resDetail.comments
     state.comments = resDetail.comments.length
     state.likes = resDetail.likes.length

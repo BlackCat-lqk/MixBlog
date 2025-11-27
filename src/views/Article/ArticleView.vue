@@ -45,9 +45,11 @@ import ClassifyMeun from '@/components/ClassifyMeun.vue'
 import ArticleCard from '@/components/ArticleCard.vue'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
+import { getArticleCachedData } from '@/utils/apiCache'
 import { useMessage } from 'naive-ui'
 const { t } = useI18n()
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
+import cloneDeep from 'lodash/cloneDeep'
 const message = useMessage()
 const isClassify = ref(false)
 const searchArticle = ref('')
@@ -72,11 +74,11 @@ interface articelDataType {
 }
 // 获取所有文章数据
 const getAllBlogArticleData = async () => {
-  const response = await getAllBlogArticleApi('')
+  const response = await getArticleCachedData('', getAllBlogArticleApi)
   const res = response.data
   if (res.code === 200) {
     const listData = res.data.list.filter((item: articelDataType) => item.status === 'published')
-    articleData.deepData = _.cloneDeep(listData)
+    articleData.deepData = cloneDeep(listData)
     classify[0].number = res.data.pagination.total
     for (const key in res.data.stats.categories) {
       classify.push({
@@ -97,7 +99,7 @@ const moreArticle = () => {
 
 // 过滤分类
 const handleClassify = (name: string) => {
-  const listData = _.cloneDeep(articleData.deepData)
+  const listData = cloneDeep(articleData.deepData)
   const filterData = listData.filter((item: articelDataType) => {
     return item.category === name
   })
@@ -111,11 +113,11 @@ const handleClassify = (name: string) => {
 }
 
 // 搜索文章
-const handleSearch = _.debounce((value: string) => {
+const handleSearch = debounce((value: string) => {
   if (!value) {
     handleClassify('全部')
   } else {
-    const listData = _.cloneDeep(articleData.deepData)
+    const listData = cloneDeep(articleData.deepData)
     articleData.data = listData.filter((item: articelDataType) => {
       return (
         item.title.toLowerCase().includes(value.toLowerCase()) ||
@@ -123,7 +125,6 @@ const handleSearch = _.debounce((value: string) => {
       )
     })
   }
-  console.log(value)
 }, 300)
 
 // 初始化文章数据

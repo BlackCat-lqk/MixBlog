@@ -108,7 +108,7 @@ import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import { uploadBookDocApi, getBookDocApi, deleteBookDocApi, getPrivateBookDocApi } from '@/http/uploadFile'
 import { useMessage } from 'naive-ui'
-import _ from 'lodash'
+import debounce from 'lodash/debounce';
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 const rules = {
@@ -177,7 +177,7 @@ interface bookDocType {
   docCover: string
 }
 
-const handleInputCategory = _.debounce((val: string) => {
+const handleInputCategory = debounce((val: string) => {
   if (val) {
     btnStatus.value = false
   } else {

@@ -338,7 +338,6 @@ const getUsersList = async () => {
 }
 const handleTableCheck = async (rowKeys: DataTableRowKey[]) => {
   checkedRowKeysRef.value = rowKeys
-  console.log(checkedRowKeysRef.value)
 }
 // 删除选择的用户
 const deleteSelectUsers = async () => {

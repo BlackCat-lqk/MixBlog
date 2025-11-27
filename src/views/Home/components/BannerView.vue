@@ -52,12 +52,6 @@
             cursorCharacter="▌"
             className="p-h2"
           />
-          <!-- <p>
-            {{ sloganStore.sloganConfig.sloganSub1 }}
-          </p>
-          <p>
-            {{ sloganStore.sloganConfig.sloganSub2 }}
-          </p> -->
         </div>
         <div></div>
       </div>
@@ -70,14 +64,6 @@
             )
           "
         >
-          <!-- <n-icon size="40">
-            <img
-              v-if="themeStore.currentTheme == 'light'"
-              src="@/assets/images/AngleDoubleDown.svg"
-              alt="scroll Down"
-            />
-            <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" alt="scroll Down" />
-          </n-icon> -->
           <img src="@/assets/images/xtools.webp" alt="X-Tools" />
         </div>
         <router-link :to="{ path: '/mixlab' }" target="_blank" rel="noopener noreferrer">

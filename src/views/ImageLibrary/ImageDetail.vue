@@ -103,7 +103,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { addPhotoCommentApi, likePhotoApi, viewPhotoApi } from '@/http/photoLibrary'
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 import { useThemeStore } from '@/stores/themeStore'
 import type { ImageComment as Comment, ImagePhotoDetailType as photoDetailType } from '@/tsInterface'
 
@@ -127,7 +127,7 @@ const closeDrawer = () => {
 }
 
 // 处理提交评论事件
-const handleSubmitComment = _.debounce(async (data: { content: string; parentId?: string }) => {
+const handleSubmitComment = debounce(async (data: { content: string; parentId?: string }) => {
   // 调用 API 提交评论
   const params = {
     libraryId: props.data._id,
@@ -165,7 +165,7 @@ const handleReplyComment = (comment: Comment) => {
   console.log('回复评论:', comment)
 }
 // 处理点赞事件
-const likeArticle = _.debounce(async () => {
+const likeArticle = debounce(async () => {
   const params = {
     libraryId: props.data._id,
     userId: userInfoStore.data.user._id,

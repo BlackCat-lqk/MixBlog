@@ -113,7 +113,6 @@ watch(
   () => props.src,
   (newSrc) => {
     if (newSrc) {
-      console.log('PDF源文件地址:', props.src)
       resetState()
     }
   },
@@ -122,12 +121,11 @@ watch(
 
 // PDF加载完成回调
 const onPdfLoaded = () => {
-  console.log('PDF加载完成事件触发')
+  loading.value = false
 }
 
 // PDF渲染完成回调
 const onPdfRendered = (pdfDocument: unknown) => {
-  console.log('PDF渲染完成事件触发:', pdfDocument)
   loading.value = false
 
   if (!pdfDocument) {
@@ -138,7 +136,6 @@ const onPdfRendered = (pdfDocument: unknown) => {
 
   if (typeof pdfDocument === 'object' && pdfDocument && 'numPages' in pdfDocument) {
     totalPages.value = (pdfDocument as { numPages: number }).numPages
-    console.log('PDF总页数:', totalPages.value)
   } else {
     console.error('无法获取PDF总页数，pdfDocument结构不符合预期:', pdfDocument)
     loadError.value = 'PDF文档格式错误'
@@ -149,7 +146,6 @@ const onPdfRendered = (pdfDocument: unknown) => {
 const onPageChange = (page: number) => {
   currentPage.value = page
   inputPage.value = page
-  console.log('当前页码:', page)
 }
 
 // 错误处理
@@ -191,13 +187,6 @@ const zoomIn = () => {
 const zoomOut = () => {
   scale.value = Math.max(scale.value - 0.1, 0.5)
 }
-
-// 监听当前页码变化
-watch(currentPage, (newPage) => {
-  // 这里可以通过vue-office/pdf的API跳转到指定页面
-  // 实际实现取决于vue-office/pdf提供的API
-  console.log(`跳转到第 ${newPage} 页`)
-})
 
 // 初始化
 onMounted(() => {

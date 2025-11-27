@@ -67,11 +67,11 @@
       </div>
       <div v-if="photoItem.photos.length > 0" class="photo-gallery-preview">
         <n-marquee auto-fill>
-            <div style="display: flex">
-              <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
-                <img :src="item" alt="photo" loading="lazy" />
-              </div>
+          <div style="display: flex">
+            <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
+              <img :src="item" alt="photo" loading="lazy" />
             </div>
+          </div>
         </n-marquee>
       </div>
     </div>
@@ -85,6 +85,7 @@
 <script lang="ts" setup>
 import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
+import { getPhotoCachedData } from '@/utils/apiCache'
 import { useThemeStore } from '@/stores/themeStore'
 import { _formatTime } from '@/utils/publickFun'
 import type { HomePhotoItemType as photoItemType } from '@/tsInterface'
@@ -121,7 +122,8 @@ let imagesDetail: photoItemType = reactive({
 })
 // 获取图库信息
 const getPhotoLibrary = async () => {
-  const response = await getPhotoLibraryApi()
+  const response = await getPhotoCachedData(getPhotoLibraryApi)
+  // const response = await getPhotoLibraryApi()
   const res = response.data
   if (res.code == 200) {
     state.step = 0

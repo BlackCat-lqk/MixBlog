@@ -93,7 +93,6 @@ const checkSavedCredentials = () => {
       formValue.email = credentials.email
       formValue.password = credentials.password
       formValue.rememberMe = true
-      console.log(formValue)
     }
   } else {
     // 如果没有保存的凭据，则清空表单

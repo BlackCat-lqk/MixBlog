@@ -148,7 +148,6 @@ const showForgotPwdModal = ref(false)
 const logoNight = '/uploads/defalut/logo-transparent-night.svg'
 const logoLight = '/uploads/defalut/logo-transparent.svg'
 const changeLanguage = (lang: string) => {
-  console.log('changeLanguage', lang)
   locale.value = lang
   localStorage.setItem('locale', lang)
 

@@ -12,7 +12,8 @@
     }
   ],
   "compilerOptions": {
-    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "strict": true
   }
 }

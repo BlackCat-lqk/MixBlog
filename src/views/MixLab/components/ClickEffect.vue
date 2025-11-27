@@ -6,6 +6,7 @@
 </template>
 
 <script setup lang="ts">
+import debounce from 'lodash/debounce'
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 
 // 类型定义
@@ -154,9 +155,9 @@ const handleClick = (event: MouseEvent) => {
 }
 
 // 处理窗口大小变化
-const handleResize = () => {
+const handleResize = debounce(() => {
   initCanvas()
-}
+}, 300)
 
 // 生命周期
 onMounted(() => {

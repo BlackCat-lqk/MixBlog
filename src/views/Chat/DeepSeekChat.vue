@@ -110,7 +110,7 @@ import type { IChatMessage as ChatMessage } from '@/tsInterface'
 const router = useRouter()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 
 const userInput = ref('')
 const messages = ref<ChatMessage[]>([])
@@ -130,7 +130,7 @@ const startNewChat = () => {
   // 重置加载状态
   isLoading.value = false
 }
-const sendMessage = _.debounce(async () => {
+const sendMessage = debounce(async () => {
   if (!userInput.value.trim()) return
   // 检查是否登录
   if (!userInfoStore.data.user.isLogin) {

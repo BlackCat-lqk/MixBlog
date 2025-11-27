@@ -40,7 +40,7 @@
           </n-form-item>
         </n-form>
       </div>
-      <n-collapse accordion arrow-placement="right" @on-item-header-click="handleUpdateExpanded">
+      <n-collapse accordion arrow-placement="right">
         <n-collapse-item name="own">
           <template #header>
             <span>我的</span>
@@ -146,7 +146,7 @@ import type {
   INavBlogSiteData as BlogSiteData,
   INavSiteNav as siteNav,
 } from '@/tsInterface'
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 
 const buttonLoading = ref(false)
 const themeStore = useThemeStore()
@@ -199,12 +199,6 @@ const rules = {
   siteName: [{ required: true, message: '请输入站点名称', trigger: 'blur' }],
   link: [{ required: true, message: '请输入网址', trigger: 'blur' }],
 }
-
-// 展开触发
-const handleUpdateExpanded = (expandedNames: Array<string | number> | string | number | null) => {
-  console.log('handleUpdateExpanded', expandedNames)
-}
-
 const showCreateInput = () => {
   if (userInfoStore.data.user.isLogin) {
     showCreateUrl.value = !showCreateUrl.value
@@ -222,7 +216,7 @@ const webIconImageError = (event: Event) => {
 }
 
 // 创建站点
-const handleCreateSite = _.debounce((e: MouseEvent) => {
+const handleCreateSite = debounce((e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {

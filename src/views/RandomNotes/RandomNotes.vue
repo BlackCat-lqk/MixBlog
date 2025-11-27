@@ -61,7 +61,7 @@ import { getNotesApi } from '@/http/notes'
 import { _formatTime } from '@/utils/publickFun'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
 import type { INotesType as NotesType, IWeatherIcons as WeatherIcons } from '@/tsInterface'
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 const notesList = ref<NotesType[]>([])
 const notesDetail = ref<NotesType>({
   id: '',
@@ -77,7 +77,7 @@ const allNotesList = ref<NotesType[]>([])
 const searchArticle = ref('')
 
 // 搜索笔记
-const handleSearch = _.debounce((value: string) => {
+const handleSearch = debounce((value: string) => {
   notesList.value = allNotesList.value.filter((item) => {
     return (
       item.title.toLowerCase().includes(value.toLowerCase()) ||

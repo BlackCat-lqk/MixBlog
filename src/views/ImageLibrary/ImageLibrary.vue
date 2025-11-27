@@ -48,8 +48,9 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import ClassifyMeun from '@/components/ClassifyMeun.vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
+import { getPhotoCachedData } from '@/utils/apiCache'
 import { useMessage } from 'naive-ui'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import type { ImagePhotoDetailType as dataType } from '@/tsInterface'
 const { t } = useI18n()
 const showActiveDrawer = ref(false)
@@ -88,11 +89,11 @@ const handleDetailImage = (data: dataType) => {
 }
 // 获取所有图片数据
 const getAllPhotoData = async () => {
-  const response = await getPhotoLibraryApi()
+  const response = await getPhotoCachedData(getPhotoLibraryApi)
   const res = response.data
   if (res.code === 200) {
     const listData = res.data.list
-    photoData.deepData = _.cloneDeep(listData)
+    photoData.deepData = cloneDeep(listData)
     classify[0].number = res.data.pagination.total
     for (const key in res.data.stats.categories) {
       classify.push({
@@ -111,7 +112,7 @@ const moreArticle = () => {
 }
 // 过滤分类
 const handleClassify = (name: string) => {
-  const listData = _.cloneDeep(photoData.deepData)
+  const listData = cloneDeep(photoData.deepData)
   const filterData = listData.filter((item: photoDataType) => {
     return item.category === name
   })

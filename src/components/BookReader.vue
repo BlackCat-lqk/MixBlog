@@ -70,8 +70,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import ePub, { Book, Rendition } from 'epubjs'
-import type { Location } from 'epubjs'
+import type { Book, Rendition, Location } from 'epubjs'
+import { dynamicImportEpub } from '@/utils/dynamicImport'
 
 // 类型定义
 interface EpubTheme {
@@ -109,6 +109,9 @@ const currentPage = ref(0)
 const totalPages = ref(0)
 const fontSize = ref('1')
 const theme = ref<'light' | 'dark'>('light')
+
+let ePub: typeof import('epubjs').default
+
 // 初始化阅读器
 const initReader = async () => {
   if (!viewerRef.value || !props.url) return
@@ -120,6 +123,10 @@ const initReader = async () => {
   }
 
   try {
+    // 动态导入 epubjs
+    const epubModule = await dynamicImportEpub()
+    ePub = epubModule.default
+
     error.value = null
 
     // 验证URL是否可以访问
@@ -199,19 +206,22 @@ const initReader = async () => {
       //@ts-ignore
       rendition.value.on('locationChanged', (location: Location) => {
         updateLocation(location)
+        //@ts-ignore
+        emit('locationChange', location)
       })
 
-      emit('ready')
-    }
-
-    // 确保加载状态最终会被关闭
-    setTimeout(() => {
-      if (loading.value) {
+      //@ts-ignore
+      rendition.value.on('renderer:ready', () => {
         emit('ready')
-      }
-    }, 1000)
+      })
+
+      //@ts-ignore
+      rendition.value.on('renderer:loaderror', (err: Error) => {
+        handleError(err)
+      })
+    }
   } catch (err) {
-    handleError(err)
+    handleError(err as Error)
   }
 }
 

@@ -172,16 +172,6 @@ const newFileImgageList = reactive([
     status: 'finished',
   },
 ])
-// // 自定义上传函数（不实际上传）
-// const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
-//   selectedFiles.value.push(file);
-//   createForm.tempFile = selectedFiles.value;
-//   console.log(createForm.tempFile);
-// }
-// // 上传完成后的回调（手动设置 url）
-// const createUploadFinish = () => {
-//   message.success('文件已选择')
-// }
 // 取消新增
 const cancleCreate = () => {
   // 清空表单

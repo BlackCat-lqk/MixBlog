@@ -174,7 +174,7 @@ const VueOfficeExcel = defineAsyncComponent(() => import('@vue-office/excel'))
 const VueOfficePdf = defineAsyncComponent(() => import('@vue-office/pdf'))
 import NovelReader from '@/components/NovelReader.vue'
 import BookReader from '@/components/BookReader.vue'
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 const showOnlyOffice = ref(false)
 const showTxtReader = ref(false)
 const message = useMessage()
@@ -228,7 +228,7 @@ const changeBg = {
 } as Record<string, string>
 
 // 搜索过滤文件
-const handleChangeSearch = _.debounce(async (value: string) => {
+const handleChangeSearch = debounce(async (value: string) => {
   bgKey.value = '-1'
   if (value) {
     const params = {
@@ -270,7 +270,7 @@ const resetState = () => {
 }
 
 // 下载文件
-const downloadFile = _.debounce((data: BookDocData) => {
+const downloadFile = debounce((data: BookDocData) => {
   if (userInfoStore.data.user.isLogin) {
     const link = document.createElement('a')
     link.href = data.path
