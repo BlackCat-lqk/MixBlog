@@ -15,7 +15,7 @@
             </div>
             <div class="article-header-info-box">
               <div class="article-header-info">
-                <n-tag :bordered="false">{{ props.data.category }}</n-tag>
+                <n-tag :bordered="false" type="success">{{ props.data.category }}</n-tag>
                 <n-tag
                   v-for="(tag, idx) in props.data.tags"
                   :key="idx"
@@ -24,7 +24,7 @@
                   :bordered="false"
                   >{{ tag }}</n-tag
                 >
-                <p>{{ _formatTime(props.data.updatedAt).date }}</p>
+                <p>{{ _formatTime(props.data.createdAt).date }}</p>
               </div>
               <div class="article-header-data-info">
                 <div style="cursor: pointer">
@@ -54,7 +54,7 @@
           </div>
           <div class="article-content">
             <div class="article-content-inner">
-              <quill-view :content="props.data.content"></quill-view>
+              <quill-view :content="articleContent"></quill-view>
             </div>
           </div>
           <div :class="showComment ? 'article-comment-area' : 'article-comment-hide'">
@@ -86,7 +86,9 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { addArticleCommentApi, likeArticleApi, viewArticleApi } from '@/http/blogArticle'
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
-import _ from 'lodash'
+import debounce from 'lodash/debounce';
+import { getAllBlogArticleApi } from '@/http/blogArticle'
+import type { IarticleDetailType as articleDetailType, IComment as Comment } from '@/tsInterface'
 const QuillView = defineAsyncComponent(() => import('@/components/QuillView.vue'))
 const CommentsChat = defineAsyncComponent(() => import('@/components/CommentsChat.vue'))
 
@@ -97,6 +99,7 @@ const userInfoStore = useUserInfoStore()
 const activeDrawer = ref(false)
 const emits = defineEmits(['update:showModal'])
 const showComment = ref(false)
+const articleContent = ref('')
 
 const props = defineProps({
   data: {
@@ -114,44 +117,11 @@ const state = reactive({
   views: 0,
   comments: 0,
 })
-
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-
-interface articleDetailType {
-  _id: string
-  title: string
-  content: string
-  intro: string
-  category: string
-  updatedAt: string
-  tags: string[]
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
-
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
-
 // 评论数据
 const comments = ref<Comment[]>([])
 
 // 处理提交评论事件
-const handleSubmitComment = _.debounce(async (data: { content: string; parentId?: string }) => {
+const handleSubmitComment = debounce(async (data: { content: string; parentId?: string }) => {
   // 调用 API 提交评论
   const params = {
     articleId: props.data._id,
@@ -185,7 +155,7 @@ const handleSubmitComment = _.debounce(async (data: { content: string; parentId?
   }
 }, 300)
 // 处理点赞事件
-const likeArticle = _.debounce(async () => {
+const likeArticle = debounce(async () => {
   const params = {
     articleId: props.data._id,
     userId: userInfoStore.data.user._id,
@@ -194,7 +164,6 @@ const likeArticle = _.debounce(async () => {
   }
   const result = await likeArticleApi(params)
   const res = result.data
-  console.log(res)
   if (res.code === 200) {
     if (res.type == 'like') {
     } else {
@@ -243,14 +212,26 @@ watch(
   },
 )
 
+const getArticleDetailSignal = async () => {
+  const response = await getAllBlogArticleApi(props.data._id)
+  const res = response.data
+  const resDetail = res.data.list[0]
+  if (res.code === 200) {
+    comments.value = resDetail.comments
+    state.comments = resDetail.comments.length
+    state.likes = resDetail.likes.length
+    state.views = resDetail.views.length
+    articleContent.value = resDetail.content
+  } else {
+    message.error(res.message)
+  }
+}
+
 watch(
   () => activeDrawer.value,
   (newVal) => {
     if (newVal) {
-      comments.value = props.data.comments
-      state.comments = props.data.comments.length
-      state.likes = props.data.likes.length
-      state.views = props.data.views.length
+      getArticleDetailSignal()
       viewArticle()
       emits('update:showModal', false)
     }

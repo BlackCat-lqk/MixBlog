@@ -12,7 +12,7 @@
         :key="index"
         :style="{ width: props.itemWidth + 'px', height: props.itemHeight + 'px' }"
       >
-        <n-image :src="item" class="marquee-image" alt="marquee image" lazy="true" />
+        <n-image :src="item" class="marquee-image" alt="marquee image" :lazy="true" />
       </div>
     </div>
   </div>
@@ -20,24 +20,13 @@
 
 <script lang="ts" setup>
 import type { CSSProperties } from 'vue'
-
-type Direction = 'left' | 'right'
-
-interface MarqueeProps {
-  items: string[]
-  direction?: Direction
-  speed?: number // px/s
-  itemWidth?: number
-  itemHeight?: number
-}
-
+import type { IMarqueeProps as MarqueeProps } from '@/tsInterface'
 const props = withDefaults(defineProps<MarqueeProps>(), {
   direction: 'left',
   speed: 30,
   itemWidth: 384,
   itemHeight: 216,
 })
-
 const isPlaying = ref(true)
 const containerRef = ref<HTMLElement | null>(null)
 const contentRef = ref<HTMLElement | null>(null)

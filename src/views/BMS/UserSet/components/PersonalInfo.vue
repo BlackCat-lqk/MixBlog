@@ -121,7 +121,7 @@ import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { validateEmail, validateUsername } from '@/utils/validate'
 import { updateUsers } from '@/http/user'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import router from '@/router'
 
 const editFormRef = ref<FormInst | null>(null)
@@ -165,18 +165,22 @@ const rules = {
 }
 // avatar上传成功后将头像地址替换掉
 const avatarUploadFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.success(JSON.parse(res).message)
-  const newAvatar = JSON.parse(res).url
-  userInfoStore.setUserAvatar(newAvatar)
-  return file
+  if (event != undefined) {
+    const res = (event.target as XMLHttpRequest).response
+    message.success(JSON.parse(res).message)
+    const newAvatar = JSON.parse(res).url
+    userInfoStore.setUserAvatar(newAvatar)
+    return file
+  }
 }
 
 // 上传失败
 const avatarUploadError = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.error(JSON.parse(res).message)
-  return file
+  if (event != undefined) {
+    const res = (event.target as XMLHttpRequest).response
+    message.error(JSON.parse(res).message)
+    return file
+  }
 }
 // 选择性别
 const handleChangeSex = (e: Event) => {
@@ -188,7 +192,7 @@ const updateInfo = () => {
 }
 // 初始化表单
 const initEditForm = () => {
-  Object.assign(editFormValue, _.cloneDeep(userInfoStore.data.user))
+  Object.assign(editFormValue, cloneDeep(userInfoStore.data.user))
   defaultFileList.value = [
     {
       id: 'default',

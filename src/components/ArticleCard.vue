@@ -15,7 +15,7 @@
         </div>
         <div class="article-card-header-title">
           <p class="p-h3">{{ item.title }}</p>
-          <p>{{ _formatTime(item.updatedAt).date }}</p>
+          <p>{{ _formatTime(item.createdAt).date }}</p>
         </div>
       </div>
       <div class="article-card-content">
@@ -26,7 +26,7 @@
       <div class="article-card-footer">
         <span>
           分类:
-          <n-tag :bordered="false">{{ item.category }}</n-tag>
+          <n-tag :bordered="false" type="success">{{ item.category }}</n-tag>
           &nbsp;标签:
           <n-tag
             style="margin-right: 5px"
@@ -61,45 +61,14 @@
 <script setup lang="ts">
 import { _formatTime } from '@/utils/publickFun'
 import ArticleDetail from '@/views/Article/ArticleDetail.vue'
+import type { IArticleCardArticleDetailType as articleDetailType } from '@/tsInterface'
 const showActiveDrawer = ref(false)
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
-
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-
-interface articleDetailType {
-  _id: string
-  title: string
-  content: string
-  intro: string
-  category: string
-  updatedAt: string
-  tags: string[]
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
 let articleDetail: articleDetailType = reactive({
   _id: '',
   title: '',
-  content: '',
   intro: '',
   category: '',
-  updatedAt: '',
+  createdAt: '',
   tags: [],
   comments: [],
   likes: [],
@@ -119,16 +88,17 @@ const articleClick = (data: articleDetailType) => {
 <style lang="scss" scoped>
 .article-cards-box {
   display: grid;
-  gap: 32px 40px;
+  gap: 54px 40px;
   justify-content: center;
   .article-card-box {
     border-radius: 16px;
     padding: 24px;
-    margin-top: 28px;
+    margin-top: 10px;
     cursor: pointer;
     transition: all 0.2s;
     background-color: var(--box-bg-color1);
-    box-shadow: 0 0 10px 0 var(--border-color);
+    box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+    padding-bottom: 16px;
     .article-card-header {
       margin-top: -53px;
       display: flex;
@@ -137,8 +107,11 @@ const articleClick = (data: articleDetailType) => {
       .article-card-header-img {
         width: 160px;
         height: 120px;
+        min-width: 160px;
         border-radius: 5px;
         overflow: hidden;
+        backdrop-filter: blur(5px);
+        padding: 5px;
         img {
           width: 100%;
           height: 100%;
@@ -180,7 +153,8 @@ const articleClick = (data: articleDetailType) => {
     .article-card-footer {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 16px;
       span {
         font-size: 14px;
         line-height: 1.54;
@@ -190,6 +164,7 @@ const articleClick = (data: articleDetailType) => {
         display: flex;
         align-items: center;
         gap: 15px;
+        justify-content: flex-end;
         span {
           display: flex;
           align-items: center;

@@ -63,39 +63,6 @@ npm run test:e2e -- --debug
 npm run lint
 ```
 
-// 配置环境
+// 配置环境[configuration environment]
 node.js: 24.0.2
 npm：11.4.0
-
-安装 postcss 插件实现 px 自动转 rem
-npm install postcss-pxtorem autoprefixer --save-dev
-
-移动端使用：vant组件库
-使用了动态路由来加载H5
-
-使用了mirage.js、faker-js/faker来模拟数据
-
-使用了@vueup/vue-quill组件进行富文本编辑
-
-使用 npx node-modules-inspector命令生成依赖可视化
-
-1.1.0 预计完善功能：
-
-1. 登录页增加是否记住密码选项（完成）
-2. 支持markdown阅读（完成）
-3. 集成书籍、小说、漫画、散文等（完成）
-4. 支持点赞、查看统计、评论功能（完成）
-5. 增加找回密码功能（完成）
-6. h5、小程序开发（延迟下一版本）
-7. 国际化（持续集成中...）
-8. 站点集成导航（完成）
-9. 个人中心修改密码（完成）
-10. 立绘海报（完成）
-11. 集成deepseek AI模型（完成）
-12. 其它问题修复与优化(图片格式转为webp，所有接口要做防抖，骨架加载，提高用户体验)（持续优化中...）
-
-1.1.2版本：
-
-1. 性能优化（提升加载速度和提高用户体验）
-2. 修复已知问题
-3. 添加反馈入口

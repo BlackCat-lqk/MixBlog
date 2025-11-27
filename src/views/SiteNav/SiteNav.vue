@@ -7,13 +7,16 @@
       <n-button strong secondary type="primary" @click="showCreateInput">
         <template #icon>
           <n-icon>
-            <img v-if="!showCreateUrl" src="@/assets/images/add.svg" alt="添加" />
-            <img v-else src="@/assets/images/Subtract.svg" alt="Subtract" />
+            <img width="20px" v-if="!showCreateUrl" src="@/assets/images/add.svg" alt="添加" />
+            <img width="20px" v-else src="@/assets/images/Subtract.svg" alt="Subtract" />
           </n-icon>
         </template>
         添加站点</n-button
       >
-      <div v-show="showCreateUrl">
+      <div
+        v-show="showCreateUrl"
+        v-loading="{ show: buttonLoading, showText: true, text: '创建中...', width: 40 }"
+      >
         <n-form ref="formRef" :model="formValue" :rules="rules">
           <n-form-item label="分类名称" path="secondaryCategory">
             <n-input
@@ -37,7 +40,7 @@
           </n-form-item>
         </n-form>
       </div>
-      <n-collapse accordion arrow-placement="right" @on-item-header-click="handleUpdateExpanded">
+      <n-collapse accordion arrow-placement="right">
         <n-collapse-item name="own">
           <template #header>
             <span>我的</span>
@@ -47,6 +50,11 @@
               hoverable
               v-for="(item, idx) in state.userSiteData"
               :key="idx"
+              :style="
+                themeStore.currentTheme == 'dark'
+                  ? 'background: linear-gradient(to right, #004e92, #191d21)'
+                  : 'background: linear-gradient(to right, #2980b9, #ffffff)'
+              "
               @click="getSiteCategoryData(item, 'user')"
             >
               {{ item.secondaryCategory }}
@@ -64,6 +72,11 @@
               v-for="(secondaryItem, idx) in item.primaryItem"
               :key="idx"
               hoverable
+              :style="
+                themeStore.currentTheme == 'dark'
+                  ? 'background: linear-gradient(to right, #004e92, #191d21)'
+                  : 'background: linear-gradient(to right, #2980b9, #ffffff)'
+              "
               @click="getSiteCategoryData(secondaryItem, 'blog')"
               >{{ secondaryItem.secondaryCategory }}</n-card
             >
@@ -72,20 +85,6 @@
       </n-collapse>
     </div>
     <div class="site-content-main-box">
-      <!-- <div class="site-content-search-box">
-        <n-input
-          clearable
-          round
-          size="large"
-          v-model:value="searchKeyWord"
-          placeholder="输入关键字搜索..."
-          @input="handleSearch"
-        >
-          <template #suffix>
-            <img src="@/assets/images/searchIconfont.svg" alt="search nav" />
-          </template>
-        </n-input>
-      </div> -->
       <div class="site-card-box">
         <div v-for="(f, idxf) in state.siteData" :key="idxf" class="site-content-main">
           <h3>{{ f.secondaryCategory }}</h3>
@@ -96,6 +95,7 @@
               :key="idx"
               @mouseenter="hoverItem = idxf + '-' + idx"
               @mouseleave="hoverItem = ''"
+              :style="cardItemStyle(idx)"
             >
               <a @click.prevent="handleLinkClick(item.link)">
                 <h3>
@@ -139,12 +139,20 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { createSiteApi, getSiteApi, delSiteNavApi } from '@/http/siteNav'
 import { useUserInfoStore } from '@/stores/userInfo'
-import _ from 'lodash'
+import { useThemeStore } from '@/stores/themeStore'
+import type {
+  INavFormValue as FormValue,
+  INavPrimaryItem as primaryItem,
+  INavBlogSiteData as BlogSiteData,
+  INavSiteNav as siteNav,
+} from '@/tsInterface'
+import debounce from 'lodash/debounce'
 
+const buttonLoading = ref(false)
+const themeStore = useThemeStore()
 const notification = useNotification()
 const router = useRouter()
 const collapseName = ref('')
-// const searchKeyWord = ref('')
 const hoverItem = ref('')
 const showDelBtn = ref(false)
 const userInfoStore = useUserInfoStore()
@@ -156,17 +164,21 @@ const allSiteNavData = ref({
   user: [],
   blog: [],
 })
-
-interface FormValue {
-  type: string
-  primaryCategory: string
-  secondaryCategory: string
-  link: string
-  siteName: string
-  desc: string
-  icon: string
+const cardItemBgDark = [
+  'background: linear-gradient(to right, #000428, #004e92)',
+  'background: linear-gradient(to right, #000428, #004e92)',
+]
+const cardItemBgLight = [
+  'background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4)',
+  'background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4)',
+]
+const cardItemStyle = (idx: number) => {
+  const i = idx % 2
+  if (themeStore.currentTheme == 'dark') {
+    return cardItemBgDark[i]
+  }
+  return cardItemBgLight[i]
 }
-
 const formValue: FormValue = reactive({
   type: 'user',
   primaryCategory: 'mysite',
@@ -176,25 +188,6 @@ const formValue: FormValue = reactive({
   desc: '',
   icon: '',
 })
-
-interface SiteData {
-  siteName: string
-  link: string
-  desc: string
-  icon: string
-  _id: string
-}
-
-interface primaryItem {
-  secondaryCategory: string
-  data: SiteData[]
-}
-
-interface BlogSiteData {
-  primaryCategory: string
-  primaryItem: primaryItem[]
-}
-
 const state = reactive({
   userSiteData: [] as primaryItem[],
   blogSiteData: [] as BlogSiteData[],
@@ -206,12 +199,6 @@ const rules = {
   siteName: [{ required: true, message: '请输入站点名称', trigger: 'blur' }],
   link: [{ required: true, message: '请输入网址', trigger: 'blur' }],
 }
-
-// 展开触发
-const handleUpdateExpanded = (expandedNames: Array<string | number> | string | number | null) => {
-  console.log('handleUpdateExpanded', expandedNames)
-}
-
 const showCreateInput = () => {
   if (userInfoStore.data.user.isLogin) {
     showCreateUrl.value = !showCreateUrl.value
@@ -229,10 +216,11 @@ const webIconImageError = (event: Event) => {
 }
 
 // 创建站点
-const handleCreateSite = _.debounce((e: MouseEvent) => {
+const handleCreateSite = debounce((e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
+      buttonLoading.value = true
       const faviconResult = await faviconFetching(formValue.link)
       if (faviconResult) formValue.icon = faviconLink.value
       const result = await createSiteApi(formValue)
@@ -250,6 +238,7 @@ const handleCreateSite = _.debounce((e: MouseEvent) => {
       } else {
         message.error('站点创建失败')
       }
+      buttonLoading.value = false
     } else {
       message.error('提交失败，请检查输入信息')
     }
@@ -315,20 +304,6 @@ const getSiteCategoryData = (data: primaryItem, type: string) => {
   }
   state.siteData = [data]
 }
-
-// 搜索
-// const handleSearch = (val: string) => {
-//   state.siteData = state.siteData.filter((item: siteNav) => {
-//     item.primaryItem.some((item: primaryItem) => {
-//       return item.siteName.includes(val)
-//     })
-//   })
-// }
-
-interface siteNav {
-  primaryCategory: string
-  primaryItem: []
-}
 // 获取站点数据
 const getSiteNavData = async () => {
   // 是否已登录，登录获取id返回数据
@@ -387,6 +362,10 @@ onMounted(() => {
     border-radius: 8px;
     height: 88vh;
     overflow: hidden;
+    img {
+      width: 20px;
+      height: 20px;
+    }
     &:hover {
       overflow-y: auto;
       @include g.scrollbarCustom;
@@ -398,6 +377,10 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      :deep(.n-card) {
+        cursor: pointer;
+        border: none;
+      }
     }
   }
   .site-content-main-box {
@@ -407,7 +390,16 @@ onMounted(() => {
     gap: 12px;
     border-radius: 8px;
     background-color: var(--box-bg-color1);
-    padding: 10px 15px;
+    // padding: 10px 15px;
+    width: 1480px;
+    &::after {
+      content: '';
+      width: 100%;
+      height: 2%;
+      background: var(--box-bg-color10);
+      border-radius: 0 0 8px 8px;
+      opacity: 0.5;
+    }
     .site-content-search-box {
       display: flex;
       justify-content: center;
@@ -424,8 +416,9 @@ onMounted(() => {
       }
     }
     .site-card-box {
-      height: 80vh;
+      height: 86vh;
       overflow: hidden;
+      padding: 10px 15px;
       &:hover {
         overflow-y: auto;
         @include g.scrollbarCustom;
@@ -448,7 +441,7 @@ onMounted(() => {
           gap: 30px;
           .card-item {
             cursor: pointer;
-            min-width: 168px;
+            width: 220px;
             max-width: 220px;
             height: 78px;
             padding: 18px;
@@ -491,8 +484,9 @@ onMounted(() => {
                 padding: 2px;
                 width: 30px;
                 height: 30px;
-                border-radius: 100%;
-                border: 1px solid #f4f5f6;
+                background: var(--box-bg-color7);
+                backdrop-filter: blur(30px);
+                border-radius: 4px;
                 @include g.flexCenter;
                 img {
                   width: 90%;

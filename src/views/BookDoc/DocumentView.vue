@@ -4,14 +4,17 @@
   </header>
   <div class="document-box">
     <div class="search-box">
-      <h3>{{ $t('bookDoc.title') }}</h3>
-      <n-input
-        clearable
-        round
-        :placeholder="$t('bookDoc.inputTip')"
-        v-model:value="searchKeyword"
-        @input="handleChangeSearch"
-      />
+      <GradientFlow class-name="search-box">
+        <template #content>
+          <n-input
+            clearable
+            round
+            :placeholder="$t('bookDoc.inputTip')"
+            v-model:value="searchKeyword"
+            @input="handleChangeSearch"
+          />
+        </template>
+      </GradientFlow>
     </div>
     <div class="content-box">
       <div class="classify-box">
@@ -35,7 +38,11 @@
           <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
             <n-card
               hoverable
-              :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 50%; background-position: center center;`"
+              :style="
+                item.docCover
+                  ? `background:url('/${item.docCover}') no-repeat center;background-size: contain;`
+                  : `background:${changeBg[item.suffix]} no-repeat center;background-size: contain;`
+              "
             >
               <n-tooltip trigger="hover">
                 <template #trigger>
@@ -80,33 +87,68 @@
               alt="close"
             />
           </div>
+          <div class="zoom-controls" v-if="!((showTxtReader && !showOnlyOffice) || (showOnlyOffice && !showTxtReader))">
+            <button @click="zoomOut" class="zoom-button" :disabled="loading">-</button>
+            <span class="zoom-level">{{ Math.round(scale * 100) }}%</span>
+            <button @click="zoomIn" class="zoom-button" :disabled="loading">+</button>
+          </div>
         </template>
+        <div v-if="loading && !showOnlyOffice && !showTxtReader" class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>正在加载文件...</p>
+          <p class="debug-info">文件路径: {{ previewData.path }}</p>
+        </div>
         <vue-office-pdf
           v-if="previewData.suffix === 'pdf' || previewData.suffix === 'PDF'"
           :src="previewData.path"
           @error="handleError"
-          style="height: 100% !important"
+          @rendered="onPdfRendered"
+          :style="[
+            {
+              transform: `scale(${scale})`,
+              height: '100% !important',
+            },
+          ]"
           :options="pdfOptions"
         />
         <vue-office-docx
           v-else-if="previewData.suffix === 'docx' || previewData.suffix === 'DOCX'"
           :src="previewData.path"
           @error="handleError"
+          :style="[
+            {
+              transform: `scale(${scale})`,
+              height: '100% !important',
+            },
+          ]"
+          @rendered="onPdfRendered"
           :options="pdfOptions"
         />
         <vue-office-excel
           v-else-if="previewData.suffix === 'xlsx' || previewData.suffix === 'XLSX'"
           :src="previewData.path"
           @error="handleError"
+          :style="[
+            {
+              transform: `scale(${scale})`,
+              height: '100% !important',
+            },
+          ]"
+          @rendered="onPdfRendered"
           :options="pdfOptions"
         />
+        <div v-if="!loading && showOnlyOffice && showTxtReader" class="preview-error-tip">预览出错啦！请下载文档查看吧</div>
         <novel-reader
-          v-else-if="previewData.suffix === 'txt' || previewData.suffix === 'TXT'"
+          v-if="showTxtReader && !showOnlyOffice"
           :txt-url="previewData.path"
           :book-id="previewData._id"
         >
         </novel-reader>
-        <div v-else class="preview-error-tip">预览出错啦！请下载文档查看吧</div>
+        <book-reader
+          v-show="showOnlyOffice && !showTxtReader"
+          :url="previewData.path"
+        ></book-reader>
+
       </n-card>
     </n-modal>
   </div>
@@ -119,9 +161,11 @@
 <script lang="ts" setup>
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
-import { getBookDocApi } from '@/http/uploadFile'
-import { useMessage } from 'naive-ui'
+import { getBookDocApi, getPrivateBookDocApi } from '@/http/uploadFile'
 import { useUserInfoStore } from '@/stores/userInfo'
+import { useMessage } from 'naive-ui'
+import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
+import type { IBookDocData as BookDocData } from '@/tsInterface'
 const userInfoStore = useUserInfoStore()
 const router = useRouter()
 // 动态导入文档处理组件
@@ -129,9 +173,11 @@ const VueOfficeDocx = defineAsyncComponent(() => import('@vue-office/docx'))
 const VueOfficeExcel = defineAsyncComponent(() => import('@vue-office/excel'))
 const VueOfficePdf = defineAsyncComponent(() => import('@vue-office/pdf'))
 import NovelReader from '@/components/NovelReader.vue'
-import _ from 'lodash'
+import BookReader from '@/components/BookReader.vue'
+import debounce from 'lodash/debounce'
+const showOnlyOffice = ref(false)
+const showTxtReader = ref(false)
 const message = useMessage()
-
 const bgKey = ref('all')
 const searchKeyword = ref('')
 const pdfOptions = {
@@ -143,20 +189,11 @@ const pdfOptions = {
 }
 
 const documentBox = ref<string | HTMLElement>('')
-
-const handleError = (err: unknown) => {
-  console.error('加载失败:', err)
-}
-
-interface BookDocData {
-  _id: string
-  filename: string
-  category: string
-  path: string
-  size: number
-  updatedAt: string
-  suffix: string
-  description: string
+const handleError = (error: unknown) => {
+  console.error('PDF加载错误:', error)
+  loading.value = false
+  loadError.value = error instanceof Error ? error.message : String(error)
+  console.error('加载失败:', error)
 }
 const previewData = ref({
   _id: '',
@@ -167,6 +204,10 @@ const previewData = ref({
 const bookDocData = ref([] as BookDocData[])
 const bookDocAllData = ref([] as BookDocData[])
 const bookCategories = ref({})
+// 缩放相关状态
+const scale = ref(1)
+const loading = ref(true)
+const loadError = ref<string | null>(null)
 
 const showPreview = ref(false)
 
@@ -182,10 +223,12 @@ const changeBg = {
   txt: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
   XLSX: `url("${new URL('@/assets/images/file/excel.svg', import.meta.url).href}")`,
   TXT: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
+  epub: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
+  EPUB: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
 } as Record<string, string>
 
 // 搜索过滤文件
-const handleChangeSearch = _.debounce(async (value: string) => {
+const handleChangeSearch = debounce(async (value: string) => {
   bgKey.value = '-1'
   if (value) {
     const params = {
@@ -205,8 +248,29 @@ const handleChangeSearch = _.debounce(async (value: string) => {
   }
 }, 300)
 
+// 放大
+const zoomIn = () => {
+  scale.value = Math.min(scale.value + 0.1, 3)
+}
+
+// 缩小
+const zoomOut = () => {
+  scale.value = Math.max(scale.value - 0.1, 0.5)
+}
+
+// PDF渲染完成回调
+const onPdfRendered = () => {
+  loading.value = false
+}
+
+// 重置状态
+const resetState = () => {
+  loading.value = true
+  loadError.value = null
+}
+
 // 下载文件
-const downloadFile = _.debounce((data: BookDocData) => {
+const downloadFile = debounce((data: BookDocData) => {
   if (userInfoStore.data.user.isLogin) {
     const link = document.createElement('a')
     link.href = data.path
@@ -224,13 +288,19 @@ const filterFiles = (key: string) => {
   if (key === 'all') return (bookDocData.value = bookDocAllData.value)
   bookDocData.value = bookDocAllData.value.filter((item) => item.category == key)
 }
+
 // 获取预览信息
 const getPreviewDetail = (data: BookDocData) => {
+  // 初始化加载状态
+  resetState()
   showPreview.value = true
   previewData.value.path = data.path
   previewData.value.filename = data.filename
   previewData.value.suffix = data.suffix
   previewData.value._id = data._id
+  const suffix = ['FB2', 'fb2', 'CBZ', 'cbz', 'KF8', 'kf8', 'epub', 'EPUB']
+  showOnlyOffice.value = suffix.includes(data.suffix)
+  showTxtReader.value = data.suffix === 'txt' || data.suffix === 'TXT'
 }
 // 获取文件列表
 const getBookDocDataList = async () => {
@@ -240,6 +310,16 @@ const getBookDocDataList = async () => {
     bookDocData.value = res.data
     bookDocAllData.value = res.data
     bookCategories.value = res.categories
+    // 是否已登录且是管理员？
+    if (userInfoStore.data.user.isLogin && userInfoStore.data.user.role == 'admin') {
+      const privates = await getPrivateBookDocApi({})
+      const privateRes = privates.data
+      if (privateRes.code === 200) {
+        bookDocData.value = res.data.concat(privateRes.data)
+        bookDocAllData.value = res.data.concat(privateRes.data)
+        Object.assign(bookCategories.value, privateRes.categories)
+      }
+    }
   } else {
     message.error(res.message)
   }
@@ -265,6 +345,9 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: 30px;
     h3 {
       color: var(--text-color1);
       line-height: 1.34;
@@ -278,7 +361,7 @@ onMounted(() => {
     gap: 24px;
     width: 100%;
     .classify-box {
-      width: 280px;
+      width: 200px;
       max-height: 70vh;
       height: 70vh;
       border-radius: 8px;
@@ -286,25 +369,33 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 10px 20px;
+      padding: 15px 20px;
       overflow: auto;
+      box-shadow:
+        rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+        rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
       @include g.scrollbarCustom;
-      .classify-item-box {
+      .classify-item-box,
+      .classify-admin-box {
         display: flex;
         align-items: center;
-        padding: 30px 10px;
+        padding: 20px 10px;
         background-color: var(--box-bg-color1);
-        border-radius: 8px;
+        border-radius: 4px;
         border: 1px solid var(--border-color);
         cursor: pointer;
         &:hover {
           background-color: var(--box-bg-color5);
         }
         span {
-          font-size: 18px;
+          font-size: 14px;
           font-weight: 500;
           color: var(--text-color);
         }
+      }
+      .classify-admin-box {
+        background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);
+        background-color: transparent;
       }
       .active-classify-item {
         background-color: var(--box-bg-color5);
@@ -318,27 +409,43 @@ onMounted(() => {
       @include g.scrollbarCustom;
       background-color: var(--box-bg-color4);
       border-radius: 8px;
-      padding: 10px;
+      padding: 15px 20px;
       max-height: 70vh;
       height: 70vh;
+      box-shadow:
+        rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+        rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
       .n-empty {
         width: 100%;
         height: 100%;
         @include g.flexCenter;
       }
       > div {
-        width: 260px;
-        height: 200px;
+        width: 200px;
+        height: 280px;
       }
       :deep(.n-card) {
         border-radius: 5px;
+        box-shadow: var(--shadow-color);
+        transition: all 0.3s ease;
+        width: 200px;
+        height: 280px;
+        &:hover {
+          scale: 1.05;
+        }
         .n-card__content {
           border-radius: 5px;
           background-color: var(--box-bg-color7);
-          backdrop-filter: blur(2px);
+          width: 100%;
+          height: 62%;
+          position: absolute;
+          bottom: 0;
+          &:hover {
+            backdrop-filter: blur(10px);
+          }
         }
         h3 {
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 600;
           white-space: nowrap;
           overflow: hidden;
@@ -387,6 +494,40 @@ onMounted(() => {
     }
     .vue-office-pdf {
       height: 100% !important;
+    }
+  }
+  .loading-placeholder,
+  .error-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: #f8fafc;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #4f46e5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 }

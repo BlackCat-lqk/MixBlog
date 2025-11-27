@@ -17,7 +17,7 @@ import Quill from 'quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import 'highlight.js/styles/monokai-sublime.css'
 // 注册语法高亮模块
-Quill.register('modules/syntax', Syntax)
+Quill.register('modules/syntax', Syntax, true)
 
 const editorContent = ref('')
 const Options = {

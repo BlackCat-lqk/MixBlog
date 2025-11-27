@@ -10,6 +10,9 @@
   --box-bg-color5: #{vars.$color-box-light5};
   --box-bg-color6: #{vars.$color-box-light6};
   --box-bg-color7: #{vars.$color-box-light7};
+  --box-bg-color8: #{vars.$color-box-light8};
+  --box-bg-color9: #{vars.$color-box-light9};
+  --box-bg-color10: #{vars.$color-box-light10};
   --text-color: #{vars.$color-text-light};
   --text-color1: #{vars.$color-text-light1};
   --text-color2: #{vars.$color-text-light2};
@@ -17,4 +20,5 @@
   --sub-text-color: #{vars.$color-text-sub-light};
   --scrollbar-color: #{vars.$scrollbar-color-light};
   --border-color: #{vars.$color-border-light};
+  --shadow-color: #{vars.$color-shadow-light};
 }

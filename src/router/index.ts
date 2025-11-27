@@ -56,6 +56,16 @@ const router = createRouter({
       component: () => import('@/views/Chat/DeepSeekChat.vue'),
     },
     {
+      path: '/mixlab',
+      name: 'MixLab',
+      component: () => import('@/views/MixLab/MixLab.vue'),
+    },
+    {
+      path: '/hookslab',
+      name: 'HooksLab',
+      component: () => import('@/views/MixLab/HooksLab.vue'),
+    },
+    {
       path: '/unauthorized',
       name: 'Unauthorized',
       component: () => import('@/views/UnAuthorized.vue'),
@@ -64,6 +74,12 @@ const router = createRouter({
       path: '/bms/LogCenter',
       name: 'LogCenter',
       component: () => import('@/views/BMS/LogsCenter/LogView.vue'),
+      meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
+    },
+    {
+      path: '/bms/FeedBackCenter',
+      name: 'FeedBack',
+      component: () => import('@/views/BMS/FeedBack/FeedbackView.vue'),
       meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
     },
     {

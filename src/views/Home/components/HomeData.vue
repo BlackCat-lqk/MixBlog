@@ -55,7 +55,7 @@
       </div>
     </div>
     <div v-else class="home-data-banner">
-      <n-carousel autoplay show-arrow dot-type="line" interval="3000" aria-hidden="false">
+      <n-carousel autoplay show-arrow dot-type="line" :interval="3000" aria-hidden="false">
         <div v-for="(item, idx) in state.banners" :key="idx" class="carousel-box">
           <div class="mask-box"></div>
           <div class="banner-config-box">
@@ -88,18 +88,9 @@ import { ref, watch, onMounted, reactive } from 'vue'
 import { useScrollStore } from '@/stores/scrollStore'
 import { getAllBanners } from '@/http/banner'
 import { getVisitStatsApi } from '@/http/visit'
+import type { HomeDataBannerDataType as bannerDataType } from '@/tsInterface'
 const scrollStore = useScrollStore()
 const homeDataRef = ref()
-interface bannerDataType {
-  title: string
-  sub: string
-  introduction: string
-  mainBtnName: string
-  childBtnName: string
-  mainBtnUrl: string
-  childBtnUrl: string
-  cover: string
-}
 const state = reactive({
   banners: [] as bannerDataType[],
   totalCount: 0,

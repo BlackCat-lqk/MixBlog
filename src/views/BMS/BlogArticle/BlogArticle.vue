@@ -45,15 +45,15 @@
                     <p>{{ _formatTime(item.updatedAt).date }}</p>
                     <div>
                       <img src="@/assets/images/View.svg" alt="view" />
-                      <span>{{ item.likes }}</span>
+                      <span>{{ item.likes.length }}</span>
                     </div>
                     <div>
                       <img src="@/assets/images/Like.svg" alt="like" />
-                      <span>{{ item.views }}</span>
+                      <span>{{ item.views.length }}</span>
                     </div>
                     <div>
                       <img src="@/assets/images/CommentOutlined.svg" alt="comment" />
-                      <span>0</span>
+                      <span>{{ item.comments.length }}</span>
                     </div>
                   </div>
                 </div>
@@ -154,6 +154,24 @@ const headerData = reactive({
 })
 const classifyParamsName = ref('article')
 const isAddInput = ref(false)
+export interface Comment {
+  _id: string
+  userId: string
+  userName: string
+  avatar: string
+  content: string
+  parentId: string | null
+  createdAt: string
+  children?: Comment[]
+}
+
+export interface LikeView {
+  userId: string
+  userName: string
+  email: string
+  viewedAt: string
+  likedAt: string
+}
 interface ArticleItemType {
   _id: string
   cover: string
@@ -163,8 +181,9 @@ interface ArticleItemType {
   tags: [string]
   status: string
   updatedAt: string
-  likes: number
-  views: number
+  likes: LikeView[]
+  views: LikeView[]
+  comments: Comment[]
   isHovered1: boolean
   isHovered2: boolean
   isHovered3: boolean
@@ -322,7 +341,7 @@ const closeAddTagInput = () => {
 
 // 获取文章列表数据
 const getArticleData = async () => {
-  const response = await getAllBlogArticleApi()
+  const response = await getAllBlogArticleApi('')
   const res = response.data
   if (res.code === 200) {
     state.articleData = res.data.list

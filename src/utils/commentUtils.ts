@@ -92,3 +92,9 @@ export function formatTime(date: string): string {
     }
   }
 }
+// 生成随机数
+export function randomStr(len = 10) {
+    Array.from({length: len}, (_, i) =>
+    Math.random() < 0.5 ? 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)] : Date.now().toString()[i % Date.now().toString().length]
+    ).join('')
+}

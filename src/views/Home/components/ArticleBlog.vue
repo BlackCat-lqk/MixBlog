@@ -14,7 +14,9 @@
 <script lang="ts" setup>
 import ArticleCard from '@/components/ArticleCard.vue'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
+import { getArticleCachedData } from '@/utils/apiCache'
 import { useMessage } from 'naive-ui'
+import type { HomeArticleBlogType as articelDataType } from '@/tsInterface'
 const message = useMessage()
 
 const router = useRouter()
@@ -25,12 +27,9 @@ const articleData = reactive({
 const moreArticle = () => {
   router.push('/articles')
 }
-interface articelDataType {
-  status: string
-}
 // 获取所有文章数据
 const getAllBlogArticleData = async () => {
-  const response = await getAllBlogArticleApi()
+  const response = await getArticleCachedData('', getAllBlogArticleApi)
   const res = response.data
   if (res.code === 200) {
     articleData.data = res.data.list

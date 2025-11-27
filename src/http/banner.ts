@@ -43,7 +43,7 @@ export function deleteBanner(params: { ids: unknown }) {
  * @returns {Promise}
  */
 export function updateBanner(
-  _id: String,
+  _id: string,
   data: Partial<{
     title: string
     sub: string

@@ -53,7 +53,7 @@ export default {
     navigation3: 'Photo Gallery',
     navigation4: 'Note',
     navigation5: 'About',
-    btnText: 'Admin Panel',
+    btnText: 'Admin',
     text: 'Login',
     person: {
       menu1: 'Personal Settings',
@@ -120,7 +120,7 @@ export default {
   },
   footer: {
     title: 'technical support',
-    content: 'Mix Blog 1.1.0 · Made by LQK',
+    content: 'Mix Blog 1.1.5 · Made by LQK',
   },
   about: {
     tagsList:

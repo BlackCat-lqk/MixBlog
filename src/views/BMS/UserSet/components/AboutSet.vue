@@ -177,11 +177,6 @@ const adiuoList = reactive([
     status: 'finished',
   },
 ])
-
-// 自定义上传函数（不实际上传）
-// const createCustomUpload = (file: UploadFileInfo, idx: number) => {
-//   console.log(formValue.modules[idx])
-// }
 const addItem = () => {
   formValue.modules.push({ title: '', content: '', image: [], tempFile: [] })
 }
@@ -195,7 +190,6 @@ const handleValidateClick = () => {
       const response = await upsertAboutApi(formValue)
       const res = response.data
       if (res.code === 200) {
-        console.log(res)
         message.success(res.message)
       } else {
         message.error(res.message)
@@ -211,18 +205,22 @@ const previewTags = computed(() => {
 
 // 背景图上传成功
 const aboutBgUploadFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.success(JSON.parse(res).message)
-  const newAvatar = JSON.parse(res).url
-  formValue.cover = newAvatar
-  return file
+  if(event != undefined){
+    const res = (event.target as XMLHttpRequest).response
+    message.success(JSON.parse(res).message)
+    const newAvatar = JSON.parse(res).url
+    formValue.cover = newAvatar
+    return file
+  }
 }
 
 // 背景图上传失败
 const aboutBgUploadError = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.error(JSON.parse(res).message)
-  return file
+  if(event != undefined){
+    const res = (event.target as XMLHttpRequest).response
+    message.error(JSON.parse(res).message)
+    return file
+  }
 }
 
 // 获取About页面的配置

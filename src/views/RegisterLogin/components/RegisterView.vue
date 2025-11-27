@@ -82,6 +82,7 @@ import {
 } from '@/utils/validate.ts'
 import { _debounce } from '@/utils/publickFun'
 import { useUserInfoStore } from '@/stores/userInfo'
+import type { IRegisterFormType as formType } from '@/tsInterface'
 const { t } = useI18n()
 const message = useMessage()
 const router = useRouter()
@@ -90,12 +91,6 @@ const formRef = ref<FormInst | null>(null)
 const isEmailValid = ref(false)
 const countdown = ref<number>(0) // 倒计时秒数
 const isCounting = computed(() => countdown.value > 0) // 是否正在倒计时
-interface formType {
-  userName: string
-  email: string
-  password: string
-  code: string
-}
 const formValue: formType = reactive({
   userName: '',
   email: '',

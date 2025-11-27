@@ -1,22 +1,37 @@
 <template>
   <div class="footer-main-box">
-    <span>{{ $t('footer.title') }}</span>
-    <n-divider />
-    <div class="technical-support" v-for="item in 1" :key="item">
-      <a
-        class="technical-support-item-box"
-        v-for="(item, idx) in supportData"
-        :key="idx"
-        :href="item.url"
-        target="_blank"
-      >
-        <img :src="item.img" :alt="item.alt" />
-      </a>
+    <div class="technical-support">
+      <n-marquee auto-fill :speed="4">
+        <a
+          class="technical-support-item-box"
+          v-for="(item, idx) in supportData.slice(0, 10)"
+          :key="idx"
+          :href="item.url"
+          target="_blank"
+        >
+          <n-image width="80" height="80" preview-disabled :src="item.img" />
+        </a>
+      </n-marquee>
     </div>
-    <n-divider />
+    <div class="technical-support-reverse technical-support">
+      <n-marquee auto-fill :speed="4">
+        <a
+          class="technical-support-item-box"
+          v-for="(item, idx) in supportData.slice(10, 20)"
+          :key="idx"
+          :href="item.url"
+          target="_blank"
+        >
+          <n-image width="80" height="80" preview-disabled :src="item.img" />
+        </a>
+      </n-marquee>
+    </div>
     <div class="footer-bottom-text">{{ $t('footer.content') }}</div>
     <div class="icp-filing-text">
       <span>备案/许可证</span>
+      <br />
+      <span>Recordation / License</span>
+      <br />
       <span><a href="https://beian.miit.gov.cn/#/Integrated/index">桂ICP备2025066402号</a></span>
     </div>
   </div>
@@ -132,8 +147,7 @@ const supportData = [
   background-color: var(--box-bg-color4);
   @include g.flexCenter;
   flex-direction: column;
-  padding: 10px 30vw;
-  padding-bottom: 4vh;
+  padding: 24px 20vw 4vh 20vw;
   span {
     display: inline-block;
     color: var(--sub-text-color);
@@ -145,12 +159,10 @@ const supportData = [
     }
   }
   .technical-support {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
+    position: relative;
     .technical-support-item-box {
       height: 84px;
-      background-color: var(--box-bg-color4);
+      width: 84px;
       margin: 0 5px;
       border-radius: 2px;
       padding: 10px;
@@ -161,15 +173,37 @@ const supportData = [
       }
     }
   }
+  .technical-support::after {
+    content: '';
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: var(--box-bg-color8);
+  }
+  .technical-support-reverse {
+    margin-top: 10px;
+    margin-bottom: 24px;
+    :deep(.n-marquee .n-marquee__group) {
+      animation-direction: alternate-reverse;
+    }
+  }
   .footer-bottom-text {
+    line-height: 1.54;
     color: var(--text-color);
+    padding-bottom: 10px;
   }
   .icp-filing-text {
+    text-align: center;
     span {
       color: var(--text-color3);
       font-size: 14px;
-      line-height: 1.54;
       font-weight: 400;
+      margin: 5px auto;
       a {
         padding-left: 10px;
         color: var(--text-color3);

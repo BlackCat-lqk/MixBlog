@@ -1,64 +1,40 @@
 <template>
-  <div class="my-logo">
-    <img src="@/assets/images/ArrowBack.svg" @click="toHome" alt="return" />
-  </div>
-  <div :class="isPlaying ? 'music-box' : 'music-box-play'" @click="toggleMusic">
-    <img src="@/assets/images/Music.svg" alt="music" />
-  </div>
-  <div class="about-main-box">
-    <div class="background-layer" :style="'background-image:url(' + aboutData.cover + ')'">
-      <div class="about-data-box">
-        <div class="about-data-img-box">
-          <img src="@/assets/images/aboutAvatar.webp" alt="avatar" loading="lazy" />
-        </div>
-        <div class="about-data-tags-box">
-          <n-space>
-            <n-tag
-              v-for="(tag, idx) in aboutData.tags ? aboutData.tags.split(' ') : []"
-              :key="idx"
-              type="info"
-              round
-            >
-              {{ tag }}
-            </n-tag>
-          </n-space>
-        </div>
-        <div class="about-data-intro-box">
-          {{ aboutData.intro }}
-        </div>
-      </div>
-      <div class="background-layer-box">
-        <div class="left-box">
-          <div v-for="(item, idx) in tagsList.slice(0, 6)" :key="idx" class="tag tag-l">
-            {{ item }}
+  <header>
+    <HeaderNav></HeaderNav>
+  </header>
+  <div class="about-box">
+    <div class="about-left">
+      <div class="avatar-box">
+        <ProfileCard
+          name="夜里的猫"
+          :title="aboutData.intro"
+          avatar-url="/uploads/about/compressed/about-me.webp"
+          icon-url="/uploads/about/compressed/about-me.webp"
+          grain-url="/uploads/about/compressed/about-me.webp"
+          :show-user-info="false"
+          :show-behind-gradient="true"
+          :enable-tilt="false"
+        />
+        <div class="avatar-name">
+          <div class="about-data-tags-box">
+            <n-space>
+              <n-tag
+                v-for="(tag, idx) in aboutData.tags ? aboutData.tags.split(' ') : []"
+                :key="idx"
+                type="info"
+                round
+              >
+                {{ tag }}
+              </n-tag>
+            </n-space>
           </div>
-        </div>
-        <div class="right-box">
-          <div v-for="(item, idx) in tagsList.slice(6, 12)" :key="idx" class="tag tag-r">
-            {{ item }}
-          </div>
-        </div>
-      </div>
-      <div class="scroll-down">
-        <n-icon size="80">
-          <img src="@/assets/images/AngleDoubleDownWhite.svg" alt="scroll down" />
-        </n-icon>
-      </div>
-    </div>
-    <div class="about-content-box">
-      <div class="about-content">
-        <div v-for="(item, idx) in aboutData.modules" :key="idx" class="about-content-item">
-          <div class="about-title-content">
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.content }}</p>
-          </div>
-          <div v-if="idx == 0" class="about-images-content">
+          <div class="about-images-content">
             <n-image
               :src="about2"
               width="200"
               height="240"
               object-fit="cover"
-              lazy="true"
+              :lazy="true"
               alt="about"
             />
             <n-image
@@ -66,41 +42,83 @@
               width="200"
               height="240"
               object-fit="cover"
-              lazy="true"
+              :lazy="true"
               alt="about"
             />
           </div>
         </div>
       </div>
     </div>
+    <div class="about-right">
+      <div class="introduce-box">
+        <div class="introduce-item introduce-item1">
+          <div class="introduce-title">
+            Creative
+            <TextType
+              :text="['coding', 'thinking', 'components']"
+              :typingSpeed="100"
+              :pauseDuration="2000"
+              :showCursor="true"
+              cursorCharacter="▌"
+              :text-colors="['rgb(255, 69, 0)']"
+              className="introduce-text-type"
+            />
+          </div>
+          <div class="introduce-time">
+            <span>站点已神奇的运行了</span
+            ><span class="count-day">
+              <n-number-animation ref="numberAnimationInstRef" :from="0" :to="countDay" /> </span
+            ><span>天</span>
+          </div>
+        </div>
+        <div class="introduce-item introduce-item2">
+          <div class="introduce-title-ten">
+            <span class="press">
+              时间进度
+              <n-number-animation
+                ref="numberAnimationInstRef"
+                :from="0"
+                :to="couintDayPress"
+                :precision="2"
+              />
+              %</span
+            >
+            <span>10年之约</span>
+            <span
+              >在这个十年中，我会用心感受生活的美好，用努力书写工作的篇章，用行动诠释人生的意义。这个进度条，不仅是数字的积累，更是我心中的期许和承诺。我相信，经过十年的坚持和努力，我会收获更多，成为一个更好的自己。</span
+            >
+          </div>
+          <div class="introduce-line"></div>
+        </div>
+      </div>
+      <div class="timeline-box">
+        <div class="timeline-title">
+          <span>时间线</span>
+        </div>
+        <div v-for="(item, idx) in aboutData.modules" :key="idx" class="about-content-item">
+          <div class="about-title-content">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.content }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+  <footer>
+    <FooterNav></FooterNav>
+  </footer>
 </template>
 
 <script setup lang="ts">
-import about2 from '@/assets/wallpaper/about2.jpg'
-import about3 from '@/assets/wallpaper/about3.jpg'
+import about2 from '@/assets/wallpaper/about2.webp'
+import about3 from '@/assets/wallpaper/about3.webp'
+import HeaderNav from '@/views/Header/HeaderNav.vue'
+import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getAboutConfigApi } from '@/http/about'
-const router = useRouter()
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
-
+import type { aboutDataType } from '@/tsInterface'
+const ProfileCard = defineAsyncComponent(() => import('@/views/VueBits/ProfileCard.vue'))
+const TextType = defineAsyncComponent(() => import('@/views/VueBits/TextType.vue'))
 const audio = ref<HTMLAudioElement | null>(null)
-const isPlaying = ref(false)
-const toHome = () => {
-  router.push('/')
-}
-interface modulesType {
-  title: string
-  content: string
-  image: string[]
-}
-interface aboutDataType {
-  intro: string
-  tags: string
-  cover: string
-  audio: string
-  modules: [modulesType]
-}
 const aboutData: aboutDataType = reactive({
   intro: '',
   tags: '',
@@ -108,25 +126,25 @@ const aboutData: aboutDataType = reactive({
   audio: '',
   modules: [{ title: '', content: '', image: [] }],
 })
-// 标语
-const tagsList = t('about.tagsList').split(',')
-// 音频播放
-const toggleMusic = () => {
-  if (!audio.value) {
-    audio.value = new Audio(aboutData.audio)
-  }
 
-  if (isPlaying.value) {
-    audio.value.pause()
-  } else {
-    audio.value.loop = true
-    audio.value.play().catch((err) => {
-      console.error(err)
-    })
-  }
+const countDay = computed(() => {
+  const now = new Date()
+  const start = new Date('2025-06-30 00:00:00')
+  const diff = now.getTime() - start.getTime()
+  const day = Math.floor(diff / (24 * 60 * 60 * 1000))
+  return day
+})
 
-  isPlaying.value = !isPlaying.value
-}
+const couintDayPress = computed(() => {
+  const now = new Date().getTime()
+  const start = new Date('2025-06-30 00:00:00').getTime()
+  const end = new Date('2035-06-30 00:00:00').getTime()
+  const totalSpan = end - start
+  const targetPosition = now - start
+  const percentage = (targetPosition / totalSpan) * 100
+  return Number(percentage.toFixed(2))
+})
+
 // 获取About页面的配置
 const getAboutConfig = async () => {
   const params = {
@@ -158,53 +176,12 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.my-logo {
-  position: fixed;
-  width: 80px;
-  height: 80px;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: pointer;
-  }
-}
-@keyframes ripple {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-    background-color: #eeff00;
-  }
-  25% {
-    transform: scale(1.2);
-    opacity: 0.75;
-    background-color: #1aff48;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 0.5;
-    background-color: #585bff;
-  }
-  75% {
-    transform: scale(1.4);
-    opacity: 0.25;
-    background-color: #ff1fe5;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0.6;
-    background-color: #1ff5e3;
-  }
-}
 .music-box,
 .music-box-play {
   position: fixed;
   width: 60px;
   height: 60px;
-  top: 10px;
+  top: 80px;
   right: 10px;
   z-index: 2;
   background-color: #ffffff;
@@ -219,7 +196,7 @@ onBeforeUnmount(() => {
     height: 100%;
     border-radius: 50%;
     animation: ripple 1.5s infinite ease-in-out;
-    z-index: -1; /* 确保在内容之下 */
+    // z-index: -1; /* 确保在内容之下 */
   }
   img {
     width: 100%;
@@ -233,124 +210,186 @@ onBeforeUnmount(() => {
     animation: none;
   }
 }
-.about-main-box {
-  width: 100%;
-  overflow-y: auto;
-  position: relative;
-  .background-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-position: center center;
-    background-size: cover;
-    z-index: 0;
-    @include g.flexCenter;
-    flex-direction: column;
-    .about-data-box {
-      @include g.flexCenter;
-      flex-direction: column;
-      .about-data-img-box {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 1px solid #5c5c5c;
-        overflow: hidden;
-        margin-bottom: 20px;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-      .about-data-tags-box {
-        background-color: rgb(205, 211, 217, 0.6);
-        width: 100%;
-        padding: 15px;
-        border-radius: 8px;
-        backdrop-filter: blur(10px);
-      }
-      .about-data-intro-box {
-        background-color: rgb(205, 211, 217, 0.3);
-        margin-top: 20px;
-        @include g.flexCenter;
-        font-size: 18px;
-        color: #0b1926;
-        width: 100%;
-        padding: 15px;
-        border-radius: 8px;
-        backdrop-filter: blur(10px);
-      }
-    }
-    .background-layer-box {
-      width: 80%;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 120px;
-      .left-box,
-      .right-box {
+.about-box {
+  min-width: 1240px;
+  max-width: 1480px;
+  margin-top: calc(5vh + 60px);
+  flex: 1;
+  display: flex;
+  gap: 24px;
+  margin-bottom: 30px;
+  .about-left {
+    .avatar-box {
+      width: 260px;
+      height: 260px;
+      .avatar-name {
         display: flex;
-        gap: 24px;
-        justify-content: flex-start;
         flex-direction: column;
-        transition: all 0.2s ease-in-out;
-        .tag {
-          width: auto;
-          cursor: pointer;
-          border-radius: 40px;
-          padding: 9px 24px;
-          color: #0b1926;
-          background: rgba(255, 255, 255, 0.7);
-          border: 1px solid rgba(255, 255, 255, 0);
+        justify-content: center;
+        align-items: center;
+        .about-data-tags-box {
+          padding: 20px 0;
         }
-        .tag-l {
-          text-align: left;
+        .about-data-intro-box {
+          font-size: 16px;
+          color: var(--text-color1);
+          line-height: 1.54;
+          padding: 20px 0px;
         }
-        .tag-r {
-          text-align: right;
+        .about-images-content {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          .n-image {
+            padding: 2px;
+            width: 200px;
+            height: 240px;
+            background-color: #5e6c7e;
+            border-radius: 8px;
+          }
         }
-      }
-    }
-    .scroll-down {
-      img {
-        animation: scrollDown 3.5s ease-in-out infinite;
-      }
-    }
-    @keyframes scrollDown {
-      0% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(80px);
-      }
-      100% {
-        transform: translateY(0);
       }
     }
   }
-
-  .about-content-box {
-    width: 100%;
-    margin: 100vh auto 0 auto;
-    background-color: var(--box-bg-color5);
-    position: relative;
-    @include g.flexCenter;
-    .about-content {
-      min-width: 1440px;
-      max-width: 1440px;
-      height: 100vh;
-      z-index: 1;
-      background-color: var(--box-bg-color1);
-      padding: 20px;
+  .about-right {
+    flex: 1;
+    .introduce-box {
+      width: 100%;
+      height: 380px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 15px;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-evenly;
+      gap: 8px;
+      .introduce-item {
+        height: 100%;
+        border: 1px solid var(--border-color);
+        color: var(--text-color1);
+        border-radius: 8px;
+      }
+      .introduce-item1 {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        > div {
+          flex: 1;
+        }
+        .introduce-title,
+        .introduce-time {
+          font-size: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .introduce-text-type {
+          color: var(--text-color1);
+          line-height: 1.54;
+          margin-left: 8px;
+          color: yellow;
+        }
+        .introduce-time {
+          font-size: 32px;
+          .count-day {
+            font-size: 48px;
+            font-family:
+              Roboto,
+              Helvetica / Arial;
+            color: rgb(255, 69, 0);
+          }
+        }
+      }
+      .introduce-item2 {
+        flex: 0.4;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 40%;
+          background: rgba(255, 69, 0, 0.1);
+          animation: shine 1.6s infinite;
+        }
+        /* 光晕动画 */
+        @keyframes shine {
+          0% {
+            top: 60%;
+            opacity: 0;
+            animation-timing-function: ease-out;
+          }
+          20% {
+            opacity: 0.8;
+            animation-timing-function: ease-in;
+          }
+          90% {
+            opacity: 0.3;
+            animation-timing-function: ease-out;
+          }
+          100% {
+            top: 0%;
+            opacity: 0;
+            animation-timing-function: ease-in;
+          }
+        }
+        .introduce-title-ten {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          .press {
+            font-size: 24px;
+            font-family:
+              Roboto,
+              Helvetica / Arial;
+            margin-bottom: 20px;
+          }
+        }
+        span {
+          font-size: 16px;
+          padding: 0 5px;
+          line-height: 1.54;
+        }
+        .introduce-line {
+          position: absolute;
+          width: 100%;
+          height: 3%;
+          bottom: 0;
+          border-radius: 0 0 8px 8px;
+          background-color: rgb(255, 69, 0);
+        }
+      }
+    }
+    .timeline-box {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 12px;
+      min-height: 520px;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      .timeline-title {
+        padding: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-color1);
+        text-align: center;
+      }
       .about-content-item {
-        width: 100%;
-        height: auto;
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
         display: flex;
         gap: 24px;
-        padding: 24px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 10px;
         .about-title-content {
-          min-width: 500px;
           font-family:
             Inter,
             -apple-system,
@@ -373,21 +412,7 @@ onBeforeUnmount(() => {
           p {
             line-height: 28px;
             color: var(--text-color1);
-            padding-bottom: 24px;
             text-align: justify;
-          }
-        }
-        .about-images-content {
-          width: 500px;
-          min-width: 500px;
-          display: flex;
-          gap: 12px;
-          .n-image {
-            padding: 10px;
-            width: 200px;
-            height: 240px;
-            background-color: #e5e5e5;
-            border-radius: 8px;
           }
         }
       }

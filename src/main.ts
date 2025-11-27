@@ -6,11 +6,26 @@ import { useThemeStore } from '@/stores/themeStore'
 import App from './App.vue'
 import router from './router'
 import i18n from './locales'
+
 // 注册指令
 import vPreventScrollPassthrough from './directives/preventScrollPassthrough'
+import vLoading from './directives/loading'
 const app = createApp(App)
+
+// 精确过滤掉 marquee 相关的插槽警告，等待naive-ui官方修复
+app.config.warnHandler = (msg, instance, trace) => {
+  // 只过滤特定的插槽警告
+  if (msg.includes('Non-function value encountered for default slot') &&
+      (trace.includes('Marquee') || trace.includes('marquee'))) {
+    return // 静默处理
+  }
+  // 其他警告正常显示
+  console.warn(`[Vue warn]: ${msg}`, trace)
+}
+
 // 注册指令（滚动条禁止透传）
 app.directive('prevent-scroll-passthrough', vPreventScrollPassthrough)
+app.directive('loading', vLoading)
 app.use(i18n)
 app.use(pinia)
 app.use(router)

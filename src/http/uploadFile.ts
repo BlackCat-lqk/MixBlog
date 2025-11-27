@@ -18,6 +18,15 @@ export function getBookDocApi(params: object) {
 }
 
 /**
+ * 获取私有书籍文件
+ * @param {Object}
+ * @returns {Promise}
+ */
+export function getPrivateBookDocApi(params: object) {
+  return request.get(`/privateFiles`, { params })
+}
+
+/**
  * 删除书籍文件
  * @param {Object}
  * @returns {Promise}

@@ -38,69 +38,95 @@
           <p class="p-h1">
             {{ sloganStore.sloganConfig.sloganTitle }}
           </p>
-          <p>
-            {{ sloganStore.sloganConfig.sloganSub1 }}
-          </p>
-          <p>
-            {{ sloganStore.sloganConfig.sloganSub2 }}
-          </p>
+
+          <TextType
+            :text="[
+              '时光逝水轻抚过，岁月飘摇风雨中',
+              'Time flows, gently touched; Years adrift in wind and rain.',
+              '掌控你的身体和思想',
+              'Control your own mind and body'
+            ]"
+            :typingSpeed="100"
+            :pauseDuration="2000"
+            :showCursor="true"
+            cursorCharacter="▌"
+            className="p-h2"
+          />
         </div>
         <div></div>
       </div>
-      <div class="scroll-down-box">
-        <div class="scroll-down" @click="handelScrollDown">
-          <n-icon size="40">
-            <img
-              v-if="themeStore.currentTheme == 'light'"
-              src="@/assets/images/AngleDoubleDown.svg"
-              alt="scroll Down"
-            />
-            <img v-else src="@/assets/images/AngleDoubleDownWhite.svg" alt="scroll Down" />
-          </n-icon>
+      <div class="advertising-box">
+        <div
+          class="advertising"
+          @click="
+            redirectToExternal(
+              'https://github.com/BlackCat-lqk/X-Tools-exe/releases/tag/X-Tools1.0.0',
+            )
+          "
+        >
+          <img src="@/assets/images/xtools.webp" alt="X-Tools" />
         </div>
+        <router-link :to="{ path: '/mixlab' }" target="_blank" rel="noopener noreferrer">
+          <div class="advertising">
+            <img width="32px" src="@/assets/images/lab.svg" alt="Laboratory" />
+          </div>
+        </router-link>
         <div class="chat-ai-btn" @click="router.push('/d-chat')">
           <span class="pure-text-glow">MIX AI</span>
         </div>
       </div>
     </div>
-    <LiquidChrome
-      v-if="imageLoading"
+    <BitsGalaxy
       class="ripple-grid"
-      :baseColor="[0.1, 0.1, 0.3]"
-      :speed="0.3"
-      :amplitude="0.3"
-      :interactive="false"
+      v-if="imageLoading && themeStore.currentTheme == 'dark'"
+      :mouse-repulsion="false"
+      :mouse-interaction="true"
+      :density="1"
+      :glow-intensity="0.3"
+      :saturation="0"
+      :hue-shift="140"
+    />
+
+    <PrismaticBurst
+      v-if="imageLoading && themeStore.currentTheme == 'light'"
+      animationType="rotate3d"
+      class="ripple-grid"
+      :intensity="5"
+      :speed="0.5"
+      :distort="5.0"
+      :paused="false"
+      :offset="{ x: 0, y: 0 }"
+      :hoverDampness="0.25"
+      :rayCount="2"
+      mixBlendMode="lighten"
+      :colors="['#ff007a', '#654ea3', '#f5af19']"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useScrollStore } from '@/stores/scrollStore'
 import { useSloganInfoStore } from '@/stores/configInfo'
 import { useThemeStore } from '@/stores/themeStore'
-const LiquidChrome = defineAsyncComponent(() => import('@/views/VueBits/RippleGrid.vue'))
+const PrismaticBurst = defineAsyncComponent(() => import('@/views/VueBits/PrismaticBurst.vue'))
+const TextType = defineAsyncComponent(() => import('@/views/VueBits/TextType.vue'))
+const BitsGalaxy = defineAsyncComponent(() => import('@/views/VueBits/BitsGalaxy.vue'))
 import router from '@/router'
 const themeStore = useThemeStore()
 const sloganStore = useSloganInfoStore()
 
 // 图片加载状态
 const imageLoading = ref(false)
-const scrollStore = useScrollStore()
 
 // 图片加载完成事件
 const onImageLoad = () => {
-  console.log('图片加载完成')
   imageLoading.value = true
-  console.log('🚀 ~ onImageLoad ~ true:', true)
 }
 // 图片加载失败事件
 const onImageError = () => {
-  console.log('图片加载失败')
   imageLoading.value = false
 }
-const handelScrollDown = () => {
-  const nowDate = new Date()
-  scrollStore.scrollTo('scorll' + nowDate)
+const redirectToExternal = (url: string) => {
+  window.open(url, '_blank')
 }
 onBeforeMount(() => {
   // 动态创建 preload 标签
@@ -109,7 +135,6 @@ onBeforeMount(() => {
   link.as = 'image'
   link.href = sloganStore.sloganConfig.cover
   document.head.appendChild(link)
-  console.log('🚀 ~ mounted ~ true:', true)
 })
 </script>
 
@@ -135,7 +160,7 @@ onBeforeMount(() => {
   height: 512px;
   align-items: center;
   position: relative;
-  background-color: var(--box-bg-color1);
+  background: var(--box-bg-color9);
   border-radius: 10px;
   overflow: hidden;
   .ripple-grid {
@@ -143,7 +168,7 @@ onBeforeMount(() => {
     top: 0%;
     left: 0%;
     width: 1480px;
-    height: 800px;
+    height: 640px;
   }
   .banner-left {
     flex: 1;
@@ -164,22 +189,26 @@ onBeforeMount(() => {
         transform: translateY(0);
       }
     }
-    .scroll-down-box {
+    .advertising-box {
       width: 100%;
       display: flex;
       margin-top: 10px;
+      align-items: center;
     }
-    .scroll-down {
+    .advertising {
       height: 80px;
-      width: 64px;
-      border-radius: 34px;
-      background-image: linear-gradient(180deg, g.$btnColor 0%, g.$btnColor 100%);
+      width: 80px;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
       text-align: center;
-      padding-top: 52px;
-      margin-right: 40px;
+      padding: 10px;
+      margin-right: 20px;
       cursor: pointer;
+      @include g.flexCenter;
       img {
-        animation: scrollDown 1.5s ease-in-out infinite;
+        // animation: scrollDown 1.5s ease-in-out infinite;
+        width: 80px;
       }
     }
     .p-h1 {
@@ -204,6 +233,14 @@ onBeforeMount(() => {
       }
     }
 
+    .p-h2 {
+      font-size: 42px;
+      height: 140px;
+      padding: 20px 0;
+      line-height: 1.54;
+      color: yellow;
+    }
+
     p {
       padding-top: 20px;
       font-size: 72px;
@@ -223,9 +260,9 @@ onBeforeMount(() => {
     }
     .chat-ai-btn {
       cursor: pointer;
-      margin-left: 30px;
       position: relative;
       width: 132px;
+      height: 132px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -286,7 +323,6 @@ onBeforeMount(() => {
   }
   .banner-pic {
     z-index: 1;
-    flex: 1;
     min-width: 512px;
     width: 512px;
     img {

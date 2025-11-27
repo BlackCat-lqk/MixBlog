@@ -102,7 +102,8 @@ import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { validateEmail, validateUsername } from '@/utils/validate'
 import { updateUsers } from '@/http/user'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import type { SetUserInfoEditFormType as editFormType } from '@/tsInterface'
 const { t } = useI18n()
 
 const personalInfoBox = ref(null)
@@ -126,16 +127,7 @@ watch(
 const state = reactive({
   showModal: false,
 })
-// 类型接口
-interface editFormType {
-  _id: string
-  userName: string
-  email: string
-  desc: string
-  avatar: string
-  sex: string
-  birthday: null
-}
+
 // 表单
 const editFormValue: editFormType = reactive({
   _id: '',
@@ -166,7 +158,7 @@ const handleChangeSex = (e: Event) => {
 
 // 初始化表单
 const initEditForm = () => {
-  Object.assign(editFormValue, _.cloneDeep(userInfoStore.data.user))
+  Object.assign(editFormValue, cloneDeep(userInfoStore.data.user))
   defaultFileList.value = [
     {
       id: 'default',
@@ -179,18 +171,22 @@ const initEditForm = () => {
 
 // avatar上传成功后将头像地址替换掉
 const avatarUploadFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.success(JSON.parse(res).message)
-  const newAvatar = JSON.parse(res).url
-  userInfoStore.setUserAvatar(newAvatar)
-  return file
+  if (event != undefined) {
+    const res = (event.target as XMLHttpRequest).response
+    message.success(JSON.parse(res).message)
+    const newAvatar = JSON.parse(res).url
+    userInfoStore.setUserAvatar(newAvatar)
+    return file
+  }
 }
 
 // 上传失败
 const avatarUploadError = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.error(JSON.parse(res).message)
-  return file
+  if (event != undefined) {
+    const res = (event.target as XMLHttpRequest).response
+    message.error(JSON.parse(res).message)
+    return file
+  }
 }
 
 // 取消应用

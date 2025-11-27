@@ -60,8 +60,9 @@
               <h3>{{ item.title }}</h3>
               <div class="photo-desc-info">
                 <div>
-                  <span>喜欢：{{ item.likes }}</span>
-                  <span>查看：{{ item.views }}</span>
+                  <span>喜欢：{{ item.likes.length }}</span>
+                  <span>查看：{{ item.views.length }}</span>
+                  <span>评论：{{ item.comments.length }}</span>
                 </div>
 
                 <span>{{ _formatTime(item.updatedAt).date }}</span>
@@ -89,12 +90,31 @@ const headerData = reactive({
   title: '摄影图库',
   url: '/bms/editPhoto',
 })
+export interface Comment {
+  _id: string
+  userId: string
+  userName: string
+  avatar: string
+  content: string
+  parentId: string | null
+  createdAt: string
+  children?: Comment[]
+}
+
+export interface LikeView {
+  userId: string
+  userName: string
+  email: string
+  viewedAt: string
+  likedAt: string
+}
 interface PhotoLibraryType {
   _id: string
   title: string
   photos: string
-  likes: number
-  views: number
+  likes: LikeView[]
+  views: LikeView[]
+  comments: Comment[]
   updatedAt: string
 }
 interface StateType {

@@ -76,8 +76,12 @@
       />
       <div class="chat-option">
         <div class="chat-option-item">
-          Use Streaming
+          使用流式对话
           <n-switch v-model:value="useStreaming" />
+        </div>
+        <div class="chat-option-item">
+          深度思考
+          <n-switch v-model:value="useThink" />
         </div>
         <div class="chat-option-send">
           <n-button strong secondary type="primary" @click="sendMessage" :disabled="isLoading">
@@ -101,21 +105,19 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
+import type { IChatMessage as ChatMessage } from '@/tsInterface'
 
 const router = useRouter()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 
 const userInput = ref('')
-interface ChatMessage {
-  role: 'user' | 'assistant'
-  content: string
-}
 const messages = ref<ChatMessage[]>([])
 const streamingResponse = ref('')
 const isLoading = ref(false)
 const useStreaming = ref(true)
+const useThink = ref(false)
 
 // 开启新对话
 const startNewChat = () => {
@@ -128,7 +130,7 @@ const startNewChat = () => {
   // 重置加载状态
   isLoading.value = false
 }
-const sendMessage = _.debounce(async () => {
+const sendMessage = debounce(async () => {
   if (!userInput.value.trim()) return
   // 检查是否登录
   if (!userInfoStore.data.user.isLogin) {
@@ -149,6 +151,7 @@ const sendMessage = _.debounce(async () => {
     if (useStreaming.value) {
       await streamChatWithDeepSeek(
         {
+          model: useThink ? 'deepseek-reasoner' : 'deepseek-chat',
           messages: [...messages.value],
         },
         (chunk) => {
@@ -163,6 +166,7 @@ const sendMessage = _.debounce(async () => {
       streamingResponse.value = ''
     } else {
       const response = await chatWithDeepSeek({
+        model: useThink ? 'deepseek-reasoner' : 'deepseek-chat',
         messages: [...messages.value],
       })
 

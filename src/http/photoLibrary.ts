@@ -5,7 +5,7 @@ import request from '@/utils/request'
  * @param {Object}
  * @returns {Promise}
  */
-export function createPhotoLibraryApi(params: Object) {
+export function createPhotoLibraryApi(params: object) {
   return request.post('/createPhotoLibrary', params)
 }
 

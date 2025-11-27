@@ -12,7 +12,8 @@
     }
   ],
   "compilerOptions": {
-    "moduleResolution": "Bundler", // "Node10", "Node16" or "NodeNext"
-    "strict": true // Optional, but recommended
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true
   }
 }

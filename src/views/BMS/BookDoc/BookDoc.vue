@@ -24,7 +24,11 @@
               <n-grid-item v-for="(item, idx) in fileListData" :key="idx">
                 <n-card
                   hoverable
-                  :style="`background:${changeBg[item.suffix]} no-repeat; background-size: 60%; background-position: center center;`"
+                  :style="
+                    item.docCover
+                      ? `background:url('/${item.docCover}') no-repeat;background-size: cover;`
+                      : `background:${changeBg[item.suffix]} no-repeat;background-size: 60%;`
+                  "
                 >
                   <h3>{{ item.filename }}</h3>
                   <p>描述：{{ item.description }}</p>
@@ -43,12 +47,16 @@
           </div>
           <div class="upload-box">
             <n-form ref="formRef" :model="fileForm" :rules="rules">
+              <n-form-item label="是否为私人文件夹">
+                <n-select v-model:value="fileForm.privateFile" placeholder="请选择" :options="options" @update:value="changePrivateFile" />
+              </n-form-item>
               <n-form-item label="分类" path="category">
                 <n-input
                   v-model:value="fileForm.category"
                   maxlength="10"
                   show-count
                   clearable
+                  :disabled="fileForm.privateFile === 'true'"
                   placeholder="新建或选择分类"
                   @input="handleInputCategory"
                 />
@@ -73,6 +81,17 @@
                   }"
                 ></n-upload>
               </n-form-item>
+              <n-form-item label="封面上传">
+                <n-upload
+                  :default-file-list="fileCover"
+                  :max="1"
+                  list-type="image-card"
+                  :custom-request="createCoverCustomUpload"
+                  :headers="{
+                    Authorization: `Bearer ${userInfoStore.data.token}`,
+                  }"
+                ></n-upload>
+              </n-form-item>
               <n-button :disabled="btnStatus" @click="handleUploadFile">开始上传</n-button>
             </n-form>
           </div>
@@ -87,9 +106,9 @@ import type { UploadFileInfo } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import { uploadBookDocApi, getBookDocApi, deleteBookDocApi } from '@/http/uploadFile'
+import { uploadBookDocApi, getBookDocApi, deleteBookDocApi, getPrivateBookDocApi } from '@/http/uploadFile'
 import { useMessage } from 'naive-ui'
-import _ from 'lodash'
+import debounce from 'lodash/debounce';
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 const rules = {
@@ -99,6 +118,16 @@ const rules = {
     trigger: 'blur',
   },
 }
+const options = [
+  {
+    label: '是',
+    value: 'true',
+  },
+  {
+    label: '否',
+    value: 'false',
+  },
+]
 const btnStatus = ref(true)
 const fileList = reactive([
   {
@@ -109,17 +138,31 @@ const fileList = reactive([
   },
 ])
 
+const fileCover = reactive([
+  {
+    id: 'createFileCover',
+    name: 'createFileCover',
+    url: '',
+    status: 'finished',
+  },
+])
+
+
 interface formType {
+  privateFile: string
   category: string
   description: string
   tempFile: UploadFileInfo | null
+  tempFileCover: UploadFileInfo | null
 }
 
 // 表单数据
 const fileForm: formType = reactive({
+  privateFile: 'false',
   category: '',
   description: '',
   tempFile: null,
+  tempFileCover: null,
 })
 
 interface bookDocType {
@@ -131,10 +174,10 @@ interface bookDocType {
   updatedAt: string
   suffix: string
   description: string
+  docCover: string
 }
 
-const handleInputCategory = _.debounce((val: string) => {
-  console.log(val)
+const handleInputCategory = debounce((val: string) => {
   if (val) {
     btnStatus.value = false
   } else {
@@ -146,6 +189,22 @@ const handleInputCategory = _.debounce((val: string) => {
 const createCustomUpload = ({ file }: { file: UploadFileInfo }) => {
   fileForm.tempFile = file
 }
+
+// 是否私人文件夹选择的回调
+const changePrivateFile = (val: string) => {
+  if (val == 'true') {
+    fileForm.category = '私人文件夹'
+    btnStatus.value = false
+  }else {
+    fileForm.category = ''
+    btnStatus.value = true
+  }
+}
+
+const createCoverCustomUpload = ({ file }: { file: UploadFileInfo }) => {
+  fileForm.tempFileCover = file
+}
+
 // 根据文件后缀改变背景
 const changeBg = {
   pdf: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
@@ -177,9 +236,13 @@ const deleteBookDoc = async (data: bookDocType) => {
 const handleUploadFile = async () => {
   if (!fileForm.category) return
   // 调用文件上传接口
+  const formData = new FormData()
+  if (fileForm.tempFileCover && fileForm.tempFileCover.file) {
+    formData.append('file', fileForm.tempFileCover?.file)
+  }
   if (fileForm.tempFile && fileForm.tempFile.file) {
-    const formData = new FormData()
     formData.append('file', fileForm.tempFile?.file)
+    formData.append('privateFile', fileForm.privateFile)
     formData.append('category', fileForm.category)
     formData.append('description', fileForm.description)
     const response = await uploadBookDocApi(formData)
@@ -198,11 +261,19 @@ const handleUploadFile = async () => {
 const fileListData = ref([] as bookDocType[])
 const allCategory = ref({} as object)
 const getBookDocList = async () => {
+  // 获取文件列表
   const response = await getBookDocApi({})
   const res = response.data
   if (res.code === 200) {
     fileListData.value = res.data
     allCategory.value = res.categories
+    // 获取私有文件列表
+    const privates = await getPrivateBookDocApi({})
+    const privateRes = privates.data
+    if(privateRes.code === 200){
+      fileListData.value = fileListData.value.concat(privateRes.data)
+      Object.assign(allCategory.value, privateRes.categories);
+    }
   } else {
     message.error(res.message)
   }
@@ -261,10 +332,11 @@ a
       border-radius: 5px;
       min-width: 220px;
       box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
+      background-position: center center;
       .n-card__content {
         border-radius: 5px;
         background-color: var(--box-bg-color7);
-        backdrop-filter: blur(2px);
+        // backdrop-filter: blur(2px);
       }
       h3 {
         font-size: 14px;

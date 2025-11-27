@@ -86,7 +86,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg}'],
         maximumFileSizeToCacheInBytes: 5000000, // 设置为 5MB
       },
     }),
@@ -140,7 +140,7 @@ export default defineConfig({
             drop_console: true, // 移除所有 console.log
           },
           format: {
-            comments: false, // 移除注释
+            comments: true, // 移除注释
           },
         }),
       ],
@@ -155,8 +155,16 @@ export default defineConfig({
           'naive-ui': ['naive-ui'],
           // 工具库
           utils: ['axios', 'lodash', '@vueuse/core'],
+          // 文档处理库（较大的包）
+          'epub-bundle': ['epubjs'],
           // 可视化和图表库
           visualization: ['echarts', 'highlight.js'],
+          // 将@vue-office/pdf和pdfjs-dist这种大型库打包在一起
+          'pdf-bundle': [
+            '@vue-office/pdf',
+          ],
+          // 富文本编辑器
+          editors: ['quill', '@vueup/vue-quill', '@tiptap/core', '@tiptap/vue-3']
         },
       },
     },

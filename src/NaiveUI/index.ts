@@ -2,9 +2,7 @@
  * naive ui 配置, 全局按需引入
  */
 import {
-  // create naive ui
   create,
-  // component
   NButton,
   NDropdown,
   NAvatar,
@@ -54,9 +52,8 @@ import {
   NPopover,
   NP,
   NQrCode,
-  NModalProvider
+  NModalProvider,
 } from 'naive-ui'
-
 const naive = create({
   components: [
     NButton,
@@ -108,7 +105,7 @@ const naive = create({
     NPopover,
     NP,
     NQrCode,
-    NModalProvider
+    NModalProvider,
   ],
 })
 

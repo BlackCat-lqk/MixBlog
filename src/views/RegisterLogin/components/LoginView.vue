@@ -56,6 +56,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { _debounce } from '@/utils/publickFun'
 import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
 import { encodeCredentials, decodeCredentials } from '@/utils/crypto'
+import type { ILoginFormType as FormType } from '@/tsInterface'
 const { t } = useI18n()
 const router = useRouter()
 const message = useMessage()
@@ -92,18 +93,12 @@ const checkSavedCredentials = () => {
       formValue.email = credentials.email
       formValue.password = credentials.password
       formValue.rememberMe = true
-      console.log(formValue)
     }
   } else {
     // 如果没有保存的凭据，则清空表单
     formValue.password = ''
     formValue.rememberMe = false
   }
-}
-interface FormType {
-  email: string
-  password: string
-  rememberMe?: boolean
 }
 // 表单数据
 const formValue: FormType = reactive({

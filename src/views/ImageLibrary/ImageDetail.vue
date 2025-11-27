@@ -16,7 +16,7 @@
             <div class="image-header-info-box">
               <div class="image-header-info">
                 <n-tag :bordered="false" type="info">{{ props.data.category }}</n-tag>
-                <p>{{ _formatTime(props.data.updatedAt).date }}</p>
+                <p>{{ _formatTime(props.data.createdAt).date }}</p>
               </div>
               <div class="image-header-data-info">
                 <div style="cursor: pointer">
@@ -53,7 +53,7 @@
                 object-fit="cover"
                 width="100%"
                 alt="photo"
-                lazy="true"
+                :lazy="true"
               />
             </div>
           </div>
@@ -103,8 +103,9 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { addPhotoCommentApi, likePhotoApi, viewPhotoApi } from '@/http/photoLibrary'
 import { useMessage } from 'naive-ui'
 import { useDeviceStore } from '@/stores/deviceInfo'
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 import { useThemeStore } from '@/stores/themeStore'
+import type { ImageComment as Comment, ImagePhotoDetailType as photoDetailType } from '@/tsInterface'
 
 const themeStore = useThemeStore()
 const router = useRouter()
@@ -120,43 +121,13 @@ const state = reactive({
   comments: 0,
 })
 const emits = defineEmits(['update:showModal'])
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
-
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-interface photoDetailType {
-  _id: string
-  title: string
-  content: string
-  category: string
-  updatedAt: string
-  photos: string[]
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
-
 // Drawer 关闭后的回调
 const closeDrawer = () => {
   showComment.value = false
 }
 
 // 处理提交评论事件
-const handleSubmitComment = _.debounce(async (data: { content: string; parentId?: string }) => {
+const handleSubmitComment = debounce(async (data: { content: string; parentId?: string }) => {
   // 调用 API 提交评论
   const params = {
     libraryId: props.data._id,
@@ -194,7 +165,7 @@ const handleReplyComment = (comment: Comment) => {
   console.log('回复评论:', comment)
 }
 // 处理点赞事件
-const likeArticle = _.debounce(async () => {
+const likeArticle = debounce(async () => {
   const params = {
     libraryId: props.data._id,
     userId: userInfoStore.data.user._id,

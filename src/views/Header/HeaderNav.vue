@@ -5,54 +5,14 @@
     <div class="header-logo-search-box">
       <div class="header-logo-box">
         <div>
-          <img
-            v-if="themeStore.currentTheme == 'light'"
-            width="608px"
-            height="514px"
-            :src="logoLight"
-            alt="logoLight"
-          />
-          <img v-else width="608px" height="514px" :src="logoNight" alt="logoNight" />
+          <img v-if="themeStore.currentTheme == 'light'" :src="logoLight" alt="logoLight" />
+          <img v-else :src="logoNight" alt="logoNight" />
+          <span>Mix Blog</span>
+        </div>
+        <div class="search-box" style="flex: 1">
+          <AlgoliaSearch></AlgoliaSearch>
         </div>
       </div>
-
-      <!-- <div class="search-box">
-        <n-popselect
-          v-model:value="state.searchQuery"
-          :options="state.searchOptions"
-          trigger="click"
-        >
-          <n-input
-            :placeholder="$t('header.search.placeholder')"
-            clearable
-            size="large"
-            v-model:value="state.searchQuery"
-            @keyup.enter="handleGlobalSearch"
-          >
-            <template #prefix>
-              <n-icon>
-                <img width="20px" src="/src/assets/images/searchIconfont.svg" />
-              </n-icon>
-            </template>
-          </n-input>
-          <template #header>
-            <div v-if="state.searchHistory.length > 0" class="search-history">
-              {{ t('header.search.tip1') }}
-            </div>
-            <p v-for="(item, idx) in state.searchHistory" :key="idx">{{ item }}</p>
-          </template>
-          <template #empty>
-            <n-empty :description="$t('header.search.tip2')">
-              <template #extra> </template>
-            </n-empty>
-          </template>
-          <template #action>
-            <div>
-              <n-button @click="clearHistory">{{ t('header.search.tip3') }}</n-button>
-            </div>
-          </template>
-        </n-popselect>
-      </div> -->
     </div>
     <div class="header-menu-box">
       <div class="menu-item-box" v-for="(item, idx) in routerPage" :key="idx">
@@ -84,7 +44,7 @@
       <div class="user-info-box">
         <div v-if="state.userInfo.isLogin">
           <n-dropdown :options="state.avatarOptions" @select="handleAvatarClick">
-            <n-avatar round :size="40">
+            <n-avatar round :size="32">
               <n-icon>
                 <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" alt="avatar" />
                 <img v-else src="@/assets/images/UserAvatarFilled.svg" alt="user avatar" />
@@ -94,7 +54,7 @@
           <span class="has-user-name">{{ state.userInfo.userName }}</span>
         </div>
         <div v-else>
-          <n-avatar round :size="40">
+          <n-avatar round :size="32">
             <n-icon>
               <img v-if="state.userInfo.isLogin" :src="state.userInfo.avatar" alt="user avatar" />
               <img v-else src="@/assets/images/UserAvatarFilled.svg" alt="user avatar" />
@@ -103,14 +63,25 @@
           <span class="user-name" @click="jumpPage('/register-login')">{{ t('header.text') }}</span>
         </div>
       </div>
-      <div class="language-select-box">
-        <n-select v-model:value="locale" :options="languages" @update:value="changeLanguage" />
+      <div style="display: flex; align-items: center; cursor: pointer">
+        <router-link :to="{ path: '/mixlab' }" target="_blank" rel="noopener noreferrer">
+          <n-icon size="32">
+            <img width="32px" src="@/assets/images/lab.svg" alt="Laboratory" />
+          </n-icon>
+        </router-link>
       </div>
+      <n-divider vertical style="background-color: rgb(192 192 192)" />
+      <div class="language-select-box">
+        <n-dropdown trigger="click" :options="languages" @select="changeLanguage">
+          <img width="32px" src="@/assets/images/i18n.svg" alt="i18n" />
+        </n-dropdown>
+      </div>
+      <n-divider vertical style="background-color: rgb(192 192 192)" />
       <div class="switch-theme-box">
         <n-switch
           v-model:value="state.switchTheme"
           alt="select theme"
-          size="large"
+          size="small"
           @update:value="handleChangeTheme"
         >
           <template #checked-icon>
@@ -121,6 +92,7 @@
           </template>
         </n-switch>
       </div>
+      <n-divider vertical style="background-color: rgb(192 192 192)" />
       <div
         class="address-img-box"
         @click="redirectToExternal('https://github.com/BlackCat-lqk/MixBlog')"
@@ -140,13 +112,7 @@
         @click="redirectToExternal('https://space.bilibili.com/154164424?spm_id_from=333.1007.0.0')"
       >
         <n-icon size="24">
-          <img
-            width="24px"
-            v-if="themeStore.currentTheme == 'light'"
-            src="@/assets/images/Blibli.svg"
-            alt="Blibli"
-          />
-          <img width="24px" v-else src="@/assets/images/BlibliWhite.svg" alt="Blibli" />
+          <img width="24px" src="@/assets/images/Blibli.svg" alt="Blibli" />
         </n-icon>
       </div>
     </div>
@@ -162,26 +128,25 @@
 import { useScroll } from '@vueuse/core'
 import { useThemeStore } from '@/stores/themeStore'
 import { useUserInfoStore } from '@/stores/userInfo'
-// import { useGlobalSearchStore } from '@/stores/globalSearch'
 import { useMessage } from 'naive-ui'
 import { logOutUserApi } from '@/http/user'
 import SetUserInfo from './components/SetUserInfo.vue'
 import ForgotPwd from '@/views/RegisterLogin/components/ForgotPwd.vue'
+import AlgoliaSearch from '@/components/AlgoliaSearch.vue'
 
 const { locale, t } = useI18n()
 const router = useRouter()
 const userInfoStore = useUserInfoStore()
 const themeStore = useThemeStore()
-// const globalSearchStore = useGlobalSearchStore()
 const message = useMessage()
 const { y } = useScroll(window)
 const languages = [
-  { label: 'English', value: 'en-US' },
-  { label: '中文', value: 'zh-CN' },
+  { label: 'English', key: 'en-US' },
+  { label: '中文', key: 'zh-CN' },
 ]
 const showForgotPwdModal = ref(false)
-const logoNight = '/uploads/defalut/logo-transparent-night.webp'
-const logoLight = '/uploads/defalut/logo-transparent.webp'
+const logoNight = '/uploads/defalut/logo-transparent-night.svg'
+const logoLight = '/uploads/defalut/logo-transparent.svg'
 const changeLanguage = (lang: string) => {
   locale.value = lang
   localStorage.setItem('locale', lang)
@@ -281,21 +246,6 @@ const handleChangeTheme = (value: boolean) => {
   }
   themeStore.setTheme(value ? 'light' : 'dark')
 }
-
-// const handleGlobalSearch = async () => {
-//   if (state.searchQuery) {
-//     await globalSearchStore.setSearch(state.searchQuery)
-//     handleSearchHistory()
-//   }
-// }
-
-// 清空搜索记录
-// const clearHistory = () => {
-//   state.searchHistory = []
-//   localStorage.removeItem('globalSearch')
-//   const tip = computed(() => t('header.search.tip4'))
-//   message.success(tip.value)
-// }
 // 用户头像菜单select回调
 const handleAvatarClick = async (key: string | number) => {
   if (key === 0) {
@@ -327,7 +277,7 @@ const initUserData = () => {
     }
   }
 }
-const jumpPage = (path: string, idx?: number | undefined) => {
+const jumpPage = async (path: string, idx?: number | undefined) => {
   router.push(path)
   if (idx != undefined) {
     state.activeRouter = idx
@@ -382,7 +332,8 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  backdrop-filter: blur(50px);
+  background-color: var(--box-bg-color4);
+  backdrop-filter: blur(10px);
   .header-logo-search-box {
     z-index: 1;
     @include g.flexCenter;
@@ -391,13 +342,24 @@ onMounted(() => {
     .header-logo-box {
       width: auto;
       display: flex;
+      align-items: center;
       height: 100%;
-      img {
-        aspect-ratio: attr(width) / attr(height); /* 动态读取原始宽高比 */
-        width: 10%; /* 或固定宽度 */
-        height: auto; /* 高度自适应 */
-        object-fit: contain; /* 保持比例，完整显示图片 */
-        padding: 5px 0 0 8px;
+      justify-content: flex-start;
+      > div {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        img {
+          aspect-ratio: attr(width) / attr(height); /* 动态读取原始宽高比 */
+          width: 56px; /* 或固定宽度 */
+          height: auto; /* 高度自适应 */
+          object-fit: contain; /* 保持比例，完整显示图片 */
+          padding: 5px 0 0 8px;
+        }
+        span {
+          font-weight: 500;
+          color: var(--text-color);
+        }
       }
     }
 
@@ -430,6 +392,8 @@ onMounted(() => {
         color: var(--text-color);
         display: flex;
         align-items: center;
+        font-size: 14px;
+        font-weight: 500;
         .more-item-box {
           display: flex;
           align-items: center;
@@ -498,10 +462,7 @@ onMounted(() => {
       }
     }
     .language-select-box {
-      margin-right: 10px;
-      .n-select {
-        width: 100px;
-      }
+      cursor: pointer;
     }
     .switch-theme-box {
       :deep(.n-switch__rail) {
@@ -509,7 +470,7 @@ onMounted(() => {
       }
     }
     .address-img-box {
-      margin-left: 10px;
+      margin: 0 5px;
       cursor: pointer;
     }
   }

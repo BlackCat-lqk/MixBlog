@@ -44,7 +44,7 @@
         <div class="photo-gallery-title">
           <p class="p-h1">{{ photoItem.title }}</p>
           <div class="photo-gallery-title-data">
-            <p>{{ _formatTime(photoItem.updatedAt).date }}</p>
+            <p>{{ _formatTime(photoItem.createdAt).date }}</p>
             <div class="views-comment-icon">
               <span>
                 <img width="20px" src="@/assets/images/likes.svg" alt="likes" />
@@ -67,13 +67,11 @@
       </div>
       <div v-if="photoItem.photos.length > 0" class="photo-gallery-preview">
         <n-marquee auto-fill>
-          <template #default>
-            <div style="display: flex">
-              <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
-                <img :src="item" alt="photo" loading="lazy" />
-              </div>
+          <div style="display: flex">
+            <div class="photo-item" v-for="(item, idx) in photoItem.photos" :key="idx">
+              <img :src="item" alt="photo" loading="lazy" />
             </div>
-          </template>
+          </div>
         </n-marquee>
       </div>
     </div>
@@ -87,46 +85,20 @@
 <script lang="ts" setup>
 import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
+import { getPhotoCachedData } from '@/utils/apiCache'
 import { useThemeStore } from '@/stores/themeStore'
 import { _formatTime } from '@/utils/publickFun'
+import type { HomePhotoItemType as photoItemType } from '@/tsInterface'
 const themeStore = useThemeStore()
 const router = useRouter()
 const showActiveDrawer = ref(false)
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[]
-}
 
-export interface LikeView {
-  userId: string
-  userName: string
-  email: string
-  viewedAt: string
-  likedAt: string
-}
-interface photoItemType {
-  _id: string
-  title: string
-  photos: string[]
-  content: string
-  updatedAt: string
-  category: string
-  comments: Comment[]
-  likes: LikeView[]
-  views: LikeView[]
-}
 const photoItem = ref<photoItemType>({
   _id: '',
   title: '',
   photos: [],
   content: '',
-  updatedAt: '',
+  createdAt: '',
   category: '',
   comments: [],
   likes: [],
@@ -142,7 +114,7 @@ let imagesDetail: photoItemType = reactive({
   title: '',
   content: '',
   category: '',
-  updatedAt: '',
+  createdAt: '',
   photos: [],
   comments: [],
   likes: [],
@@ -150,7 +122,8 @@ let imagesDetail: photoItemType = reactive({
 })
 // 获取图库信息
 const getPhotoLibrary = async () => {
-  const response = await getPhotoLibraryApi()
+  const response = await getPhotoCachedData(getPhotoLibraryApi)
+  // const response = await getPhotoLibraryApi()
   const res = response.data
   if (res.code == 200) {
     state.step = 0
