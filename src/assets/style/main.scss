@@ -5,15 +5,6 @@
 @use './theme/light.scss';
 @use './loading.scss';
 
-@font-face {
-  font-family: PuHuiTi;
-  src: url('@/assets/font/AlibabaPuHuiTi-3-55-RegularL3.ttf');
-}
-
-* {
-  font-family: PuHuiTi;
-}
-
 html {
   @include g.scrollbarCustom;
 }

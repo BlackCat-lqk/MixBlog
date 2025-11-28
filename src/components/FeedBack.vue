@@ -60,11 +60,6 @@
           <div class="form-group">
             <label class="form-label">截图（可选，最多3张）</label>
             <div class="screenshots-area">
-              <!-- <img
-                v-if="formData.screenshots"
-                :src="formData.screenshots"
-                class="screenshots-preview"
-              /> -->
               <div class="screenshots-placeholder">
                 <button type="button" class="screenshots-btn" @click="captureScreenshot">
                   上传截图

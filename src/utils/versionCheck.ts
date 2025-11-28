@@ -15,7 +15,7 @@ class VersionChecker {
         // 预留逻辑：检测到更新时的操作
         console.log('检测缓存数据是否更新');
         // 只清除缓存，不刷新页面
-        await this.clearCachesOnly();
+        // await this.clearCachesOnly();
       }
       return hasUpdate;
     } catch (error) {
@@ -23,7 +23,7 @@ class VersionChecker {
       return false;
     }
   }
-
+  // 该方法有待改进
   private async clearCachesOnly(): Promise<void> {
     try {
       // 1. 清除 Cache Storage

@@ -6,7 +6,6 @@ import { useThemeStore } from '@/stores/themeStore'
 import App from './App.vue'
 import router from './router'
 import i18n from './locales'
-import { versionChecker } from '@/utils/versionCheck'
 
 
 // 注册指令
@@ -39,4 +38,4 @@ const themeStore = useThemeStore()
 themeStore.setTheme(themeStore.currentTheme)
 
 // 开始版本检查
-versionChecker.start()
+// versionChecker.start()

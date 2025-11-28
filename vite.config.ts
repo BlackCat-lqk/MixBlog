@@ -160,7 +160,7 @@ export default defineConfig({
       plugins: [
         terser({
           compress: {
-            drop_console: true, // 移除所有 console.log
+            drop_console: false, // 移除所有 console.log
           },
           format: {
             comments: true, // 移除注释
