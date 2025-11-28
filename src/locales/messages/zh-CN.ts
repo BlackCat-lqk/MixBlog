@@ -134,4 +134,9 @@ export default {
     sendMsg: '发送消息...',
     padding: '正在生成中',
   },
+  notFound:{
+    title: '404 资源不存在',
+    content: '生活总归带点荒谬',
+    back: '返回首页',
+  }
 }

@@ -8,7 +8,9 @@
       <n-message-provider>
         <n-dialog-provider>
           <n-notification-provider>
-            <RouterView />
+            <n-loading-bar-provider>
+              <RouterView />
+            </n-loading-bar-provider>
           </n-notification-provider>
         </n-dialog-provider>
       </n-message-provider>

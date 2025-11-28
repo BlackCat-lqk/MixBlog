@@ -119,6 +119,9 @@ import { getAboutCachedData } from '@/utils/apiCache'
 import type { aboutDataType } from '@/tsInterface'
 const ProfileCard = defineAsyncComponent(() => import('@/views/VueBits/ProfileCard.vue'))
 const TextType = defineAsyncComponent(() => import('@/views/VueBits/TextType.vue'))
+import { useLoadingBar } from 'naive-ui'
+
+const loadingBar = useLoadingBar()
 const audio = ref<HTMLAudioElement | null>(null)
 const aboutData: aboutDataType = reactive({
   intro: '',
@@ -148,6 +151,7 @@ const couintDayPress = computed(() => {
 
 // 获取About页面的配置
 const getAboutConfig = async () => {
+  loadingBar.start()
   const params = {
     email: '',
     uId: '',
@@ -160,7 +164,9 @@ const getAboutConfig = async () => {
     aboutData.cover = res.data.cover
     aboutData.intro = res.data.intro
     aboutData.modules = res.data.modules
+    loadingBar.finish()
   } else {
+    loadingBar.error()
     console.log(res.message)
   }
 }

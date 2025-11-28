@@ -135,4 +135,9 @@ export default {
     sendMsg: 'send message...',
     padding: 'padding',
   },
+  notFound:{
+    title: '404 resource not found',
+    content: 'Oops! Something is wrong!',
+    back: 'Home',
+  }
 }

@@ -147,7 +147,9 @@ import type {
   INavSiteNav as siteNav,
 } from '@/tsInterface'
 import debounce from 'lodash/debounce'
+import { useLoadingBar } from 'naive-ui'
 
+const loadingBar = useLoadingBar()
 const buttonLoading = ref(false)
 const themeStore = useThemeStore()
 const notification = useNotification()
@@ -220,6 +222,7 @@ const handleCreateSite = debounce((e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
+      loadingBar.start()
       buttonLoading.value = true
       const faviconResult = await faviconFetching(formValue.link)
       if (faviconResult) formValue.icon = faviconLink.value
@@ -232,14 +235,17 @@ const handleCreateSite = debounce((e: MouseEvent) => {
         formValue.siteName = ''
         formValue.desc = ''
         getSiteNavData()
+        loadingBar.finish()
       } else if (res.code === 401) {
         message.info('请先登录')
         router.push('/register-login')
       } else {
         message.error('站点创建失败')
       }
+      loadingBar.error()
       buttonLoading.value = false
     } else {
+      loadingBar.error()
       message.error('提交失败，请检查输入信息')
     }
   })

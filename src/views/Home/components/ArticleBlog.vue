@@ -17,8 +17,10 @@ import { getAllBlogArticleApi } from '@/http/blogArticle'
 import { getArticleCachedData } from '@/utils/apiCache'
 import { useMessage } from 'naive-ui'
 import type { HomeArticleBlogType as articelDataType } from '@/tsInterface'
-const message = useMessage()
+import { useLoadingBar } from 'naive-ui'
 
+const loadingBar = useLoadingBar()
+const message = useMessage()
 const router = useRouter()
 const articleData = reactive({
   data: [],
@@ -29,13 +31,16 @@ const moreArticle = () => {
 }
 // 获取所有文章数据
 const getAllBlogArticleData = async () => {
+  loadingBar.start()
   const response = await getArticleCachedData('', getAllBlogArticleApi)
   const res = response.data
   if (res.code === 200) {
     articleData.data = res.data.list
       .filter((item: articelDataType) => item.status === 'published')
       .slice(0, 4)
+    loadingBar.finish()
   } else {
+    loadingBar.error()
     message.error(res.message)
   }
 }

@@ -90,6 +90,9 @@ import { getAllBanners } from '@/http/banner'
 import { getVisitStatsApi } from '@/http/visit'
 import { getBannerCachedData } from '@/utils/apiCache'
 import type { HomeDataBannerDataType as bannerDataType } from '@/tsInterface'
+import { useLoadingBar } from 'naive-ui'
+
+const loadingBar = useLoadingBar()
 const scrollStore = useScrollStore()
 const homeDataRef = ref()
 const state = reactive({
@@ -113,11 +116,15 @@ const onImageError = () => {
 }
 // 获取banner图片数据
 const getBannerData = async () => {
-  const result = await getBannerCachedData(getAllBanners)
-  const res = result.data
-  if (res.code == 200) {
-    state.banners = res.data
-    stateLoading.banner = true
+  try{
+    const result = await getBannerCachedData(getAllBanners)
+    const res = result.data
+    if (res.code == 200) {
+      state.banners = res.data
+      stateLoading.banner = true
+    }
+  }catch(error){
+    console.log(error)
   }
 }
 // 获取统计数据
@@ -146,9 +153,15 @@ watch(
     }
   },
 )
-onMounted(() => {
-  getStatisticsData()
-  getBannerData()
+onMounted(async () => {
+  try{
+    loadingBar.start()
+    await Promise.all([getStatisticsData(), getBannerData()])
+    loadingBar.finish()
+  }catch(e){
+    console.log(e)
+    loadingBar.error()
+  }
 })
 </script>
 
