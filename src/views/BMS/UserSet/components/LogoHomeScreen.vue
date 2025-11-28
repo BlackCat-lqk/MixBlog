@@ -172,34 +172,42 @@ const formValue: formType = reactive({
 
 // cover上传成功
 const coverUploadFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.success(JSON.parse(res).message)
-  const newAvatar = JSON.parse(res).url
-  formValue.cover = newAvatar
-  return file
+  if (event != undefined) {
+    const res = (event.target as XMLHttpRequest).response
+    message.success(JSON.parse(res).message)
+    const newAvatar = JSON.parse(res).url
+    formValue.cover = newAvatar
+    return file
+  }
 }
 
 // cover上传失败
 const coverUploadError = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.error(JSON.parse(res).message)
-  return file
+  if (event != undefined) {
+    const res = (event.target as XMLHttpRequest).response
+    message.error(JSON.parse(res).message)
+    return file
+  }
 }
 
 // logo上传成功
 const logoUploadFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.success(JSON.parse(res).message)
-  const newAvatar = JSON.parse(res).url
-  formValue.logoPicture = newAvatar
-  return file
+  if (event != undefined) {
+    const res = (event.target as XMLHttpRequest).response
+    message.success(JSON.parse(res).message)
+    const newAvatar = JSON.parse(res).url
+    formValue.logoPicture = newAvatar
+    return file
+  }
 }
 
 // logo上传失败
 const logoUploadError = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  const res = (event?.target as XMLHttpRequest).response
-  message.error(JSON.parse(res).message)
-  return file
+  if (event != undefined) {
+    const res = (event.target as XMLHttpRequest).response
+    message.error(JSON.parse(res).message)
+    return file
+  }
 }
 
 // 获取slogan配置信息

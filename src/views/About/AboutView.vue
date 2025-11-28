@@ -115,6 +115,7 @@ import about3 from '@/assets/wallpaper/about3.webp'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getAboutConfigApi } from '@/http/about'
+import { getAboutCachedData } from '@/utils/apiCache'
 import type { aboutDataType } from '@/tsInterface'
 const ProfileCard = defineAsyncComponent(() => import('@/views/VueBits/ProfileCard.vue'))
 const TextType = defineAsyncComponent(() => import('@/views/VueBits/TextType.vue'))
@@ -151,7 +152,7 @@ const getAboutConfig = async () => {
     email: '',
     uId: '',
   }
-  const response = await getAboutConfigApi(params)
+  const response = await getAboutCachedData(params, getAboutConfigApi)
   const res = response.data
   if (res.code === 200) {
     aboutData.audio = res.data.audio
@@ -293,9 +294,6 @@ onBeforeUnmount(() => {
           font-size: 32px;
           .count-day {
             font-size: 48px;
-            font-family:
-              Roboto,
-              Helvetica / Arial;
             color: rgb(255, 69, 0);
           }
         }
@@ -344,9 +342,6 @@ onBeforeUnmount(() => {
           align-items: center;
           .press {
             font-size: 24px;
-            font-family:
-              Roboto,
-              Helvetica / Arial;
             margin-bottom: 20px;
           }
         }
@@ -390,19 +385,6 @@ onBeforeUnmount(() => {
         border-radius: 8px;
         padding: 10px;
         .about-title-content {
-          font-family:
-            Inter,
-            -apple-system,
-            BlinkMacSystemFont,
-            Segoe UI,
-            Roboto,
-            Oxygen,
-            Ubuntu,
-            Cantarell,
-            Fira Sans,
-            Droid Sans,
-            Helvetica Neue,
-            sans-serif;
           h3 {
             color: var(--text-color1);
             font-size: 24px;

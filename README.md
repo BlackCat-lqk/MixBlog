@@ -66,3 +66,4 @@ npm run lint
 // 配置环境[configuration environment]
 node.js: 24.0.2
 npm：11.4.0
+vite: 7.1.7

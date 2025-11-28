@@ -179,7 +179,6 @@ window.addEventListener('resize', () => {
   height: 96%;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'SimSun', serif;
   line-height: 1.6;
 }
 
@@ -223,7 +222,6 @@ window.addEventListener('resize', () => {
   white-space: pre-wrap; /* 保留换行但允许自动换行 */
   word-wrap: break-word;
   margin: 0;
-  font-family: inherit;
 }
 
 .page-controls {

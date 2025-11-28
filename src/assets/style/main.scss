@@ -5,6 +5,15 @@
 @use './theme/light.scss';
 @use './loading.scss';
 
+@font-face {
+  font-family: PuHuiTi;
+  src: url('@/assets/font/AlibabaPuHuiTi-3-55-RegularL3.ttf');
+}
+
+* {
+  font-family: PuHuiTi;
+}
+
 html {
   @include g.scrollbarCustom;
 }
@@ -13,19 +22,6 @@ body {
   display: flex;
   min-height: 100vh;
   height: 100%;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
 }
 
 #app {

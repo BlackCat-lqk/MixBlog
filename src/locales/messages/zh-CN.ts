@@ -107,8 +107,8 @@ export default {
   notes: {
     title: '随笔随记',
     subTitle: '我的日常记录...',
-    content: '记录生活',
-    content1: '记录奇怪的东西',
+    content: '记录',
+    content1: '生活',
     content2: '记录瞬间',
     content3: '评论暂未开放...',
     noData: '暂无内容',
@@ -120,7 +120,7 @@ export default {
   },
   footer: {
     title: '技术支持',
-    content: 'Mix Blog 1.1.5 · Made by LQK',
+    content: 'Mix Blog 1.2.0 · Made by LQK',
   },
   about: {
     tagsList: '富强, 民主, 文明, 和谐, 自由, 友善, 平等, 公正, 法治, 爱国, 敬业, 诚信',

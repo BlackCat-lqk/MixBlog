@@ -58,6 +58,7 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import NotesCard from '@/components/NotesCard.vue'
 import { getNotesApi } from '@/http/notes'
+import { getNotesCachedData } from '@/utils/apiCache'
 import { _formatTime } from '@/utils/publickFun'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
 import type { INotesType as NotesType, IWeatherIcons as WeatherIcons } from '@/tsInterface'
@@ -106,7 +107,7 @@ const getAllNotes = async () => {
     title: '',
     weather: '',
   }
-  const response = await getNotesApi(params)
+  const response = await getNotesCachedData(params, getNotesApi)
   const res = response.data
   if (res.code == 200) {
     if (res.data.length > 0) {

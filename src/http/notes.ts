@@ -6,7 +6,7 @@ import request from '@/utils/request'
  * @param {Object} params - 新建Notes参数
  * @returns {Promise}
  */
-export function createNotesApi(params: Object) {
+export function createNotesApi(params: object) {
   return request.post('/createNote', params)
 }
 
@@ -15,7 +15,7 @@ export function createNotesApi(params: Object) {
  * @param {Object} params - 查询Notes参数
  * @returns {Promise}
  */
-export function getNotesApi(params: Object) {
+export function getNotesApi(params: object) {
   return request.post('/getNotes', params)
 }
 

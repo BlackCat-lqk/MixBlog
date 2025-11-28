@@ -88,6 +88,7 @@ import { ref, watch, onMounted, reactive } from 'vue'
 import { useScrollStore } from '@/stores/scrollStore'
 import { getAllBanners } from '@/http/banner'
 import { getVisitStatsApi } from '@/http/visit'
+import { getBannerCachedData } from '@/utils/apiCache'
 import type { HomeDataBannerDataType as bannerDataType } from '@/tsInterface'
 const scrollStore = useScrollStore()
 const homeDataRef = ref()
@@ -112,7 +113,7 @@ const onImageError = () => {
 }
 // 获取banner图片数据
 const getBannerData = async () => {
-  const result = await getAllBanners()
+  const result = await getBannerCachedData(getAllBanners)
   const res = result.data
   if (res.code == 200) {
     state.banners = res.data

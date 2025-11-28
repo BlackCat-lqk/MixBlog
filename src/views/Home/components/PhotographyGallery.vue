@@ -275,7 +275,7 @@ onMounted(() => {
       }
       .photo-gallery-desc-p {
         color: var(--text-color);
-        padding-top: 10px;
+        padding: 10px 20px 0 0;
         font-size: 16px;
         line-height: 32px;
         text-align: justify;

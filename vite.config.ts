@@ -18,6 +18,10 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    // 注入构建时间到代码中
+    __APP_BUILD_TIME__: JSON.stringify(new Date().toISOString())
+  },
   plugins: [
     vue(),
     vueJsx(),
@@ -90,6 +94,25 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 5000000, // 设置为 5MB
       },
     }),
+    {
+      // 自定义插件生成版本文件
+      name: 'version-file',
+      apply: 'build',
+      buildStart() {
+        const versionInfo = {
+          version: process.env.npm_package_version || '1.2.5',
+          buildTime: new Date().toISOString(),
+          hash: Math.random().toString(36).substring(2, 11)
+        };
+
+        // 生成版本文件
+        this.emitFile({
+          type: 'asset',
+          fileName: 'version.json',
+          source: JSON.stringify(versionInfo, null, 2)
+        });
+      }
+    }
   ],
   resolve: {
     alias: {

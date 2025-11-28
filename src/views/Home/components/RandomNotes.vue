@@ -31,6 +31,7 @@
 import { addDays } from 'date-fns'
 import NotesCard from '@/components/NotesCard.vue'
 import { getNotesApi } from '@/http/notes'
+import { getNotesCachedData } from '@/utils/apiCache'
 import { _formatTime } from '@/utils/publickFun'
 import type { HomeNotesType as NotesType } from '@/tsInterface'
 
@@ -83,7 +84,7 @@ const getAllNotes = async () => {
     title: '',
     weather: '',
   }
-  const response = await getNotesApi(params)
+  const response = await getNotesCachedData(params, getNotesApi)
   const res = response.data
   if (res.code == 200) {
     if (res.data.length > 0) {
