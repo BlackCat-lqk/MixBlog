@@ -267,6 +267,7 @@ const delSiteNav = async (site: string) => {
 }
 
 // 外部网站跳转
+const setTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
 const handleLinkClick = (url: string) => {
   let count = 3
   const n = notification.create({
@@ -279,10 +280,10 @@ const handleLinkClick = (url: string) => {
         count--
         n.content = `${count} 秒后跳转：${url}`
         if (count > 0) {
-          window.setTimeout(minusCount, 1000)
+          setTimeoutId.value = setTimeout(minusCount, 1000)
         }
       }
-      window.setTimeout(minusCount, 1000)
+      setTimeout(minusCount, 1000)
     },
     onAfterLeave: () => {
       window.open(url, '_blank')
@@ -340,6 +341,9 @@ const getSiteNavData = async () => {
 }
 onMounted(() => {
   getSiteNavData()
+})
+onUnmounted(() => {
+  clearTimeout(setTimeoutId.value!)
 })
 </script>
 

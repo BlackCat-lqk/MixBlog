@@ -226,6 +226,7 @@ const initReader = async () => {
 }
 
 // 等待容器元素获得有效尺寸
+const setTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
 const waitForContainerSize = async () => {
   return new Promise<void>((resolve) => {
     let attempts = 0
@@ -236,7 +237,7 @@ const waitForContainerSize = async () => {
       if (viewerRef.value && viewerRef.value.offsetWidth > 0 && viewerRef.value.offsetHeight > 0) {
         resolve()
       } else if (attempts < maxAttempts) {
-        setTimeout(checkSize, 100)
+        setTimeoutId.value = setTimeout(checkSize, 100)
       } else {
         // 即使没有尺寸也继续，让后续流程决定如何处理
         resolve()
@@ -374,6 +375,9 @@ onMounted(() => {
 onUnmounted(() => {
   if (book.value) {
     book.value.destroy()
+  }
+  if (setTimeoutId.value) {
+    clearTimeout(setTimeoutId.value)
   }
 })
 </script>

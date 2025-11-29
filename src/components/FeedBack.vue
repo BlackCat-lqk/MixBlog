@@ -104,10 +104,11 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { upsertFeedbackApi } from '@/http/feedback'
-import type { IFeedbackType as FeedbackType,
+import type {
+  IFeedbackType as FeedbackType,
   IFeedbackFormData as FeedbackFormData,
-  IFeedbackProps as Props
- } from '@/tsInterface'
+  IFeedbackProps as Props,
+} from '@/tsInterface'
 
 // 组件属性
 const props = withDefaults(defineProps<Props>(), {

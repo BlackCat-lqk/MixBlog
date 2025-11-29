@@ -171,9 +171,13 @@ window.addEventListener('resize', () => {
     splitContentIntoPages(content)
   }
 })
+
+onUnmounted(() => {
+  window.removeEventListener('resize', () => {})
+})
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .novel-reader {
   width: 66%;
   height: 96%;

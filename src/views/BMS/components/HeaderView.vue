@@ -43,14 +43,14 @@ const changeTheme = () => {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
 }
 const timeDisplay = ref<HTMLElement | null>(null)
-
+const setTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
 const updateClock = () => {
   const now = new Date()
   if (timeDisplay.value) {
     timeDisplay.value.textContent = now.toLocaleTimeString()
   }
   requestAnimationFrame(() => {
-    setTimeout(updateClock, 1000)
+    setTimeoutId.value = setTimeout(updateClock, 1000)
   })
 }
 // 退出登录
@@ -68,6 +68,11 @@ const exitLogin = async () => {
 }
 onMounted(() => {
   updateClock()
+})
+onUnmounted(() => {
+  if (setTimeoutId.value) {
+    clearTimeout(setTimeoutId.value)
+  }
 })
 </script>
 

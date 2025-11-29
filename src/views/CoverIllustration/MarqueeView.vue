@@ -103,13 +103,16 @@ onMounted(() => {
     { immediate: true },
   )
 })
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateSizes)
+})
 </script>
 
 <style lang="scss" scoped>
 .marquee-container {
   overflow: hidden;
   position: relative;
-  // width: 100%;
   height: 236px;
   border-radius: 10px;
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(30, 30, 30, 0.25));
