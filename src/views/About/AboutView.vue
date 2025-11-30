@@ -45,6 +45,14 @@
               :lazy="true"
               alt="about"
             />
+            <n-image
+              :src="about4"
+              width="200"
+              height="240"
+              object-fit="cover"
+              :lazy="true"
+              alt="about"
+            />
           </div>
         </div>
       </div>
@@ -112,6 +120,7 @@
 <script setup lang="ts">
 import about2 from '@/assets/wallpaper/about2.webp'
 import about3 from '@/assets/wallpaper/about3.webp'
+import about4 from '@/assets/wallpaper/about4.webp'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getAboutConfigApi } from '@/http/about'
@@ -228,7 +237,7 @@ onBeforeUnmount(() => {
   .about-left {
     .avatar-box {
       width: 260px;
-      height: 260px;
+      height: auto;
       .avatar-name {
         display: flex;
         flex-direction: column;

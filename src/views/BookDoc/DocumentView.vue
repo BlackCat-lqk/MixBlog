@@ -76,18 +76,16 @@
     </div>
   </div>
   <div class="preview-file-box" ref="documentBox">
-    <n-modal v-model:show="showPreview" :to="documentBox">
+    <n-modal v-model:show="showPreview" :to="documentBox" @after-leave="closePreview">
       <n-card content-class="vue-office-pdf-box" role="dialog" aria-modal="false">
         <template #header>
           <div class="preivew-card-header-close">
-            <img
-              width="32px"
-              src="@/assets/images/close1.svg"
-              @click="showPreview = false"
-              alt="close"
-            />
+            <img width="32px" src="@/assets/images/close1.svg" @click="closePreview" alt="close" />
           </div>
-          <div class="zoom-controls" v-if="!((showTxtReader && !showOnlyOffice) || (showOnlyOffice && !showTxtReader))">
+          <div
+            class="zoom-controls"
+            v-if="!((showTxtReader && !showOnlyOffice) || (showOnlyOffice && !showTxtReader))"
+          >
             <button @click="zoomOut" class="zoom-button" :disabled="loading">-</button>
             <span class="zoom-level">{{ Math.round(scale * 100) }}%</span>
             <button @click="zoomIn" class="zoom-button" :disabled="loading">+</button>
@@ -97,6 +95,7 @@
           <div class="loading-spinner"></div>
           <p>正在加载文件...</p>
           <p class="debug-info">文件路径: {{ previewData.path }}</p>
+          <p>{{ fileLodingTip }}</p>
         </div>
         <vue-office-pdf
           v-if="previewData.suffix === 'pdf' || previewData.suffix === 'PDF'"
@@ -137,7 +136,9 @@
           @rendered="onPdfRendered"
           :options="pdfOptions"
         />
-        <div v-if="!loading && showOnlyOffice && showTxtReader" class="preview-error-tip">预览出错啦！请下载文档查看吧</div>
+        <div v-if="!loading && showOnlyOffice && showTxtReader" class="preview-error-tip">
+          预览出错啦！请下载文档查看吧
+        </div>
         <novel-reader
           v-if="showTxtReader && !showOnlyOffice"
           :txt-url="previewData.path"
@@ -148,7 +149,6 @@
           v-show="showOnlyOffice && !showTxtReader"
           :url="previewData.path"
         ></book-reader>
-
       </n-card>
     </n-modal>
   </div>
@@ -180,6 +180,7 @@ const showTxtReader = ref(false)
 const message = useMessage()
 const bgKey = ref('all')
 const searchKeyword = ref('')
+const fileLodingTip = ref('')
 const pdfOptions = {
   maxPagesToRender: null,
   disableAutoFetch: false,
@@ -206,7 +207,7 @@ const bookDocAllData = ref([] as BookDocData[])
 const bookCategories = ref({})
 // 缩放相关状态
 const scale = ref(1)
-const loading = ref(true)
+const loading = ref(false)
 const loadError = ref<string | null>(null)
 
 const showPreview = ref(false)
@@ -265,7 +266,7 @@ const onPdfRendered = () => {
 
 // 重置状态
 const resetState = () => {
-  loading.value = true
+  loading.value = false
   loadError.value = null
 }
 
@@ -292,7 +293,7 @@ const filterFiles = (key: string) => {
 // 获取预览信息
 const getPreviewDetail = (data: BookDocData) => {
   // 初始化加载状态
-  resetState()
+  loading.value = true
   showPreview.value = true
   previewData.value.path = data.path
   previewData.value.filename = data.filename
@@ -324,6 +325,30 @@ const getBookDocDataList = async () => {
     message.error(res.message)
   }
 }
+
+// 关闭预览
+const closePreview = () => {
+  showPreview.value = false
+  resetState()
+}
+const timer = ref<ReturnType<typeof setTimeout> | null>(null)
+watch(
+  () => loading.value,
+  (newVal) => {
+    // 清除之前的定时器（如果存在）
+    if (timer.value) {
+      clearTimeout(timer.value)
+      timer.value = null
+    }
+    if (newVal == true) {
+      timer.value = setTimeout(() => {
+        fileLodingTip.value = '文件较大，请耐心等待加载'
+      }, 10000)
+    } else {
+      fileLodingTip.value = ''
+    }
+  },
+)
 
 onMounted(() => {
   getBookDocDataList()
@@ -509,7 +534,10 @@ onMounted(() => {
     top: 0;
     left: 0;
     z-index: 10;
-    background: #f8fafc;
+    background-color: var(--box-bg-color1);
+    p {
+      color: var(--text-color);
+    }
   }
 
   .loading-spinner {
