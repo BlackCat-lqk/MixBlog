@@ -16,7 +16,7 @@
             <n-card :title="item.title" hoverable :style="`background:${item.bgColor}`">
               <div class="gather-cards-content">
                 <h2>{{ item.content }}</h2>
-                <div v-show="idx != 0 && idx != 4" class="gather-cards-content-icon">
+                <div v-show="idx != 0 && idx != 5" class="gather-cards-content-icon">
                   <n-button strong secondary @click="handleJump(idx)">
                     <img src="@/assets/images/Add.svg" alt="添加" />
                   </n-button>
@@ -244,6 +244,8 @@ const handleJump = (item: number) => {
     router.push('/bms/editPhoto')
   } else if (item === 3) {
     router.push('/bms/notes')
+  }else if (item === 4) {
+    router.push('/bms/site-nav')
   }
 }
 
