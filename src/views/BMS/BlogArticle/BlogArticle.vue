@@ -44,15 +44,15 @@
                     </p>
                     <p>{{ _formatTime(item.updatedAt).date }}</p>
                     <div>
-                      <img src="@/assets/images/View.svg" alt="view" />
+                      <img src="@/assets/images/views.svg" alt="view" />
                       <span>{{ item.likes.length }}</span>
                     </div>
                     <div>
-                      <img src="@/assets/images/Like.svg" alt="like" />
+                      <img src="@/assets/images/likes.svg" alt="like" />
                       <span>{{ item.views.length }}</span>
                     </div>
                     <div>
-                      <img src="@/assets/images/CommentOutlined.svg" alt="comment" />
+                      <img src="@/assets/images/comment.svg" alt="comment" />
                       <span>{{ item.comments.length }}</span>
                     </div>
                   </div>
@@ -369,7 +369,7 @@ onMounted(() => {
       flex: 1;
     }
     :deep(.n-list-item) {
-      background-color: #2e33380d;
+      background-color: rgba(22, 117, 211, 0.1);
       padding: 10px;
       border-radius: 8px;
       margin-bottom: 15px;
@@ -447,7 +447,7 @@ onMounted(() => {
     }
     .tags-box {
       width: 320px;
-      background-color: #2e33380d;
+      background-color: rgba(22, 117, 211, 0.1);
       padding: 10px;
       border-radius: 8px;
       .tags-title {
@@ -458,7 +458,7 @@ onMounted(() => {
         span {
           font-size: 18px;
           font-weight: 600;
-          color: #333;
+          color: var(--text-color);
         }
         img {
           width: 16px;
@@ -473,7 +473,7 @@ onMounted(() => {
         }
         span {
           font-size: 16px;
-          color: #000;
+          color: var(--text-color);
           font-weight: 600;
         }
       }

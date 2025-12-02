@@ -222,7 +222,7 @@ const onNegativeClick = () => {
 // 启动倒计时函数
 let timer: any
 const startCountdown = () => {
-  const timer = setInterval(() => {
+  timer = setInterval(() => {
     countdown.value--
     if (countdown.value <= 0) {
       clearInterval(timer)

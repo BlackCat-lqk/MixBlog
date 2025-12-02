@@ -36,7 +36,7 @@ import AboutSet from './components/AboutSet.vue'
     font-size: 18px;
     line-height: 1.34;
     font-weight: 600;
-    color: #1e2025;
+    color: var(--text-color);
     padding-bottom: 10px;
   }
 }

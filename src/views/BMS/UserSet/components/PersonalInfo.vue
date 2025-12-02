@@ -243,7 +243,7 @@ const confirmUpdate = async () => {
     flex: 1;
     display: flex;
     justify-content: space-between;
-    background-color: #2e33380d;
+    background-color: rgba(22, 117, 211, 0.1);
     padding: 10px;
     border-radius: 8px;
     .personal-info {
@@ -299,7 +299,7 @@ const confirmUpdate = async () => {
     display: flex;
     gap: 24px;
     flex-direction: column;
-    background-color: #2e33380d;
+    background-color: rgba(22, 117, 211, 0.1);
     padding: 10px;
     border-radius: 8px;
   }

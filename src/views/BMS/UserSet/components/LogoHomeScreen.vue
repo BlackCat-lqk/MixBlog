@@ -248,7 +248,7 @@ onMounted(() => {
 .logo-home-screen-box {
   display: flex;
   gap: 24px;
-  background-color: #2e33380d;
+  background-color: rgba(22, 117, 211, 0.1);
   padding: 20px 10px;
   border-radius: 8px;
   margin-bottom: 24px;
@@ -268,12 +268,12 @@ onMounted(() => {
     flex: 0.5;
     position: relative;
     border-radius: 8px;
-    background-color: #f4f2ec;
+    background-color: var(--bg-color);
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
     .logo-text-box {
       width: calc(100% - 20px);
       padding: 10px;
-      background-color: #fff;
+      background-color: var(--bg-color);
       position: absolute;
       border-radius: 8px 8px 0 0;
       top: 0%;
@@ -322,7 +322,7 @@ onMounted(() => {
         align-items: center;
         justify-content: center;
         font-size: 32px;
-        color: #fff;
+        color: var(--text-color);
         font-weight: bold;
       }
     }

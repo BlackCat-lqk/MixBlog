@@ -89,12 +89,12 @@ onBeforeUnmount(() => {
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 16px;
-    color: #999;
+    color: var(--text-color);
   }
 
   .dark-mode .chart-loading,
   .dark-mode .chart-empty {
-    color: #ccc;
+    color: var(--text-color);
   }
 }
 </style>
