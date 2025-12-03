@@ -1,6 +1,6 @@
 # mix-blog
 
-welcome to visit [https://mixblog.cn/](https://vitest.dev/)  
+welcome to visit [https://mixblog.cn/](https://mixblog.cn/)  
 
 This template should help get you started developing with Vue 3 in Vite.
 
