@@ -38,13 +38,13 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   initialPosition: () => ({ x: 0, y: 0 }),
   boundarySelector: '',
-  className: ''
+  className: '',
 })
 
 const emit = defineEmits<{
   (e: 'dragStart', position: Position): void // 拖拽开始
-  (e: 'dragging', position: Position): void  // 拖拽中
-  (e: 'dragEnd', position: Position): void   // 拖拽结束
+  (e: 'dragging', position: Position): void // 拖拽中
+  (e: 'dragEnd', position: Position): void // 拖拽结束
 }>()
 
 const draggableElement = ref<HTMLElement | null>(null)
@@ -58,27 +58,28 @@ const boundaryCache = ref<BoundaryCache>({
   minY: 0,
   maxY: 0,
   width: 0,
-  height: 0
+  height: 0,
 })
 
 // 计算位置样式
 const positionStyle = computed(() => ({
   transform: `translate(${position.value.x}px, ${position.value.y}px)`,
-  cursor: isDragging.value ? 'grabbing' : 'grab'
+  cursor: isDragging.value ? 'grabbing' : 'grab',
 }))
 
 // 节流函数
 // 替换原有的节流函数实现
+const setTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
 const throttle = (func: (...args: [MouseEvent | TouchEvent]) => void, limit: number) => {
-  let inThrottle = false;
+  let inThrottle = false
   return function (this: unknown, ...args: [MouseEvent | TouchEvent]) {
     if (!inThrottle) {
-      func.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
+      func.apply(this, args)
+      inThrottle = true
+      setTimeoutId.value = setTimeout(() => (inThrottle = false), limit)
     }
-  };
-};
+  }
+}
 
 // 开始拖拽
 const startDrag = (e: MouseEvent | TouchEvent) => {
@@ -91,7 +92,7 @@ const startDrag = (e: MouseEvent | TouchEvent) => {
 
   startPos.value = {
     x: clientX - position.value.x,
-    y: clientY - position.value.y
+    y: clientY - position.value.y,
   }
 
   // 缓存边界值
@@ -105,7 +106,7 @@ const startDrag = (e: MouseEvent | TouchEvent) => {
       minY: 0,
       maxY: boundaryRect.height - draggableRect.height,
       width: draggableRect.width,
-      height: draggableRect.height
+      height: draggableRect.height,
     }
   }
 
@@ -186,8 +187,10 @@ onUnmounted(() => {
   window.removeEventListener('touchmove', throttledOnDrag)
   window.removeEventListener('mouseup', stopDrag)
   window.removeEventListener('touchend', stopDrag)
+  if (setTimeoutId.value) {
+    clearTimeout(setTimeoutId.value)
+  }
 })
-
 </script>
 
 <style scoped lang="scss">

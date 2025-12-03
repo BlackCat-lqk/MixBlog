@@ -7,6 +7,9 @@ const lineOptions: EChartsOption = {
     show: true,
     top: '2%',
     left: '3%',
+    textStyle: {
+      color: '#fff',
+    },
   },
   grid: {
     left: '8%',
@@ -17,7 +20,9 @@ const lineOptions: EChartsOption = {
     type: 'category',
     data: [],
   },
-  yAxis: {},
+  yAxis: {
+    type: 'value',
+  },
   series: [
     {
       type: 'line',
@@ -33,6 +38,9 @@ const pieOptions: EChartsOption = {
     show: true,
     top: '2%',
     left: '3%',
+    textStyle: {
+      color: '#fff',
+    },
   },
   tooltip: {
     trigger: 'item',

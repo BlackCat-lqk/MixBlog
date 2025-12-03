@@ -229,7 +229,6 @@ onMounted(() => {
   cursor: pointer;
   font-weight: 500;
   transition: background 0.2s;
-  disabled: opacity 0.5;
 }
 
 .nav-button:hover:not(:disabled) {

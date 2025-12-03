@@ -36,18 +36,21 @@ import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   show: {
     type: Boolean,
-    default: false
+    default: false,
   },
   size: [Number, String],
   color: String,
-  class: String
+  class: String,
 })
 
-watch(() => props.show, (val) => {
-  if (val) {
-    toggleNotification()
-  }
-})
+watch(
+  () => props.show,
+  (val) => {
+    if (val) {
+      toggleNotification()
+    }
+  },
+)
 
 const emits = defineEmits(['update:show'])
 
@@ -56,15 +59,14 @@ const isExpanded = ref(false)
 const hasUnread = ref(true)
 
 // 触发图标抖动动画
+const setTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
 const triggerShake = () => {
   isShaking.value = true
-  setTimeout(() => {
+  setTimeoutId.value = setTimeout(() => {
     isShaking.value = false
     // 抖动结束后展开通知
-    setTimeout(() => {
-      isExpanded.value = true
-      hasUnread.value = false
-    }, 200)
+    isExpanded.value = true
+    hasUnread.value = false
   }, 300)
 }
 
@@ -85,6 +87,11 @@ const closeNotification = () => {
 // 组件挂载后自动触发一次抖动
 onMounted(() => {
   setTimeout(triggerShake, 1000)
+})
+onUnmounted(() => {
+  if (setTimeoutId.value) {
+    clearTimeout(setTimeoutId.value)
+  }
 })
 </script>
 

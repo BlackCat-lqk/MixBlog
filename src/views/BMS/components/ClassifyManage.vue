@@ -267,7 +267,7 @@ onMounted(() => {
     }
     span {
       font-size: 16px;
-      color: #000;
+      color: var(--text-color);
       font-weight: 600;
     }
   }

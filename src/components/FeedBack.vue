@@ -60,11 +60,6 @@
           <div class="form-group">
             <label class="form-label">截图（可选，最多3张）</label>
             <div class="screenshots-area">
-              <!-- <img
-                v-if="formData.screenshots"
-                :src="formData.screenshots"
-                class="screenshots-preview"
-              /> -->
               <div class="screenshots-placeholder">
                 <button type="button" class="screenshots-btn" @click="captureScreenshot">
                   上传截图
@@ -109,10 +104,11 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { upsertFeedbackApi } from '@/http/feedback'
-import type { IFeedbackType as FeedbackType,
+import type {
+  IFeedbackType as FeedbackType,
   IFeedbackFormData as FeedbackFormData,
-  IFeedbackProps as Props
- } from '@/tsInterface'
+  IFeedbackProps as Props,
+} from '@/tsInterface'
 
 // 组件属性
 const props = withDefaults(defineProps<Props>(), {

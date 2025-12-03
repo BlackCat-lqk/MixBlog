@@ -7,6 +7,7 @@ import App from './App.vue'
 import router from './router'
 import i18n from './locales'
 
+
 // 注册指令
 import vPreventScrollPassthrough from './directives/preventScrollPassthrough'
 import vLoading from './directives/loading'
@@ -35,3 +36,6 @@ app.mount('#app')
 // pinia挂载后再进行主题初始化
 const themeStore = useThemeStore()
 themeStore.setTheme(themeStore.currentTheme)
+
+// 开始版本检查
+// versionChecker.start()

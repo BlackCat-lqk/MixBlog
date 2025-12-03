@@ -31,9 +31,12 @@
 import { addDays } from 'date-fns'
 import NotesCard from '@/components/NotesCard.vue'
 import { getNotesApi } from '@/http/notes'
+import { getNotesCachedData } from '@/utils/apiCache'
 import { _formatTime } from '@/utils/publickFun'
 import type { HomeNotesType as NotesType } from '@/tsInterface'
+import { useLoadingBar } from 'naive-ui'
 
+const loadingBar = useLoadingBar()
 const router = useRouter()
 const value = ref(addDays(Date.now(), 1).valueOf())
 const articleUpdateAt = ref<string[]>([])
@@ -79,11 +82,12 @@ const handleUpdateValue = (
 
 // 获取所有笔记
 const getAllNotes = async () => {
+  loadingBar.start()
   const params = {
     title: '',
     weather: '',
   }
-  const response = await getNotesApi(params)
+  const response = await getNotesCachedData(params, getNotesApi)
   const res = response.data
   if (res.code == 200) {
     if (res.data.length > 0) {
@@ -94,7 +98,9 @@ const getAllNotes = async () => {
         return res.split(' ')[0]
       })
     }
+    loadingBar.finish()
   } else {
+    loadingBar.error()
     console.log(res.message)
   }
 }

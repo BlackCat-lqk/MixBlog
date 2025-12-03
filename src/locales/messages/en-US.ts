@@ -107,8 +107,8 @@ export default {
   notes: {
     title: 'Daily Notes',
     subTitle: 'My daily log...',
-    content: 'Record strange things',
-    content1: 'Record life',
+    content: 'Record',
+    content1: 'life',
     content2: 'Record moments',
     content3: 'Comments are not yet open...',
     noData: 'No content available',
@@ -120,7 +120,7 @@ export default {
   },
   footer: {
     title: 'technical support',
-    content: 'Mix Blog 1.1.5 · Made by LQK',
+    content: 'Mix Blog 1.2.0 · Made by LQK',
   },
   about: {
     tagsList:
@@ -135,4 +135,9 @@ export default {
     sendMsg: 'send message...',
     padding: 'padding',
   },
+  notFound:{
+    title: '404 resource not found',
+    content: 'Oops! Something is wrong!',
+    back: 'Home',
+  }
 }

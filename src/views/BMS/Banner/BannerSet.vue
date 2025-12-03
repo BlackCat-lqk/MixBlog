@@ -425,7 +425,7 @@ onMounted(() => {
       flex-wrap: wrap;
 
       .banner-item-box {
-        background-color: #2e33380d;
+        background-color: rgba(22, 117, 211, 0.1);
         border-radius: 8px;
         padding: 10px;
         height: 320;

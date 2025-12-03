@@ -5,6 +5,9 @@
   <div class="article-menu-box">
     <classify-meun :classify="classify" @classifyEmit="handleClassify"></classify-meun>
     <div class="search-box">
+      <div class="date-picker-box">
+        <DatePicker @updateDate="filterDate"></DatePicker>
+      </div>
       <GradientFlow class-name="gradient-box">
         <template #content>
           <n-input
@@ -46,6 +49,8 @@ import ArticleCard from '@/components/ArticleCard.vue'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
 import { getAllBlogArticleApi } from '@/http/blogArticle'
 import { getArticleCachedData } from '@/utils/apiCache'
+import DatePicker from '@/components/DatePicker.vue'
+import { _formatTime } from '@/utils/publickFun'
 import { useMessage } from 'naive-ui'
 const { t } = useI18n()
 import debounce from 'lodash/debounce'
@@ -71,6 +76,7 @@ interface articelDataType {
   category: string
   title: string
   intro: string
+  createdAt: string
 }
 // 获取所有文章数据
 const getAllBlogArticleData = async () => {
@@ -112,16 +118,33 @@ const handleClassify = (name: string) => {
   }
 }
 
+// 过滤时间文章
+const filterTime = ref<string[]>([])
+const filterDate = (date: string[]) => {
+  if (date) {
+    filterTime.value = date.map((item) => {
+      const res = _formatTime(item)
+      return res.date
+    })
+  } else {
+    filterTime.value = []
+  }
+  handleSearch(searchArticle.value)
+}
+
 // 搜索文章
 const handleSearch = debounce((value: string) => {
-  if (!value) {
+  if (!value && filterTime.value.length == 0) {
     handleClassify('全部')
   } else {
     const listData = cloneDeep(articleData.deepData)
     articleData.data = listData.filter((item: articelDataType) => {
+      const articleTime = _formatTime(item.createdAt)
       return (
-        item.title.toLowerCase().includes(value.toLowerCase()) ||
-        item.intro.toLowerCase().includes(value.toLowerCase())
+        (item.title.toLowerCase().includes(value.toLowerCase()) ||
+          item.intro.toLowerCase().includes(value.toLowerCase())) &&
+        filterTime.value[0] <= articleTime.date &&
+        articleTime.date <= filterTime.value[1]
       )
     })
   }
@@ -146,6 +169,23 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     margin-bottom: 80px;
+    align-items: center;
+    .date-picker-box {
+      position: absolute;
+      width: 220px;
+      height: 100%;
+      left: 0;
+      top: 0;
+      z-index: 1;
+      border: 1px solid #9a9aff;
+      :deep(.n-date-picker) {
+        height: 100%;
+        .n-input,
+        .n-input__input-el {
+          height: 100%;
+        }
+      }
+    }
     .gradient-box {
       width: 360px;
       border-radius: 30px;

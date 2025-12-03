@@ -94,7 +94,6 @@ const hasNote = ref(true)
       }
     }
     .random-notes-content {
-      font-family: serif;
       font-size: 16px;
       line-height: 42px;
       text-align: justify;

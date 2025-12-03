@@ -194,7 +194,6 @@ const sendMessage = debounce(async () => {
   justify-content: center;
   align-items: center;
   color: var(--text-color);
-  font-family: Arial, sans-serif;
   gap: 5px;
   padding: 20px 0;
   margin-top: 5vh;
@@ -287,6 +286,7 @@ const sendMessage = debounce(async () => {
     height: 120px;
     border-radius: 8px;
     padding: 10px;
+    border: 1px solid var(--border-color);
     background-color: var(--bg);
     display: flex;
     flex-direction: column;

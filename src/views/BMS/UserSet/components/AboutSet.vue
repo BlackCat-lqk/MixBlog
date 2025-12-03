@@ -66,7 +66,7 @@
             <n-input
               v-model:value="item.title"
               placeholder="请输入标题..."
-              maxlength="20"
+              maxlength="100"
               show-count
               clearable
             />
@@ -257,7 +257,7 @@ onMounted(() => {
   padding: 20px 10px;
   gap: 24px;
   height: auto;
-  background-color: #2e33380d;
+  background-color: rgba(22, 117, 211, 0.1);
   border-radius: 8px;
   .about-content-box {
     flex: 0.5;
@@ -270,7 +270,7 @@ onMounted(() => {
         .n-form-item-label__text {
           font-size: 14px;
           font-weight: bold;
-          color: #525c75;
+          color: var(--text-color);
         }
         .n-form-item-blank {
           > div {
@@ -347,10 +347,10 @@ onMounted(() => {
       .user-name-title {
         font-size: 24px;
         font-weight: 600;
-        color: #1e2025;
+        color: var(--text-color);
       }
       .introduction-text {
-        color: #1e2025b8;
+        color: var(--text-color);
         font-size: 14px;
         text-align: center;
       }
@@ -358,8 +358,8 @@ onMounted(() => {
         font-size: 12px;
         line-height: 28px;
         padding: 0 12px;
-        color: #1e2025;
-        background-color: #1e202514;
+        color: var(--text-color);
+        background-color: rgba(22, 117, 211, 0.1);
         border-radius: 14px;
       }
       .preview-module-box {
@@ -369,7 +369,7 @@ onMounted(() => {
         align-items: center;
         h3 {
           font-size: 20px;
-          color: #1e2025;
+          color: var(--text-color);
           font-weight: 600;
           padding-bottom: 4px;
           padding-top: 12px;
@@ -377,7 +377,7 @@ onMounted(() => {
         p {
           text-align: center;
           font-size: 14px;
-          color: #1e2025b8;
+          color: var(--text-color);
           overflow: hidden;
           width: 680px;
           word-wrap: break-word;

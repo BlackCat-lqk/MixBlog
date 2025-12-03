@@ -83,6 +83,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useLoadingBar } from 'naive-ui'
 import ImageDetail from '@/views/ImageLibrary/ImageDetail.vue'
 import { getPhotoLibraryApi } from '@/http/photoLibrary'
 import { getPhotoCachedData } from '@/utils/apiCache'
@@ -92,6 +93,7 @@ import type { HomePhotoItemType as photoItemType } from '@/tsInterface'
 const themeStore = useThemeStore()
 const router = useRouter()
 const showActiveDrawer = ref(false)
+const loadingBar = useLoadingBar()
 
 const photoItem = ref<photoItemType>({
   _id: '',
@@ -122,8 +124,8 @@ let imagesDetail: photoItemType = reactive({
 })
 // 获取图库信息
 const getPhotoLibrary = async () => {
+  loadingBar.start()
   const response = await getPhotoCachedData(getPhotoLibraryApi)
-  // const response = await getPhotoLibraryApi()
   const res = response.data
   if (res.code == 200) {
     state.step = 0
@@ -133,7 +135,9 @@ const getPhotoLibrary = async () => {
       photoItem.value = state.photoLibrary[0]
       state.dataCount = res.data.list.length - 1
     }
+    loadingBar.finish()
   } else {
+    loadingBar.error()
     console.log('error')
   }
 }
@@ -275,7 +279,7 @@ onMounted(() => {
       }
       .photo-gallery-desc-p {
         color: var(--text-color);
-        padding-top: 10px;
+        padding: 10px 20px 0 0;
         font-size: 16px;
         line-height: 32px;
         text-align: justify;

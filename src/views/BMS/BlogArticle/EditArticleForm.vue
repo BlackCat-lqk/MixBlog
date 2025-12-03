@@ -2,50 +2,47 @@
   <n-modal-provider>
     <n-modal v-model:show="showModalRef">
       <n-card
-        style="width: 600px"
+        style="width: 80%"
         title="编辑博客文章"
         :bordered="false"
         size="huge"
         role="dialog"
         aria-modal="true"
       >
-        内容
-        <template #footer>
-          <n-button strong secondary>取消</n-button>
-          <n-button type="info">确认</n-button>
-        </template>
+        <ModifyArticle :data="props.editData" @canleEdit="canleEdit"></ModifyArticle>
       </n-card>
     </n-modal>
   </n-modal-provider>
 </template>
 
 <script lang="ts" setup>
+import { ref, watch } from 'vue'
+import ModifyArticle from './ModifyArticle.vue'
+
 const emit = defineEmits<{
   (e: 'update:showModal', val: boolean): void
 }>()
 const props = defineProps<{
   showModal: boolean
+  editData: object
 }>()
 
 const showModalRef = ref(false)
 
+// 取消
+const canleEdit = () => {
+  showModalRef.value = false
+}
+
 watch(
   () => props.showModal,
   (val) => {
-    if (val) {
-      showModalRef.value = val
-    }
+    showModalRef.value = val
   },
+  { immediate: true },
 )
 
-watch(
-  () => showModalRef.value,
-  (val) => {
-    if (!val) {
-      emit('update:showModal', val)
-    }
-  },
-)
+watch(showModalRef, (val) => {
+  emit('update:showModal', val)
+})
 </script>
-
-<style lang="scss" scoped></style>

@@ -52,7 +52,6 @@
     background-color: $black;
     color: $white;
     text-align: center;
-    font-family: 'Open Sans';
     font-size: 1.3rem;
     h1 {
       font-size: 2.5rem;

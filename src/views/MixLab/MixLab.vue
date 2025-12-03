@@ -181,8 +181,16 @@
           </div>
           <div class="grid-custom-box">
             <TextToImage :data="textToImageData"></TextToImage>
-            <span style="color: #fff; position: absolute; bottom: 5%; background-color: #000;">Canvas画布: 数据生图</span>
-            <input type="file" id="imageUpload" accept="image/*" style="color: #fff; background-color: #000; position: absolute; bottom: 15%;" @change="handleImageUpload" />
+            <span style="color: #fff; position: absolute; bottom: 5%; background-color: #000"
+              >Canvas画布: 数据生图</span
+            >
+            <input
+              type="file"
+              id="imageUpload"
+              accept="image/*"
+              style="color: #fff; background-color: #000; position: absolute; bottom: 15%"
+              @change="handleImageUpload"
+            />
           </div>
         </div>
         <HooksLab v-show="showTabs == 1"></HooksLab>
@@ -247,7 +255,7 @@ const textToImageData = reactive({
   uploadedImage: '',
   width: '456px',
   height: '300px',
-  content: '描述文字'
+  content: '描述文字',
 })
 
 // 处理Canvas图片上传
@@ -256,7 +264,7 @@ const handleImageUpload = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (file) {
     reader.onload = (e) => {
-      if(!e.target) return
+      if (!e.target) return
       textToImageData.uploadedImage = e.target.result as string
     }
     reader.readAsDataURL(file)
@@ -278,7 +286,9 @@ onMounted(() => {
   initWaterBallData()
 })
 onBeforeUnmount(() => {
-  clearInterval(timer)
+  if (timer) {
+    clearInterval(timer)
+  }
 })
 </script>
 

@@ -13,12 +13,13 @@ import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import HomeView from '@/views/Home/HomeView.vue'
 import { getSloganApi } from '@/http//slogan'
+import { getSloganCachedData } from '@/utils/apiCache'
 import { sloganConfigData } from '@/utils/defaultConfig'
 import { useSloganInfoStore } from '@/stores/configInfo'
 const sloganStore = useSloganInfoStore()
 // 获取logo图及logo文本和Slogan等数据
 const getSloganData = async () => {
-  const response = await getSloganApi()
+  const response = await getSloganCachedData(getSloganApi)
   const res = response.data
   if (res.code == 200) {
     sloganStore.setSloganConfig(res.data)

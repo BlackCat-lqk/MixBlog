@@ -372,7 +372,7 @@ onMounted(() => {
       .published-content {
         height: auto;
         min-height: 180px;
-        background-color: #2e33380d;
+        background-color: rgba(22, 117, 211, 0.1);
         margin-bottom: 20px;
         padding: 20px;
         display: flex;
@@ -407,14 +407,14 @@ onMounted(() => {
         .note-update-time {
           font-size: 14px;
           line-height: 1.54;
-          color: rgba(30, 32, 37, 0.48);
+          color: var(--text-color);
         }
         .note-content-detail-box {
           margin-top: 16px;
           font-size: 14px;
           line-height: 1.54;
           font-weight: 400;
-          color: #1e2025;
+          color: var(--text-color);
         }
 
         .content-img-box {
@@ -437,7 +437,7 @@ onMounted(() => {
       min-width: 440px;
       border-radius: 8px;
       box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
-      background-color: #2e33380d;
+      background-color: rgba(22, 117, 211, 0.1);
       padding: 20px;
 
       .n-form {

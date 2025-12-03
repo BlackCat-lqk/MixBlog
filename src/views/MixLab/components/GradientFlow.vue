@@ -9,7 +9,7 @@
  * 自定义不用颜色的类名：color-class-name-arry, 最多定义4种颜色
  */
 <template>
-  <div :class="['gradient-border', className]" v-bind="$attrs" @click="handleSubmit">
+  <div :class="['gradient-border', bgColor ? '' : 'unsetBg', className]" v-bind="$attrs" @click="handleSubmit">
     <div :class="['red-glow glow', colorClassNameArry[0]]"></div>
     <div :class="['cyan-glow glow', colorClassNameArry[1]]"></div>
     <div :class="['purple-glow glow', colorClassNameArry[2]]"></div>
@@ -22,11 +22,13 @@
 interface GradientFlowProps {
   className?: string
   disabled?: boolean
-  colorClassNameArry?: string[]
+  colorClassNameArry?: string[],
+  bgColor?: boolean, // 是否开启背景光效
 }
 const {
   className = '',
-  colorClassNameArry = ['', '', '', '']
+  colorClassNameArry = ['', '', '', ''],
+  bgColor = false,
 } = defineProps<GradientFlowProps>()
 
 defineOptions({ inheritAttrs: false }); // 用 inheritAttrs: false 避免自动绑定到根元素，再手动绑定到目标元素
@@ -36,7 +38,7 @@ const handleSubmit = () => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .gradient-border {
   /*   基础尺寸和定位 */
   position: absolute;
@@ -158,6 +160,22 @@ const handleSubmit = () => {
 
 .cyan-glow {
   filter: blur(15px);
+}
+
+.unsetBg {
+  .cyan-glow::after{
+    background-image: unset;
+  }
+  .red-glow::after{
+    background-image: unset;
+  }
+  .purple-glow::after{
+    background-image: unset;
+  }
+  .glow::after{
+    background-image: unset;
+  }
+
 }
 
 /* 注册的变量才能进行动画 */

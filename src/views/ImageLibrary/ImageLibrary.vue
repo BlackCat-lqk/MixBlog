@@ -200,19 +200,6 @@ onMounted(() => {
           opacity: 0;
           font-size: 14px;
           line-height: 1.54;
-          font-family:
-            Inter,
-            -apple-system,
-            BlinkMacSystemFont,
-            Segoe UI,
-            Roboto,
-            Oxygen,
-            Ubuntu,
-            Cantarell,
-            Fira Sans,
-            Droid Sans,
-            Helvetica Neue,
-            sans-serif;
         }
       }
       &:hover {

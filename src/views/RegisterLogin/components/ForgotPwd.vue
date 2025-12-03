@@ -220,11 +220,12 @@ const onNegativeClick = () => {
   formValue.confirmPassword = ''
 }
 // 启动倒计时函数
+let timer: any
 const startCountdown = () => {
-  const interval = setInterval(() => {
+  timer = setInterval(() => {
     countdown.value--
     if (countdown.value <= 0) {
-      clearInterval(interval)
+      clearInterval(timer)
       localStorage.removeItem('countdownEndTime')
     }
   }, 1000)
@@ -266,6 +267,11 @@ watch(
     }
   },
 )
+onBeforeUnmount(() => {
+  if (timer) {
+    clearInterval(timer)
+  }
+})
 </script>
 
 <style scoped lang="scss">

@@ -13,10 +13,10 @@
         </div>
         <div class="gather">
           <div class="gather-cards" v-for="(item, idx) in optionCards" :key="idx">
-            <n-card :title="item.title" hoverable :style="`background:${item.bgColor}`">
+            <n-card :title="item.title" hoverable>
               <div class="gather-cards-content">
                 <h2>{{ item.content }}</h2>
-                <div v-show="idx != 0 && idx != 4" class="gather-cards-content-icon">
+                <div v-show="idx != 0 && idx != 5" class="gather-cards-content-icon">
                   <n-button strong secondary @click="handleJump(idx)">
                     <img src="@/assets/images/Add.svg" alt="添加" />
                   </n-button>
@@ -110,7 +110,9 @@ import EchartsInit from '@/echarts/EchartsInit.vue'
 import { lineOptions, pieOptions } from '@/echarts/echartsConfig.ts'
 import type { DataTableColumns } from 'naive-ui'
 import { getStatisticsApi } from '@/http/statistics'
+import { useThemeStore } from '@/stores/themeStore'
 
+const themeStore = useThemeStore()
 const message = useMessage()
 const lineOptionsData = ref({})
 const pieOptionsData = ref({})
@@ -193,8 +195,13 @@ const optionCards = ref([
     bgColor: 'linear-gradient(to bottom, #e1eec3, #f05053);',
   },
   {
+    title: '站点收录',
+    content: 0,
+    bgColor: 'linear-gradient(to bottom, #e1ee56, #f05093);',
+  },
+  {
     title: '其它',
-    content: '敬请期待...',
+    content: '开发中...',
     bgColor: 'linear-gradient(to bottom, #2b5876, #4e4376);',
   },
 ])
@@ -237,6 +244,8 @@ const handleJump = (item: number) => {
     router.push('/bms/editPhoto')
   } else if (item === 3) {
     router.push('/bms/notes')
+  } else if (item === 4) {
+    router.push('/bms/site-nav')
   }
 }
 
@@ -252,12 +261,31 @@ const getStatisticsData = async () => {
     optionCards.value[1].content = data.blogArticleCount
     optionCards.value[2].content = data.photoLibraryCount
     optionCards.value[3].content = data.noteCount
+    optionCards.value[4].content = data.siteNavCount
     // 配置echarts数据
     lineOptionsData.value = {
       ...lineOptions,
+      title: {
+        text: '访问量',
+        show: true,
+        top: '2%',
+        left: '3%',
+        textStyle: {
+          color: themeStore.currentTheme == 'light' ? '#000' : '#fff',
+        },
+      },
       xAxis: {
         type: 'category',
+        axisLabel: {
+          color: themeStore.currentTheme == 'light' ? '#000' : '#fff',
+        },
         data: data.visitCount.weekChartData.dates,
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          color: themeStore.currentTheme == 'light' ? '#000' : '#fff',
+        },
       },
       series: [
         {
@@ -269,6 +297,22 @@ const getStatisticsData = async () => {
 
     pieOptionsData.value = {
       ...pieOptions,
+      title: {
+        text: '数据监测',
+        show: true,
+        top: '2%',
+        left: '3%',
+        textStyle: {
+          color: themeStore.currentTheme == 'light' ? '#000' : '#fff',
+        },
+      },
+      legend: {
+        top: '15%',
+        left: 'center',
+        textStyle: {
+          color: themeStore.currentTheme == 'light' ? '#000' : '#fff',
+        },
+      },
       series: [
         {
           name: '使用设备',
@@ -279,12 +323,14 @@ const getStatisticsData = async () => {
           label: {
             show: false,
             position: 'center',
+            color: themeStore.currentTheme == 'light' ? '#000' : '#fff',
           },
           emphasis: {
             label: {
               show: true,
               fontSize: 24,
               fontWeight: 'bold',
+              color: themeStore.currentTheme == 'light' ? '#000' : '#fff',
             },
           },
           labelLine: {
@@ -347,6 +393,7 @@ onMounted(() => {
 
       .n-card {
         border-radius: 10px;
+        border: 1px solid var(--border-color);
       }
 
       .gather-cards-content {
@@ -358,13 +405,12 @@ onMounted(() => {
           font-size: 32px;
           line-height: 1.28;
           font-weight: 600;
-          color: #fff;
+          color: var(--text-color);
         }
 
         .gather-cards-content-icon {
-          background-color: #41444f14;
-          border-radius: 10px;
-
+          background-color: var(--box-bg-color10);
+          border-radius: 20px;
           img {
             width: 16px;
             height: 16px;
@@ -384,7 +430,7 @@ onMounted(() => {
       max-width: 60%;
       div {
         margin-bottom: 12px;
-        box-shadow: 0 0 10px 1px #e4e4e4;
+        box-shadow: 0 0 3px 1px var(--border-color);
         height: 400px;
         border-radius: 8px;
         position: relative;
@@ -410,7 +456,7 @@ onMounted(() => {
     }
     .comment-info {
       flex: 0.4;
-      box-shadow: 0 0 10px 1px #e4e4e4;
+      box-shadow: 0 0 3px 1px var(--border-color);
       border-radius: 8px;
       display: flex;
       flex-direction: column;

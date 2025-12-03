@@ -45,6 +45,14 @@
               :lazy="true"
               alt="about"
             />
+            <n-image
+              :src="about4"
+              width="200"
+              height="240"
+              object-fit="cover"
+              :lazy="true"
+              alt="about"
+            />
           </div>
         </div>
       </div>
@@ -112,12 +120,17 @@
 <script setup lang="ts">
 import about2 from '@/assets/wallpaper/about2.webp'
 import about3 from '@/assets/wallpaper/about3.webp'
+import about4 from '@/assets/wallpaper/about4.webp'
 import HeaderNav from '@/views/Header/HeaderNav.vue'
 import FooterNav from '@/views/Footer/FooterNav.vue'
 import { getAboutConfigApi } from '@/http/about'
+import { getAboutCachedData } from '@/utils/apiCache'
 import type { aboutDataType } from '@/tsInterface'
 const ProfileCard = defineAsyncComponent(() => import('@/views/VueBits/ProfileCard.vue'))
 const TextType = defineAsyncComponent(() => import('@/views/VueBits/TextType.vue'))
+import { useLoadingBar } from 'naive-ui'
+
+const loadingBar = useLoadingBar()
 const audio = ref<HTMLAudioElement | null>(null)
 const aboutData: aboutDataType = reactive({
   intro: '',
@@ -147,11 +160,12 @@ const couintDayPress = computed(() => {
 
 // 获取About页面的配置
 const getAboutConfig = async () => {
+  loadingBar.start()
   const params = {
     email: '',
     uId: '',
   }
-  const response = await getAboutConfigApi(params)
+  const response = await getAboutCachedData(params, getAboutConfigApi)
   const res = response.data
   if (res.code === 200) {
     aboutData.audio = res.data.audio
@@ -159,7 +173,9 @@ const getAboutConfig = async () => {
     aboutData.cover = res.data.cover
     aboutData.intro = res.data.intro
     aboutData.modules = res.data.modules
+    loadingBar.finish()
   } else {
+    loadingBar.error()
     console.log(res.message)
   }
 }
@@ -221,7 +237,7 @@ onBeforeUnmount(() => {
   .about-left {
     .avatar-box {
       width: 260px;
-      height: 260px;
+      height: auto;
       .avatar-name {
         display: flex;
         flex-direction: column;
@@ -293,9 +309,6 @@ onBeforeUnmount(() => {
           font-size: 32px;
           .count-day {
             font-size: 48px;
-            font-family:
-              Roboto,
-              Helvetica / Arial;
             color: rgb(255, 69, 0);
           }
         }
@@ -344,9 +357,6 @@ onBeforeUnmount(() => {
           align-items: center;
           .press {
             font-size: 24px;
-            font-family:
-              Roboto,
-              Helvetica / Arial;
             margin-bottom: 20px;
           }
         }
@@ -390,19 +400,6 @@ onBeforeUnmount(() => {
         border-radius: 8px;
         padding: 10px;
         .about-title-content {
-          font-family:
-            Inter,
-            -apple-system,
-            BlinkMacSystemFont,
-            Segoe UI,
-            Roboto,
-            Oxygen,
-            Ubuntu,
-            Cantarell,
-            Fira Sans,
-            Droid Sans,
-            Helvetica Neue,
-            sans-serif;
           h3 {
             color: var(--text-color1);
             font-size: 24px;
