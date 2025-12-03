@@ -97,15 +97,19 @@
           <div class="tags-box">
             <div class="tags-title">
               <span>标签</span>
-              <n-button secondary strong>
-                <img src=" @/assets/images/seting.svg" alt="seting" />
-                管理标签
-              </n-button>
+              <n-button secondary strong> 管理标签 </n-button>
             </div>
             <div class="tags-list">
-              <n-tag size="large" round v-for="(item, idx) in state.tagsArray" :key="idx">
+              <n-tag
+                size="large"
+                round
+                v-for="(item, idx) in state.tagsArray"
+                :key="idx"
+                closable
+                @close="deleteTag(item)"
+              >
                 {{ item }}：
-                <span>0</span>
+                <span>{{ state.tagsCountArray[item] ? state.tagsCountArray[item] : 0 }}</span>
               </n-tag>
               <div v-if="isAddInput">
                 <n-input v-model:value="state.tagvalue" :style="{ width: '180px' }"> </n-input>
@@ -195,6 +199,7 @@ interface State {
   updateTagCount: number
   articleData: ArticleItemType[]
   isModalVisible: boolean
+  tagsCountArray: { [key: string]: number }
 }
 const state = reactive<State>({
   tagvalue: '',
@@ -203,6 +208,7 @@ const state = reactive<State>({
   updateTagCount: 0,
   articleData: [],
   isModalVisible: false,
+  tagsCountArray: {},
 })
 interface CategoryTagsType {
   _id: string
@@ -235,7 +241,9 @@ interface editArticleDataType {
   selectTags: string[]
   tags: string[]
   cover: string
+  content: string
   count: number
+  status: string
 }
 // 编辑窗口的数据
 const editArticleData: editArticleDataType = reactive({
@@ -247,8 +255,22 @@ const editArticleData: editArticleDataType = reactive({
   selectTags: [],
   tags: [],
   cover: '',
+  content: '',
   count: 0,
+  status: '',
 })
+
+// 删除标签
+const deleteTag = async (tag: string) => {
+  if (tag) {
+    if (state.tagsCountArray[tag] > 0) {
+      message.info('标签下有文章，请先删除文章')
+    } else {
+      state.tagsArray = state.tagsArray.filter((item) => item !== tag)
+      confirmAddTag()
+    }
+  }
+}
 const getRollbackIcon = (isHovered: boolean, type: number, status?: string) => {
   if (type === 1) {
     if (status === 'published') {
@@ -270,6 +292,7 @@ const getRollbackIcon = (isHovered: boolean, type: number, status?: string) => {
       : new URL('@/assets/images/DeleteHover.svg', import.meta.url).href
   }
 }
+
 // 添加或更新标签接口
 const upsertCategory = async (params: object) => {
   const response = await upsertCategoryTags(params)
@@ -295,16 +318,26 @@ const publishStatus = async (val: ArticleItemType) => {
   }
 }
 // 编辑文章
-const editArticle = (val: ArticleItemType) => {
-  state.isModalVisible = !state.isModalVisible
-  // 拿到文章数据到编辑窗口
-  editArticleData.title = val.title
-  editArticleData.intro = val.intro
-  editArticleData._id = val._id
-  editArticleData.cover = val.cover
-  editArticleData.selectCategory = val.category
-  editArticleData.selectTags = val.tags
-  editArticleData.count++
+const editArticle = async (val: ArticleItemType) => {
+  const response = await getAllBlogArticleApi(val._id)
+  const res = response.data
+  if (res.code === 200) {
+    const detail = res.data.list[0]
+    // 拿到文章数据到编辑窗口
+    editArticleData.title = detail.title
+    editArticleData.intro = detail.intro
+    editArticleData._id = detail._id
+    editArticleData.cover = detail.cover
+    editArticleData.selectCategory = detail.category
+    editArticleData.selectTags = detail.tags
+    editArticleData.content = detail.content
+    editArticleData.status = detail.status
+    editArticleData.count++
+    message.success(res.message)
+    state.isModalVisible = !state.isModalVisible
+  } else {
+    message.error(res.message)
+  }
 }
 // 删除文章
 const deleteArticle = async (id: string) => {
@@ -324,14 +357,16 @@ const deleteArticle = async (id: string) => {
 const confirmAddTag = () => {
   params.uid = userInfoStore.data.user._id
   params.email = userInfoStore.data.user.email
-  params.tags = [...state.tagsArray, state.tagvalue]
+  if (state.tagvalue) {
+    params.tags = [...state.tagsArray, state.tagvalue]
+  } else {
+    params.tags = [...state.tagsArray]
+  }
   upsertCategory(params)
 }
 // 拿到分类标签数据
 const getCategoryTags = (val: CategoryTagsType) => {
   state.tagsArray = val.tags
-  editArticleData.tags = val.tags
-  editArticleData.category = val.category
 }
 // 关闭添加分类input
 const closeAddTagInput = () => {
@@ -340,11 +375,12 @@ const closeAddTagInput = () => {
 }
 
 // 获取文章列表数据
-const getArticleData = async () => {
-  const response = await getAllBlogArticleApi('')
+const getArticleData = async (params: string = '') => {
+  const response = await getAllBlogArticleApi(params)
   const res = response.data
   if (res.code === 200) {
     state.articleData = res.data.list
+    state.tagsCountArray = res.data.stats.tags
     message.success(res.message)
   } else {
     message.error(res.message)

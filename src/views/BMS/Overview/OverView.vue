@@ -13,7 +13,7 @@
         </div>
         <div class="gather">
           <div class="gather-cards" v-for="(item, idx) in optionCards" :key="idx">
-            <n-card :title="item.title" hoverable :style="`background:${item.bgColor}`">
+            <n-card :title="item.title" hoverable>
               <div class="gather-cards-content">
                 <h2>{{ item.content }}</h2>
                 <div v-show="idx != 0 && idx != 5" class="gather-cards-content-icon">
@@ -201,7 +201,7 @@ const optionCards = ref([
   },
   {
     title: '其它',
-    content: '敬请期待...',
+    content: '开发中...',
     bgColor: 'linear-gradient(to bottom, #2b5876, #4e4376);',
   },
 ])
@@ -244,7 +244,7 @@ const handleJump = (item: number) => {
     router.push('/bms/editPhoto')
   } else if (item === 3) {
     router.push('/bms/notes')
-  }else if (item === 4) {
+  } else if (item === 4) {
     router.push('/bms/site-nav')
   }
 }
@@ -393,6 +393,7 @@ onMounted(() => {
 
       .n-card {
         border-radius: 10px;
+        border: 1px solid var(--border-color);
       }
 
       .gather-cards-content {
@@ -404,13 +405,12 @@ onMounted(() => {
           font-size: 32px;
           line-height: 1.28;
           font-weight: 600;
-          color: #fff;
+          color: var(--text-color);
         }
 
         .gather-cards-content-icon {
-          background-color: rgba(65, 68, 79, 0.5);
-          border-radius: 10px;
-          border: 1px solid var(--border-color);
+          background-color: var(--box-bg-color10);
+          border-radius: 20px;
           img {
             width: 16px;
             height: 16px;

@@ -5,6 +5,7 @@
     v-model:content="editorContent"
     content-type="html"
     :options="Options"
+    style="height: 452px;"
   />
 </template>
 
