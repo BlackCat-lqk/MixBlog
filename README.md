@@ -1,5 +1,7 @@
 # mix-blog
 
+welcome to visit [https://mixblog.cn/](https://vitest.dev/)  
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
@@ -63,7 +65,8 @@ npm run test:e2e -- --debug
 npm run lint
 ```
 
-// 配置环境[configuration environment]
-node.js: 24.0.2
-npm：11.4.0
-vite: 7.1.7
+### 配置环境[configuration environment]
+node.js: 24.0.2  
+npm：11.4.0  
+vite: 7.1.7  
+
