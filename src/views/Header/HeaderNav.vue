@@ -28,6 +28,7 @@
           <n-dropdown trigger="hover" :options="moreData" @select="handleMoreSelect">
             <div class="more-item-box">
               <img src="@/assets/images/moreiconfont.svg" alt="more" />
+              <span>更多</span>
             </div>
           </n-dropdown>
         </div>
@@ -396,15 +397,20 @@ onMounted(() => {
         font-weight: 500;
         .more-item-box {
           display: flex;
+          gap: 4px;
           align-items: center;
           border-radius: 10px;
+          transition: all 0.5s;
           img {
-            width: 32px;
+            width: 24px;
+          }
+          span {
+            font-size: 12px;
+            line-height: 12px;
+          }
+          &:hover {
+            scale: 1.2;
             transition: all 0.5s;
-            &:hover {
-              scale: 1.2;
-              transition: all 0.5s;
-            }
           }
         }
       }
