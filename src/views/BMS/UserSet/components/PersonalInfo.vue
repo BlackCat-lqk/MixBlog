@@ -28,7 +28,7 @@
             </div>
           </template>
           <div>
-            <n-qr-code value="https://cn.bing.com/" />
+            <n-qr-code value="https://mixblog.cn/" />
           </div>
         </n-popover>
       </div>

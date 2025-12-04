@@ -17,18 +17,30 @@
                   <h3>{{ item.title }}</h3>
                   <img :src="weatherIconsURLs[item.weather]" alt="weather" />
                 </div>
-                <n-button
-                  strong
-                  secondary
-                  round
-                  type="error"
-                  class="delete-btn"
-                  @click="handleDeleteNote(item._id)"
-                >
-                  <img src="@/assets/images/Delete.svg" alt="delete" />
-                </n-button>
+                <div>
+                  <n-button
+                    strong
+                    secondary
+                    round
+                    type="error"
+                    class="delete-btn"
+                    @click="deleteNoteBtn(item._id)"
+                  >
+                    <img src="@/assets/images/Delete.svg" alt="delete notes" />
+                  </n-button>
+                  <n-button
+                    strong
+                    secondary
+                    round
+                    type="info"
+                    class="edit-btn"
+                    @click="handleEditNote(item._id)"
+                  >
+                    <img src="@/assets/images/Edit.svg" alt="edit notes" />
+                  </n-button>
+                </div>
               </div>
-              <span class="note-update-time">{{ item.updatedAt }}</span>
+              <span class="note-update-time">{{ _formatTime(item.updatedAt).time }}</span>
               <p class="note-content-detail-box">{{ item.content }}</p>
               <div class="content-img-box"><img :src="item.cover" alt="cover" /></div>
             </div>
@@ -48,7 +60,7 @@
                     <n-input
                       v-model:value="createForm.title"
                       type="text"
-                      maxlength="20"
+                      maxlength="200"
                       show-count
                       clearable
                       placeholder="请输入标题"
@@ -77,7 +89,7 @@
                     <n-input
                       v-model:value="createForm.content"
                       type="textarea"
-                      maxlength="1500"
+                      maxlength="9999"
                       show-count
                       clearable
                       placeholder="请输入内容"
@@ -111,6 +123,15 @@
       </div>
     </div>
   </div>
+  <n-modal v-model:show="showDeleteModal">
+    <n-card style="width: 600px" title="确认删除？" size="huge" role="dialog" aria-modal="true">
+      <div class="title-btn-box" style="display: flex; justify-content: flex-end; gap: 20px">
+        <n-button strong secondary @click="showDeleteModal = false">取消</n-button>
+        <n-button type="error" @click="handleDeleteNote">删除</n-button>
+      </div>
+    </n-card>
+  </n-modal>
+  <EditNote v-model:showEdit="showEditModal" :data="notesEditData"></EditNote>
 </template>
 
 <script setup lang="ts">
@@ -121,9 +142,12 @@ import type { FormInst, UploadFileInfo } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { createNotesApi, getNotesApi, uploadNoteImageApi, delteNoteApi } from '@/http/notes'
+import { _formatTime } from '@/utils/publickFun'
+import EditNote from './EditRandomNotes.vue'
 
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
+const showDeleteModal = ref(false)
 const formRef = ref<FormInst | null>(null)
 interface NoteItem {
   _id: string
@@ -246,16 +270,32 @@ const createUploadError = () => {
   message.error('文件选择失败')
 }
 // 删除Note
-const handleDeleteNote = async (val: string) => {
-  const response = await delteNoteApi({ _id: val })
+const deleteNoteId = ref('')
+const deleteNoteBtn = (val: string) => {
+  showDeleteModal.value = true
+  deleteNoteId.value = val
+}
+const handleDeleteNote = async () => {
+  const response = await delteNoteApi({ _id: deleteNoteId.value })
   const res = response.data
   if (res.code === 200) {
     message.success(res.message)
-    notesData.value = notesData.value.filter((item) => item._id !== val)
+    notesData.value = notesData.value.filter((item) => item._id !== deleteNoteId.value)
   } else {
     message.error(res.message)
   }
+  showDeleteModal.value = false
 }
+
+// 编辑Note
+const showEditModal = ref(false)
+const notesEditData = ref<NoteItem[]>([])
+const handleEditNote = async (val: string) => {
+  showEditModal.value = true
+  const data = notesData.value.find((item) => item._id === val)
+  notesEditData.value = data ? [data] : []
+}
+
 // 清空内容
 const clearClick = () => {
   formRef.value?.restoreValidation()
@@ -363,6 +403,7 @@ onMounted(() => {
       flex: 1;
       min-width: 320px;
       max-height: 100%;
+      @include g.scrollbarCustom;
       overflow-y: auto;
       box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
       background-color: #2e33380d;
@@ -397,7 +438,9 @@ onMounted(() => {
             }
           }
 
-          .delete-btn {
+          .delete-btn,
+          .edit-btn {
+            margin-left: 10px;
             img {
               width: 16px;
               height: 16px;

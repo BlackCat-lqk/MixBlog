@@ -9,25 +9,30 @@
       </div>
       <div class="main-router-box">
         <div class="category">
-          <div class="category-item">
+          <div class="category-item" @click="filterFile('all')">
             <img src="@/assets/images/file/file.svg" alt="文件" />
-            <span>全部{{ fileListData.length }}</span>
+            <span>全部{{ allFileListData.length }}</span>
           </div>
-          <div v-for="(val, key) in allCategory" :key="key" class="category-item">
+          <div
+            v-for="(val, key) in allCategory"
+            :key="key"
+            class="category-item"
+            @click="filterFile(key)"
+          >
             <img src="@/assets/images/file/file.svg" alt="文件" />
             <span>{{ key }}: {{ val }}</span>
           </div>
         </div>
         <div>
           <div class="doc-list-box">
-            <n-grid :x-gap="12" :y-gap="12" :cols="7">
+            <n-grid :x-gap="12" :y-gap="5" :cols="7">
               <n-grid-item v-for="(item, idx) in fileListData" :key="idx">
                 <n-card
                   hoverable
                   :style="
                     item.docCover
-                      ? `background:url('/${item.docCover}') no-repeat;background-size: cover;`
-                      : `background:${changeBg[item.suffix]} no-repeat;background-size: 60%;`
+                      ? `background:url('/${item.docCover}') no-repeat center center;background-size: contain;`
+                      : `background:${changeBg[item.suffix]} no-repeat center center;background-size: contain;`
                   "
                 >
                   <h3>{{ item.filename }}</h3>
@@ -48,14 +53,22 @@
           <div class="upload-box">
             <n-form ref="formRef" :model="fileForm" :rules="rules">
               <n-form-item label="是否为私人文件夹">
-                <n-select v-model:value="fileForm.privateFile" placeholder="请选择" :options="options" @update:value="changePrivateFile" />
+                <n-select
+                  v-model:value="fileForm.privateFile"
+                  style="width: 220px"
+                  placeholder="请选择"
+                  :options="options"
+                  @update:value="changePrivateFile"
+                />
               </n-form-item>
               <n-form-item label="分类" path="category">
                 <n-input
                   v-model:value="fileForm.category"
-                  maxlength="10"
+                  maxlength="100"
+                  style="width: 240px"
                   show-count
                   clearable
+                  type="textarea"
                   :disabled="fileForm.privateFile === 'true'"
                   placeholder="新建或选择分类"
                   @input="handleInputCategory"
@@ -64,7 +77,9 @@
               <n-form-item label="文件描述" path="description">
                 <n-input
                   v-model:value="fileForm.description"
-                  maxlength="30"
+                  maxlength="100"
+                  style="width: 240px"
+                  type="textarea"
                   show-count
                   clearable
                   placeholder="请输入文件描述..."
@@ -74,6 +89,7 @@
                 <n-upload
                   :default-file-list="fileList"
                   :max="1"
+                  style="width: 120px"
                   list-type="image-card"
                   :custom-request="createCustomUpload"
                   :headers="{
@@ -85,6 +101,7 @@
                 <n-upload
                   :default-file-list="fileCover"
                   :max="1"
+                  style="width: 120px"
                   list-type="image-card"
                   :custom-request="createCoverCustomUpload"
                   :headers="{
@@ -92,7 +109,9 @@
                   }"
                 ></n-upload>
               </n-form-item>
-              <n-button :disabled="btnStatus" @click="handleUploadFile">开始上传</n-button>
+              <div class="upload-btn">
+                <n-button :disabled="btnStatus" @click="handleUploadFile">开始上传</n-button>
+              </div>
             </n-form>
           </div>
         </div>
@@ -106,9 +125,14 @@ import type { UploadFileInfo } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import HeaderView from '@/views/BMS/components/HeaderView.vue'
 import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
-import { uploadBookDocApi, getBookDocApi, deleteBookDocApi, getPrivateBookDocApi } from '@/http/uploadFile'
+import {
+  uploadBookDocApi,
+  getBookDocApi,
+  deleteBookDocApi,
+  getPrivateBookDocApi,
+} from '@/http/uploadFile'
 import { useMessage } from 'naive-ui'
-import debounce from 'lodash/debounce';
+import debounce from 'lodash/debounce'
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 const rules = {
@@ -146,7 +170,6 @@ const fileCover = reactive([
     status: 'finished',
   },
 ])
-
 
 interface formType {
   privateFile: string
@@ -195,9 +218,18 @@ const changePrivateFile = (val: string) => {
   if (val == 'true') {
     fileForm.category = '私人文件夹'
     btnStatus.value = false
-  }else {
+  } else {
     fileForm.category = ''
     btnStatus.value = true
+  }
+}
+
+// 过滤文件
+const filterFile = (key: string) => {
+  if (key === 'all' || key === '全部') {
+    fileListData.value = allFileListData.value
+  } else {
+    fileListData.value = allFileListData.value.filter((item: bookDocType) => item.category === key)
   }
 }
 
@@ -260,6 +292,7 @@ const handleUploadFile = async () => {
 // 获取文档列表
 const fileListData = ref([] as bookDocType[])
 const allCategory = ref({} as object)
+const allFileListData = ref([] as bookDocType[])
 const getBookDocList = async () => {
   // 获取文件列表
   const response = await getBookDocApi({})
@@ -270,10 +303,11 @@ const getBookDocList = async () => {
     // 获取私有文件列表
     const privates = await getPrivateBookDocApi({})
     const privateRes = privates.data
-    if(privateRes.code === 200){
+    if (privateRes.code === 200) {
       fileListData.value = fileListData.value.concat(privateRes.data)
-      Object.assign(allCategory.value, privateRes.categories);
+      Object.assign(allCategory.value, privateRes.categories)
     }
+    allFileListData.value = fileListData.value.concat(fileListData.value)
   } else {
     message.error(res.message)
   }
@@ -294,8 +328,10 @@ a
   display: flex;
   flex-direction: column;
   .category {
-    height: 200px;
-    background-color: #2e33380d;
+    background-color: rgba(22, 117, 211, 0.1);
+    max-height: 200px;
+    @include g.scrollbarCustom;
+    overflow: auto;
     border-radius: 8px;
     padding: 10px;
     display: flex;
@@ -327,16 +363,22 @@ a
   .doc-list-box {
     flex: 1;
     display: flex;
-    padding: 10px;
+    padding: 0 20px;
+    max-height: 640px;
+    @include g.scrollbarCustom;
+    overflow: auto;
+    margin-bottom: 20px;
+    background-color: rgba(22, 117, 211, 0.1);
     :deep(.n-card) {
       border-radius: 5px;
       min-width: 220px;
+      height: 100%;
       box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.1);
-      background-position: center center;
+      border: none;
+      background-size: contain;
       .n-card__content {
         border-radius: 5px;
         background-color: var(--box-bg-color7);
-        // backdrop-filter: blur(2px);
       }
       h3 {
         font-size: 14px;
@@ -347,12 +389,26 @@ a
       }
       .doc-info {
         display: flex;
+        gap: 5px;
         flex-direction: column;
       }
       .btn-box {
         display: flex;
         gap: 12px;
       }
+    }
+  }
+  .upload-box {
+    background-color: rgba(22, 117, 211, 0.1);
+    padding: 20px;
+    flex: 1;
+    :deep(.n-form){
+      display: flex;
+      align-items: center;
+      gap: 60px;
+    }
+    .upload-btn {
+      height: 100%;
     }
   }
 }
