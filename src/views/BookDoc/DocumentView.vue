@@ -34,39 +34,39 @@
         </div>
       </div>
       <div v-if="bookDocData.length" class="doc-list-box">
-        <n-grid :x-gap="12" :y-gap="12" :cols="4">
+        <n-grid :x-gap="46" :y-gap="46" :cols="5">
           <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
-            <n-card
-              hoverable
-              :style="
-                item.docCover
-                  ? `background:url('/${item.docCover}') no-repeat center;background-size: contain;`
-                  : `background:${changeBg[item.suffix]} no-repeat center;background-size: contain;`
-              "
+            <TheBook
+              w="100%"
+              h="100%"
+              :d="24"
+              :cover="item.docCover ? item.docCover : changeBg[item.suffix]"
+              :gradient="['#1a2a6c', '#b21f1f']"
             >
-              <n-tooltip trigger="hover">
-                <template #trigger>
-                  <h3>{{ item.filename }}</h3>
-                </template>
-                {{ item.filename }}
-              </n-tooltip>
-              <n-tooltip trigger="hover">
-                <template #trigger>
-                  <p>描述：{{ item.description }}</p>
-                </template>
-                {{ item.description }}
-              </n-tooltip>
-              <div class="doc-info">
-                <span>类型：{{ item.suffix }}</span>
-                <span>大小：{{ item.size }}</span>
-                <span>时间：{{ item.updatedAt }}</span>
-              </div>
-              <div class="btn-box">
-                <!-- 下载需要登录 -->
-                <n-button type="primary" @click="downloadFile(item)">下载</n-button>
-                <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
-              </div>
-            </n-card>
+              <template #front>
+                <n-tooltip trigger="hover">
+                  <template #trigger>
+                    <h3>{{ item.filename }}</h3>
+                  </template>
+                  {{ item.filename }}
+                </n-tooltip>
+                <n-tooltip trigger="hover">
+                  <template #trigger>
+                    <p>描述：{{ item.description }}</p>
+                  </template>
+                  {{ item.description }}
+                </n-tooltip>
+                <div class="doc-info">
+                  <span>类型：{{ item.suffix }}</span>
+                  <span>大小：{{ item.size }}</span>
+                  <span>时间：{{ item.updatedAt }}</span>
+                </div>
+                <div class="btn-box">
+                  <n-button type="primary" @click="downloadFile(item)">下载</n-button>
+                  <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
+                </div>
+              </template>
+            </TheBook>
           </n-grid-item>
         </n-grid>
       </div>
@@ -166,6 +166,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
 import type { IBookDocData as BookDocData } from '@/tsInterface'
+import TheBook from './TheBook.vue'
 const userInfoStore = useUserInfoStore()
 const router = useRouter()
 // 动态导入文档处理组件
@@ -214,18 +215,18 @@ const showPreview = ref(false)
 
 // 根据文件后缀改变背景
 const changeBg = {
-  pdf: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
-  PDF: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
-  doc: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-  docx: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-  DOC: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-  DOCX: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-  xlsx: `url("${new URL('@/assets/images/file/excel.svg', import.meta.url).href}")`,
-  txt: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
-  XLSX: `url("${new URL('@/assets/images/file/excel.svg', import.meta.url).href}")`,
-  TXT: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
-  epub: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
-  EPUB: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
+  pdf: new URL('@/assets/images/file/pdf.svg', import.meta.url).href,
+  PDF: new URL('@/assets/images/file/pdf.svg', import.meta.url).href,
+  doc: new URL('@/assets/images/file/word.svg', import.meta.url).href,
+  docx: new URL('@/assets/images/file/word.svg', import.meta.url).href,
+  DOC: new URL('@/assets/images/file/word.svg', import.meta.url).href,
+  DOCX: new URL('@/assets/images/file/word.svg', import.meta.url).href,
+  xlsx: new URL('@/assets/images/file/excel.svg', import.meta.url).href,
+  txt: new URL('@/assets/images/file/txt.svg', import.meta.url).href,
+  XLSX: new URL('@/assets/images/file/excel.svg', import.meta.url).href,
+  TXT: new URL('@/assets/images/file/txt.svg', import.meta.url).href,
+  epub: new URL('@/assets/images/file/txt.svg', import.meta.url).href,
+  EPUB: new URL('@/assets/images/file/txt.svg', import.meta.url).href,
 } as Record<string, string>
 
 // 搜索过滤文件
@@ -440,6 +441,7 @@ onMounted(() => {
       box-shadow:
         rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
         rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+      color: var(--text-color);
       .n-empty {
         width: 100%;
         height: 100%;
@@ -449,47 +451,30 @@ onMounted(() => {
         width: 200px;
         height: 280px;
       }
-      :deep(.n-card) {
-        border-radius: 5px;
-        box-shadow: var(--shadow-color);
-        transition: all 0.3s ease;
-        width: 200px;
-        height: 280px;
-        &:hover {
-          scale: 1.05;
-        }
-        .n-card__content {
-          border-radius: 5px;
-          background-color: var(--box-bg-color7);
-          width: 100%;
-          height: 62%;
-          position: absolute;
-          bottom: 0;
-          &:hover {
-            backdrop-filter: blur(10px);
-          }
-        }
-        h3 {
-          font-size: 14px;
-          font-weight: 600;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        p {
+      h3 {
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      p {
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .doc-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        span {
           font-size: 12px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          font-weight: normal;
         }
-        .doc-info {
-          display: flex;
-          flex-direction: column;
-        }
-        .btn-box {
-          display: flex;
-          gap: 12px;
-        }
+      }
+      .btn-box {
+        display: flex;
+        gap: 16px;
       }
     }
   }

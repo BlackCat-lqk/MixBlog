@@ -29,11 +29,21 @@ export function uploadNoteImageApi(params: unknown) {
 }
 
 /**
- * 删除Note图片
+ * 删除Note
  * @param {Object} params - 删除Note参数
  * @returns {Promise}
  */
 export function delteNoteApi(params: unknown) {
   return request.post('/deleteNotes', params)
 }
+
+/**
+ * 更新Note
+ * @param {Object} params - 删除Note参数
+ * @returns {Promise}
+ */
+export function updateNoteApi(params: unknown) {
+  return request.post('/updateNotes', params)
+}
+
 
