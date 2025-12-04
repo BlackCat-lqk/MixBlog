@@ -34,39 +34,39 @@
         </div>
       </div>
       <div v-if="bookDocData.length" class="doc-list-box">
-        <n-grid :x-gap="12" :y-gap="12" :cols="4">
+        <n-grid :x-gap="5" :y-gap="16" :cols="4">
           <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
-            <n-card
-              hoverable
-              :style="
-                item.docCover
-                  ? `background:url('/${item.docCover}') no-repeat center;background-size: contain;`
-                  : `background:${changeBg[item.suffix]} no-repeat center;background-size: contain;`
-              "
+            <TheBook
+              :width="260"
+              :height="200"
+              :depth="30"
+              :cover="item.docCover ? item.docCover : changeBg[item.suffix]"
+              :gradient="['#1a2a6c', '#b21f1f']"
             >
-              <n-tooltip trigger="hover">
-                <template #trigger>
-                  <h3>{{ item.filename }}</h3>
-                </template>
-                {{ item.filename }}
-              </n-tooltip>
-              <n-tooltip trigger="hover">
-                <template #trigger>
-                  <p>描述：{{ item.description }}</p>
-                </template>
-                {{ item.description }}
-              </n-tooltip>
-              <div class="doc-info">
-                <span>类型：{{ item.suffix }}</span>
-                <span>大小：{{ item.size }}</span>
-                <span>时间：{{ item.updatedAt }}</span>
-              </div>
-              <div class="btn-box">
-                <!-- 下载需要登录 -->
-                <n-button type="primary" @click="downloadFile(item)">下载</n-button>
-                <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
-              </div>
-            </n-card>
+              <template #front>
+                <n-tooltip trigger="hover">
+                  <template #trigger>
+                    <h3>{{ item.filename }}</h3>
+                  </template>
+                  {{ item.filename }}
+                </n-tooltip>
+                <n-tooltip trigger="hover">
+                  <template #trigger>
+                    <p>描述：{{ item.description }}</p>
+                  </template>
+                  {{ item.description }}
+                </n-tooltip>
+                <div class="doc-info">
+                  <span>类型：{{ item.suffix }}</span>
+                  <span>大小：{{ item.size }}</span>
+                  <span>时间：{{ item.updatedAt }}</span>
+                </div>
+                <div class="btn-box">
+                  <n-button type="primary" @click="downloadFile(item)">下载</n-button>
+                  <n-button type="info" @click="getPreviewDetail(item)">在线预览</n-button>
+                </div>
+              </template>
+            </TheBook>
           </n-grid-item>
         </n-grid>
       </div>
@@ -166,6 +166,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { useMessage } from 'naive-ui'
 import GradientFlow from '@/views/MixLab/components/GradientFlow.vue'
 import type { IBookDocData as BookDocData } from '@/tsInterface'
+import TheBook from './TheBook.vue'
 const userInfoStore = useUserInfoStore()
 const router = useRouter()
 // 动态导入文档处理组件
@@ -440,6 +441,7 @@ onMounted(() => {
       box-shadow:
         rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
         rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+      color: var(--text-color);
       .n-empty {
         width: 100%;
         height: 100%;
@@ -449,47 +451,30 @@ onMounted(() => {
         width: 200px;
         height: 280px;
       }
-      :deep(.n-card) {
-        border-radius: 5px;
-        box-shadow: var(--shadow-color);
-        transition: all 0.3s ease;
-        width: 200px;
-        height: 280px;
-        &:hover {
-          scale: 1.05;
-        }
-        .n-card__content {
-          border-radius: 5px;
-          background-color: var(--box-bg-color7);
-          width: 100%;
-          height: 62%;
-          position: absolute;
-          bottom: 0;
-          &:hover {
-            backdrop-filter: blur(10px);
-          }
-        }
-        h3 {
-          font-size: 14px;
-          font-weight: 600;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        p {
+      h3 {
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      p {
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .doc-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        span{
           font-size: 12px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          font-weight: normal;
         }
-        .doc-info {
-          display: flex;
-          flex-direction: column;
-        }
-        .btn-box {
-          display: flex;
-          gap: 12px;
-        }
+      }
+      .btn-box {
+        display: flex;
+        gap: 16px;
       }
     }
   }
