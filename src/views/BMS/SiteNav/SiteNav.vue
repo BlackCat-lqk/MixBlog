@@ -10,7 +10,7 @@
       <div class="main-router-box">
         <h3>站点收录</h3>
         <div class="site-nav-box">
-          <div class="create-site-nav">
+          <div class="create-site-nav" v-loading="{ show: buttonLoading, showText: true, text: '创建中...', width: 40 }">
             <n-form ref="formRef" :model="formValue" :rules="rules">
               <n-form-item label="一级分类名称" path="primaryCategory">
                 <n-input
@@ -70,6 +70,7 @@
               :data="tableData"
               :pagination="{ pageSize: 10 }"
               :row-key="rowKey"
+              style="height: calc(100% - 88px);"
               @update:checked-row-keys="handleCheck"
             />
             <n-modal
@@ -314,28 +315,35 @@ const bitchEdit = async () => {
   }
 }
 // 创建站点
+import { useLoadingBar } from 'naive-ui'
+const loadingBar = useLoadingBar()
+const buttonLoading = ref(false)
 const handleCreateSite = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
+      loadingBar.start()
       formValue.type = 'blog'
       const faviconResult = await faviconFetching(formValue.link)
       if (faviconResult) formValue.icon = faviconLink.value
+      buttonLoading.value = true
       const result = await createSiteApi(formValue)
       const res = result.data
       if (res.code === 200) {
         message.success('站点创建成功')
-        formValue.primaryCategory = ''
-        formValue.secondaryCategory = ''
         formValue.link = ''
         formValue.siteName = ''
-        formValue.desc = '' // 清空表单
+        formValue.desc = ''
         getSiteNavData()
+        loadingBar.finish()
       } else {
         message.error('站点创建失败')
+        loadingBar.error()
       }
+      buttonLoading.value = false
     } else {
       message.error('表单验证失败')
+      loadingBar.error()
     }
   })
 }
@@ -378,12 +386,11 @@ onMounted(() => {
 .main-router-box {
   padding: 10px;
   gap: 12px;
-
   h3 {
     font-size: 18px;
     line-height: 1.34;
     font-weight: 600;
-    color: #1e2025;
+    color: var(--text-color);
     padding-bottom: 10px;
   }
   .site-nav-box {
@@ -404,6 +411,8 @@ onMounted(() => {
       border: 1px solid var(--border-color);
       padding: 10px;
       border-radius: 8px;
+      @include g.scrollbarCustom;
+      overflow: auto;
     }
   }
 }

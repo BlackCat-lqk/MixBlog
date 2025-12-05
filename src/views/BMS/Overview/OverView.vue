@@ -59,19 +59,9 @@
                 :isEmpty="isEmptyData"
               >
               </echarts-init>
-              <div v-show="false" class="echarts-btns">
-                <n-button
-                  :color="state.pieBtn == 'Week' ? '#8a2be2' : ''"
-                  @click="handlePieDate('Week')"
-                >
-                  近一周
-                </n-button>
-                <n-button
-                  :color="state.pieBtn == 'Month' ? '#8a2be2' : ''"
-                  @click="handlePieDate('Month')"
-                >
-                  近一月
-                </n-button>
+              <div v-show="true" class="echarts-btns">
+                <n-button> 今天：{{ todayCount }} </n-button>
+                <n-button> 总共：{{ totalCount }} </n-button>
               </div>
             </div>
           </div>
@@ -103,6 +93,7 @@ import { lineOptions, pieOptions } from '@/echarts/echartsConfig.ts'
 import type { DataTableColumns } from 'naive-ui'
 import { getStatisticsApi, getAllVisitDetailApi } from '@/http/statistics'
 import { useThemeStore } from '@/stores/themeStore'
+import { _formatTime } from '@/utils/publickFun'
 
 const themeStore = useThemeStore()
 const message = useMessage()
@@ -175,6 +166,8 @@ interface StatisticsData {
       dates: string[]
       counts: number[]
     }
+    today: number
+    total: number
   }
 }
 
@@ -245,10 +238,6 @@ const handleLineDate = (value: string) => {
     ],
   }
 }
-// 点击饼状图时间统计
-const handlePieDate = (value: string) => {
-  state.pieBtn = value
-}
 const handleJump = (item: number) => {
   if (item === 1) {
     router.push('/bms/editarticle')
@@ -262,6 +251,8 @@ const handleJump = (item: number) => {
 }
 
 // 获取统计数据
+const totalCount = ref(0)
+const todayCount = ref(0)
 const getStatisticsData = async () => {
   const response = await getStatisticsApi()
   const res = response.data
@@ -269,6 +260,8 @@ const getStatisticsData = async () => {
     // 获取数据成功
     const data = res.data
     state.statisticsData = data
+    todayCount.value = data.visitCount.today
+    totalCount.value = data.visitCount.total
     optionCards.value[0].content = '数量:' + data.totalFiles + ' / Size:' + data.totalSize.formatted
     optionCards.value[1].content = data.blogArticleCount
     optionCards.value[2].content = data.photoLibraryCount
@@ -364,8 +357,13 @@ const getAllVisitDetail = async () => {
   const res = response.data
   if (res.code == 200) {
     // 获取数据成功
-    console.log(res.data)
-    data.value = res.data
+    data.value = res.data.map((item: Comment, index: number) => {
+      item.visitDate = _formatTime(item.visitDate).time
+      return {
+        ...item,
+        no: index + 1,
+      }
+    })
   } else {
     // 获取数据失败
     message.error('获取访问详细数据失败')
@@ -373,12 +371,6 @@ const getAllVisitDetail = async () => {
 }
 
 onMounted(() => {
-  // 订阅
-  // const channel = new BroadcastChannel('dingyue')
-  // // 接收消息
-  // channel.onmessage = function (event) {
-  //   message.success('订阅成功', event.data)
-  // }
   getAllVisitDetail()
   getStatisticsData()
 })
@@ -499,7 +491,7 @@ onMounted(() => {
         overflow: auto;
         max-height: 756px;
       }
-      :deep(.n-data-table__pagination){
+      :deep(.n-data-table__pagination) {
         @include g.flexCenter;
       }
     }
