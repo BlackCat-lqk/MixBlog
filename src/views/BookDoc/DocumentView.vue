@@ -34,12 +34,12 @@
         </div>
       </div>
       <div v-if="bookDocData.length" class="doc-list-box">
-        <n-grid :x-gap="5" :y-gap="16" :cols="4">
+        <n-grid :x-gap="46" :y-gap="46" :cols="5">
           <n-grid-item v-for="(item, idx) in bookDocData" :key="idx">
             <TheBook
-              :width="260"
-              :height="200"
-              :depth="30"
+              w="100%"
+              h="100%"
+              :d="24"
               :cover="item.docCover ? item.docCover : changeBg[item.suffix]"
               :gradient="['#1a2a6c', '#b21f1f']"
             >
@@ -215,18 +215,18 @@ const showPreview = ref(false)
 
 // 根据文件后缀改变背景
 const changeBg = {
-  pdf: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
-  PDF: `url("${new URL('@/assets/images/file/pdf.svg', import.meta.url).href}")`,
-  doc: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-  docx: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-  DOC: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-  DOCX: `url("${new URL('@/assets/images/file/word.svg', import.meta.url).href}")`,
-  xlsx: `url("${new URL('@/assets/images/file/excel.svg', import.meta.url).href}")`,
-  txt: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
-  XLSX: `url("${new URL('@/assets/images/file/excel.svg', import.meta.url).href}")`,
-  TXT: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
-  epub: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
-  EPUB: `url("${new URL('@/assets/images/file/txt.svg', import.meta.url).href}")`,
+  pdf: new URL('@/assets/images/file/pdf.svg', import.meta.url).href,
+  PDF: new URL('@/assets/images/file/pdf.svg', import.meta.url).href,
+  doc: new URL('@/assets/images/file/word.svg', import.meta.url).href,
+  docx: new URL('@/assets/images/file/word.svg', import.meta.url).href,
+  DOC: new URL('@/assets/images/file/word.svg', import.meta.url).href,
+  DOCX: new URL('@/assets/images/file/word.svg', import.meta.url).href,
+  xlsx: new URL('@/assets/images/file/excel.svg', import.meta.url).href,
+  txt: new URL('@/assets/images/file/txt.svg', import.meta.url).href,
+  XLSX: new URL('@/assets/images/file/excel.svg', import.meta.url).href,
+  TXT: new URL('@/assets/images/file/txt.svg', import.meta.url).href,
+  epub: new URL('@/assets/images/file/txt.svg', import.meta.url).href,
+  EPUB: new URL('@/assets/images/file/txt.svg', import.meta.url).href,
 } as Record<string, string>
 
 // 搜索过滤文件
@@ -467,7 +467,7 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
         gap: 5px;
-        span{
+        span {
           font-size: 12px;
           font-weight: normal;
         }
