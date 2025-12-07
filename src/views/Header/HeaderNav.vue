@@ -310,6 +310,21 @@ const initTheme = () => {
     state.headerColorTheme = '#000'
   }
 }
+// 监听storage事件，跨标签页监听主题变化
+const handleStorageChange = (e: StorageEvent) => {
+  if (e.key === 'app-theme') {
+    const theme = localStorage.getItem(e.key) == 'light' ? 'light' : 'dark'
+    themeStore.setTheme(theme)
+    initTheme()
+  }
+}
+// 监听public仓库下的看板娘主题切换
+const publicThemeChanged = () => {
+  const theme = localStorage.getItem('app-theme')
+  themeStore.setTheme(theme == 'dark' ? 'dark' : 'light')
+  initTheme()
+}
+
 onBeforeMount(() => {
   y.value = 0
   initTheme()
@@ -318,6 +333,14 @@ onMounted(() => {
   initUserData()
   activeRouterInit()
   handleSearchHistory()
+  // 监听浏览器storage事件
+  window.addEventListener('storage', handleStorageChange)
+  window.addEventListener('themeChanged', publicThemeChanged)
+})
+onUnmounted(() => {
+  // 移除监听
+  window.removeEventListener('storage', handleStorageChange)
+  window.removeEventListener('themeChanged', publicThemeChanged)
 })
 </script>
 <style scoped lang="scss">

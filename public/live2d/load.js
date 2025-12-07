@@ -1,41 +1,23 @@
-var 引流 = [
-  'https://space.bilibili.com/672328094',
-  'https://www.bilibili.com/video/BV1FZ4y1F7HH',
-  'https://www.bilibili.com/video/BV1FX4y1g7u8',
-  'https://www.bilibili.com/video/BV1aK4y1P7Cg',
-  'https://www.bilibili.com/video/BV17A411V7Uh',
-  'https://www.bilibili.com/video/BV1JV411b7Pc',
-  'https://www.bilibili.com/video/BV1AV411v7er',
-  'https://www.bilibili.com/video/BV1564y1173Q',
-
-  'https://www.bilibili.com/video/BV1MX4y1N75X',
-  'https://www.bilibili.com/video/BV17h411U71w',
-  'https://www.bilibili.com/video/BV1ry4y1Y71t',
-  'https://www.bilibili.com/video/BV1Sy4y1n7c4',
-  'https://www.bilibili.com/video/BV15y4y177uk',
-  'https://www.bilibili.com/video/BV1PN411X7QW',
-  'https://www.bilibili.com/video/BV1Dp4y1H7iB',
-  'https://www.bilibili.com/video/BV1bi4y1P7Eh',
-  'https://www.bilibili.com/video/BV1vQ4y1Z7C2',
-  'https://www.bilibili.com/video/BV1oU4y1h7Sc',
+var attractingTraffic = [
+  'https://www.bilibili.com/video/BV1Pj421d7iU',
+  'https://www.bilibili.com/video/BV12pb9eZE3i',
 ]
-// 切换夜间模式
+// 切换主题模式
 function toggleNightMode() {
-  const html = document.querySelector('html')
-  html.classList.toggle('dark')
-  // localStorage.setItem('app-theme', html.classList.contains('dark')) // contains 方法判断是否包含某个类名
   const currentTheme = localStorage.getItem('app-theme')
   const theme = currentTheme == 'light' ? 'dark' : 'light'
   localStorage.setItem('app-theme', theme)
   document.documentElement.setAttribute('data-theme', theme)
+  // 触发自定义事件，让 Vue 能够监听到
+  const event = new CustomEvent('themeChanged')
+  window.dispatchEvent(event)
 }
 
 const initConfig = {
   mode: 'fixed',
   hidden: true,
   content: {
-    link: 引流[Math.floor(Math.random() * 引流.length)],
-    // link: 引流[Math.floor(Math.random() * 引流.length)],
+    link: attractingTraffic[Math.floor(Math.random() * attractingTraffic.length)],
     welcome: ['Hi!'],
     touch: '',
     skin: ['诶，想看看其他团员吗？', '替换后入场文本'],
@@ -59,7 +41,7 @@ const initConfig = {
   onModelLoad: onModelLoad,
 }
 
-function 加载圣·嘉然() {
+function loadModel() {
   pio_instance = new Paul_Pio(initConfig)
 
   pio_alignment = 'left'
@@ -240,4 +222,4 @@ function onModelLoad(model) {
 }
 // 加载圣·嘉然实例
 var pio_instance
-window.onload = 加载圣·嘉然
+window.onload = loadModel
