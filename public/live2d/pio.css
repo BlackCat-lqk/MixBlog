@@ -23,13 +23,13 @@
 .pio-container .pio-show {
   left: -1.2em;
   bottom: -0.2em;
-  width: 6em;
-  height: 6.8em;
+  width: 5.3em;
+  height: 6em;
   display: none;
   cursor: pointer;
   position: absolute;
   transition: all 0.3s;
-  background: url(/live2d/avatar.png) center/contain;
+  background: url(/live2d/avatar.webp) center/contain;
   opacity: 0.7;
 }
 
@@ -130,7 +130,9 @@
   position: absolute;
   word-break: break-all;
   border: 1px solid #eee;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
 }
 
 .pio-container .pio-dialog.active {
