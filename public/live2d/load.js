@@ -35,14 +35,14 @@ const initConfig = {
     homeLink: 'https://mixblog.cn', // 首页链接
     homePort: '', // 首页domain端口号
   },
-  night: 'toggleNightMode()',
+  night: toggleNightMode(),
   model: ['/live2d/Diana/Diana.model3.json', '/live2d/Ava/Ava.model3.json'],
   tips: true,
   onModelLoad: onModelLoad,
 }
 
 function loadModel() {
-  pio_instance = new Paul_Pio(initConfig)
+  pio_instance = new PaulPio(initConfig)
 
   pio_alignment = 'left'
 
