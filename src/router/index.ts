@@ -56,6 +56,11 @@ const router = createRouter({
       component: () => import('@/views/Chat/DeepSeekChat.vue'),
     },
     {
+      path: '/tools',
+      name: 'Tools',
+      component: () => import('@/views/ToolsPage/IndexView.vue'),
+    },
+    {
       path: '/mixlab',
       name: 'MixLab',
       component: () => import('@/views/MixLab/MixLab.vue'),

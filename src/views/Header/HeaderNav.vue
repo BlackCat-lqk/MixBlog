@@ -175,6 +175,10 @@ const moreData = [
     label: 'MIX AI',
     key: '/d-chat',
   },
+  {
+    label: '工具',
+    key: '/tools',
+  },
 ]
 // 选择更多选项
 const handleMoreSelect = (key: string) => {
