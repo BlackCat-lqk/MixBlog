@@ -5,7 +5,7 @@ var attractingTraffic = [
 // 切换主题模式
 function toggleNightMode() {
   const currentTheme = localStorage.getItem('app-theme')
-  const theme = currentTheme == 'light' ? 'dark' : 'light'
+  const theme = currentTheme == 'light' ? 'light' : 'dark'
   localStorage.setItem('app-theme', theme)
   document.documentElement.setAttribute('data-theme', theme)
   // 触发自定义事件，让 Vue 能够监听到

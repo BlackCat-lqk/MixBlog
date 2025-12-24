@@ -164,8 +164,8 @@ const moreData = [
     key: '/book-doc',
   },
   {
-    label: '站点收录',
-    key: '/site-navigation',
+    label: '随笔随记',
+    key: '/random-notes',
   },
   {
     label: '封面立绘',
@@ -178,6 +178,10 @@ const moreData = [
   {
     label: '工具',
     key: '/tools',
+  },
+  {
+    label: '最佳实践',
+    key: '/best-practice',
   },
 ]
 // 选择更多选项
@@ -202,7 +206,7 @@ const routerPage = reactive([
     title: computed(() => t('header.navigation3')),
   },
   {
-    path: '/random-notes',
+    path: '/site-navigation',
     title: computed(() => t('header.navigation4')),
   },
   {

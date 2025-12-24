@@ -51,7 +51,7 @@ export default {
     navigation1: '首页',
     navigation2: '文章',
     navigation3: '图库',
-    navigation4: '随记',
+    navigation4: '导航',
     navigation5: '关于',
     btnText: '后台管理',
     text: '去登录',

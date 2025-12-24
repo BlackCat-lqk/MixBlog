@@ -61,6 +61,11 @@ const router = createRouter({
       component: () => import('@/views/ToolsPage/IndexView.vue'),
     },
     {
+      path: '/best-practice',
+      name: 'BestPractice',
+      component: () => import('@/views/BestPractice/IndexView.vue'),
+    },
+    {
       path: '/mixlab',
       name: 'MixLab',
       component: () => import('@/views/MixLab/MixLab.vue'),

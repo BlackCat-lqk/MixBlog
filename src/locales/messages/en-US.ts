@@ -51,7 +51,7 @@ export default {
     navigation1: 'Home',
     navigation2: 'Article',
     navigation3: 'Photo Gallery',
-    navigation4: 'Note',
+    navigation4: 'Navigation',
     navigation5: 'About',
     btnText: 'Admin',
     text: 'Login',
