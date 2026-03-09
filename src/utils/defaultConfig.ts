@@ -1,15 +1,8 @@
 /**
  * 默认配置项
  */
+import type { Slogan } from '@/tsInterface/index'
 export const sloganConfigData = () => {
-  interface Slogan {
-    logoPicture: string
-    logoName: string
-    sloganTitle: string
-    sloganSub1: string
-    sloganSub2: string
-    cover: string
-  }
   return {
     logoPicture: '/uploads/defalut/logo-transparent.webp',
     logoName: 'Mix Blog',

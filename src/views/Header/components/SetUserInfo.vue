@@ -97,7 +97,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormInst, UploadFileInfo } from 'naive-ui'
+import type { UploadFileInfo } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { validateEmail, validateUsername } from '@/utils/validate'
@@ -107,7 +107,6 @@ import type { SetUserInfoEditFormType as editFormType } from '@/tsInterface'
 const { t } = useI18n()
 
 const personalInfoBox = ref(null)
-const editFormRef = ref<FormInst | null>(null)
 const userInfoStore = useUserInfoStore()
 const defaultFileList = ref([] as object[])
 const message = useMessage()
@@ -230,7 +229,6 @@ onMounted(() => {
 .personal-info-box {
   display: flex;
   gap: 24px;
-  // margin-bottom: 24px;
   .personal-box {
     flex: 1;
     display: flex;

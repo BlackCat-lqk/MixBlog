@@ -4,6 +4,8 @@
  * @param {number} delay - 防抖时间间隔（毫秒）
  * @returns {Function} - 包装后的防抖函数
  */
+
+import type { resDate } from '@/tsInterface/index'
 export function _debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number,
@@ -20,10 +22,6 @@ export function _debounce<T extends (...args: unknown[]) => unknown>(
 }
 
 // 日期格式化
-interface resDate {
-  date: string
-  time: string
-}
 export function _formatTime(dateString: string): resDate {
   const date = dateString ? new Date(dateString) : new Date()
   const year = date.getFullYear()

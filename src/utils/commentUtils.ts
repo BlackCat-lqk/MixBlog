@@ -1,14 +1,4 @@
-export interface Comment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  email?: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: Comment[] // 用于前端构建的树状结构
-}
+import type { Comment } from '@/tsInterface/index'
 
 /**
  * 将扁平的评论数组转换为树状结构

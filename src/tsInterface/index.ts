@@ -40,12 +40,15 @@ export interface Comment {
   userId: string
   userName: string
   avatar: string
+  email?: string
   content: string
   parentId: string | null
   createdAt: string
   children?: Comment[]
 }
-
+/**
+ * @description: 照片页接口类型
+ */
 export interface LikeView {
   userId: string
   userName: string
@@ -53,6 +56,7 @@ export interface LikeView {
   viewedAt: string
   likedAt: string
 }
+
 export interface HomePhotoItemType {
   _id: string
   title: string
@@ -103,7 +107,16 @@ export interface ILikeView {
   viewedAt: string
   likedAt: string
 }
-
+export interface IComment {
+  _id: string
+  userId: string
+  userName: string
+  avatar: string
+  content: string
+  parentId: string | null
+  createdAt: string
+  children?: IComment[]
+}
 export interface IarticleDetailType {
   _id: string
   title: string
@@ -116,18 +129,6 @@ export interface IarticleDetailType {
   likes: ILikeView[]
   views: ILikeView[]
 }
-
-export interface IComment {
-  _id: string
-  userId: string
-  userName: string
-  avatar: string
-  content: string
-  parentId: string | null
-  createdAt: string
-  children?: IComment[]
-}
-
 /**
  * @description: 书籍文档页接口类型
  */
@@ -342,3 +343,74 @@ export interface IFeedbackProps {
   title?: string
   apiUrl?: string
 }
+
+/**
+ * @description: pinia缓存数据接口类型
+ */
+export interface DATA {
+  data: object,
+  timestamp: number
+}
+
+/**
+ * @description: pinia缓存Slogan接口类型
+ */
+export interface Slogan {
+  logoPicture: string
+  logoName: string
+  sloganTitle: string
+  sloganSub1: string
+  sloganSub2: string
+  cover: string
+}
+
+/**
+ * @description: pinia缓存设备信息类型
+ */
+export interface Dvice {
+  ip: string
+  userAgent: string
+}
+
+/**
+ * @description: pinia缓存用户信息类型
+ */
+interface User {
+  isLogin: boolean
+  avatar: string
+  email: string
+  role: string
+  status: string
+  userName: string
+  _id: string
+  createdAt: string
+  updatedAt: string
+  sex: string
+  birthday: null
+  desc: string
+}
+
+// 定义整个 data 的结构
+export interface UserData {
+  token: string
+  user: User
+}
+
+/**
+ * @description: 日期格式化函数返回类型
+ */
+export interface resDate {
+  date: string
+  time: string
+}
+/**
+ * @description: 接口返回的文字数据类型
+ */
+export interface articelDataType {
+  status: string
+  category: string
+  title: string
+  intro: string
+  createdAt: string
+}
+
