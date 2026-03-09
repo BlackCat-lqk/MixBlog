@@ -32,7 +32,7 @@ const props = defineProps({
     font-size: 24px;
     line-height: 1.34;
     font-weight: 600;
-    color: #1e2025;
+    color: var(--text-color);
   }
   img {
     width: 16px;

@@ -59,41 +59,23 @@
                 :isEmpty="isEmptyData"
               >
               </echarts-init>
-              <div v-show="false" class="echarts-btns">
-                <n-button
-                  :color="state.pieBtn == 'Week' ? '#8a2be2' : ''"
-                  @click="handlePieDate('Week')"
-                >
-                  近一周
-                </n-button>
-                <n-button
-                  :color="state.pieBtn == 'Month' ? '#8a2be2' : ''"
-                  @click="handlePieDate('Month')"
-                >
-                  近一月
-                </n-button>
+              <div v-show="true" class="echarts-btns">
+                <n-button> 今天：{{ todayCount }} </n-button>
+                <n-button> 总共：{{ totalCount }} </n-button>
               </div>
             </div>
           </div>
-          <div class="comment-info">
-            <h3>评论0</h3>
-            <div class="comment-table">
+          <div class="visit-info">
+            <h3>详细访问数据</h3>
+            <div class="visit-table">
               <n-config-provider>
                 <n-data-table
                   :columns="createColumns"
                   :data="data"
-                  :pagination="state.pagination"
+                  :pagination="true"
                   :bordered="false"
                 />
               </n-config-provider>
-            </div>
-            <div class="pagination-box">
-              <n-pagination
-                :display-order="['quick-jumper', 'pages', 'size-picker']"
-                :page-count="100"
-                show-quick-jumper
-                show-size-picker
-              />
             </div>
           </div>
         </div>
@@ -109,8 +91,9 @@ import NavigaMenu from '@/views/BMS/components/NavigaMenu.vue'
 import EchartsInit from '@/echarts/EchartsInit.vue'
 import { lineOptions, pieOptions } from '@/echarts/echartsConfig.ts'
 import type { DataTableColumns } from 'naive-ui'
-import { getStatisticsApi } from '@/http/statistics'
+import { getStatisticsApi, getAllVisitDetailApi } from '@/http/statistics'
 import { useThemeStore } from '@/stores/themeStore'
+import { _formatTime } from '@/utils/publickFun'
 
 const themeStore = useThemeStore()
 const message = useMessage()
@@ -118,10 +101,14 @@ const lineOptionsData = ref({})
 const pieOptionsData = ref({})
 interface Comment {
   no: number
-  user: string
-  content: string
-  type: string
-  date: string
+  country: string
+  region: string
+  city: string
+  ipAddress: string
+  userAgent: string
+  visitDate: string
+  postal: string
+  loc: string
 }
 const createColumns: DataTableColumns<Comment> = [
   {
@@ -129,23 +116,39 @@ const createColumns: DataTableColumns<Comment> = [
     key: 'no',
   },
   {
-    title: '用户',
-    key: 'user',
+    title: '国家',
+    key: 'country',
   },
   {
-    title: '内容',
-    key: 'content',
+    title: '地区',
+    key: 'region',
   },
   {
-    title: '类型',
-    key: 'type',
+    title: '城市',
+    key: 'city',
   },
   {
-    title: '日期',
-    key: 'date',
+    title: 'IP地址',
+    key: 'ipAddress',
+  },
+  {
+    title: '访问设备',
+    key: 'userAgent',
+  },
+  {
+    title: '访问日期',
+    key: 'visitDate',
+  },
+  {
+    title: '邮政编号',
+    key: 'postal',
+  },
+  {
+    title: '位置',
+    key: 'loc',
   },
 ]
-const data: Comment[] = []
+const data = ref<Comment[]>([])
 // 加载状态
 const loading = ref(true)
 const isEmptyData = ref(false)
@@ -163,6 +166,8 @@ interface StatisticsData {
       dates: string[]
       counts: number[]
     }
+    today: number
+    total: number
   }
 }
 
@@ -233,10 +238,6 @@ const handleLineDate = (value: string) => {
     ],
   }
 }
-// 点击饼状图时间统计
-const handlePieDate = (value: string) => {
-  state.pieBtn = value
-}
 const handleJump = (item: number) => {
   if (item === 1) {
     router.push('/bms/editarticle')
@@ -250,6 +251,8 @@ const handleJump = (item: number) => {
 }
 
 // 获取统计数据
+const totalCount = ref(0)
+const todayCount = ref(0)
 const getStatisticsData = async () => {
   const response = await getStatisticsApi()
   const res = response.data
@@ -257,6 +260,8 @@ const getStatisticsData = async () => {
     // 获取数据成功
     const data = res.data
     state.statisticsData = data
+    todayCount.value = data.visitCount.today
+    totalCount.value = data.visitCount.total
     optionCards.value[0].content = '数量:' + data.totalFiles + ' / Size:' + data.totalSize.formatted
     optionCards.value[1].content = data.blogArticleCount
     optionCards.value[2].content = data.photoLibraryCount
@@ -346,13 +351,27 @@ const getStatisticsData = async () => {
   }
 }
 
+// 获取全部访问详情数据
+const getAllVisitDetail = async () => {
+  const response = await getAllVisitDetailApi()
+  const res = response.data
+  if (res.code == 200) {
+    // 获取数据成功
+    data.value = res.data.map((item: Comment, index: number) => {
+      item.visitDate = _formatTime(item.visitDate).time
+      return {
+        ...item,
+        no: index + 1,
+      }
+    })
+  } else {
+    // 获取数据失败
+    message.error('获取访问详细数据失败')
+  }
+}
+
 onMounted(() => {
-  // 订阅
-  // const channel = new BroadcastChannel('dingyue')
-  // // 接收消息
-  // channel.onmessage = function (event) {
-  //   message.success('订阅成功', event.data)
-  // }
+  getAllVisitDetail()
   getStatisticsData()
 })
 </script>
@@ -454,7 +473,7 @@ onMounted(() => {
         margin-bottom: 0;
       }
     }
-    .comment-info {
+    .visit-info {
       flex: 0.4;
       box-shadow: 0 0 3px 1px var(--border-color);
       border-radius: 8px;
@@ -467,12 +486,13 @@ onMounted(() => {
         line-height: 1.32;
         padding-bottom: 15px;
       }
-      .comment-table {
-        flex: 1;
+      .visit-table {
+        @include g.scrollbarCustom;
+        overflow: auto;
+        max-height: 756px;
       }
-      .pagination-box {
-        display: flex;
-        justify-content: flex-end;
+      :deep(.n-data-table__pagination) {
+        @include g.flexCenter;
       }
     }
   }

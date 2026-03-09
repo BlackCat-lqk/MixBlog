@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia'
-// 定义 User 接口
-interface DATA {
-  data: object,
-  timestamp: number
-}
+import type { DATA } from '@/tsInterface/index'
+
 export const useApiDataStore = defineStore('apiCache', {
   state: () => ({
     photoLibraryData: {

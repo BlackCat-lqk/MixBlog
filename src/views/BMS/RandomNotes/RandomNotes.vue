@@ -45,7 +45,7 @@
               <div class="content-img-box"><img :src="item.cover" alt="cover" /></div>
             </div>
           </div>
-          <div class="edit-release-box">
+          <div class="edit-release-box" v-loading="{ show: buttonLoading, showText: true, text: '创建中...', width: 40 }">
             <n-form ref="formRef" inline :label-width="80" :model="createForm" :rules="rules">
               <div style="width: 100%">
                 <div class="title-box">
@@ -333,6 +333,7 @@ const uploadFile = async (id: string) => {
   }
 }
 // 发布校验提交
+const buttonLoading = ref(false)
 const createValidateClick = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
@@ -340,6 +341,7 @@ const createValidateClick = (e: MouseEvent) => {
       createForm.uid = userInfoStore.data.user._id
       createForm.email = userInfoStore.data.user.email
       createForm.weather = currentWeather.value
+      buttonLoading.value = true
       const response = await createNotesApi(createForm) // 创建Note数据
       const res = response.data
       if (res.code === 200) {
@@ -361,6 +363,7 @@ const createValidateClick = (e: MouseEvent) => {
       } else {
         message.error(res.message)
       }
+      buttonLoading.value = false
     } else {
       console.log(errors)
       message.error('确少必填项')
@@ -391,7 +394,7 @@ onMounted(() => {
 .main-router-box {
   padding: 10px;
   gap: 12px;
-
+  color: var(--text-color);
   .list-notes-box {
     display: flex;
     padding-top: 20px;
@@ -430,6 +433,7 @@ onMounted(() => {
               font-size: 20px;
               font-weight: 600;
               line-height: 1.54;
+              color: var(--text-color);
             }
             img {
               width: 24px;

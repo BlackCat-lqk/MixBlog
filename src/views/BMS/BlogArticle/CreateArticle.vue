@@ -8,7 +8,10 @@
         <div class="sidebar-box">
           <naviga-menu></naviga-menu>
         </div>
-        <div class="main-router-box">
+        <div
+          class="main-router-box"
+          v-loading="{ show: buttonLoading, showText: true, text: '创建中...', width: 40 }"
+        >
           <div class="header-option-box">
             <h3>新建博客文章</h3>
             <div class="option-btn-box">
@@ -233,6 +236,7 @@ const getCategoryTags = async () => {
 }
 
 // 保存/发布博客文章
+const buttonLoading = ref(false)
 const saveArticle = async (status: string) => {
   // 先保存文章内容，如果有上传图片再保存图片
   createParams.content = state.tiptapEditorValue
@@ -240,18 +244,25 @@ const saveArticle = async (status: string) => {
   createParams.uid = userInfoStore.data.user._id
   createParams.status = status
   // 保存文章
-  const response = await createBlogArtileApi(createParams)
-  const res = response.data
-  if (res.code === 200) {
-    // 成功后再上传文件
-    const fileResonse = await uploadFile(res.data._id)
-    if (fileResonse) {
-      message.success(status === 'published' ? '发布成功' : '保存成功')
+  buttonLoading.value = true
+  try {
+    const response = await createBlogArtileApi(createParams)
+    const res = response.data
+    if (res.code === 200) {
+      // 成功后再上传文件
+      const fileResonse = await uploadFile(res.data._id)
+      if (fileResonse) {
+        message.success(status === 'published' ? '发布成功' : '保存成功')
+      } else {
+        message.error(status === 'published' ? '发布失败' : '保存失败')
+      }
     } else {
-      message.error(status === 'published' ? '发布失败' : '保存失败')
+      message.error(res.message)
     }
-  } else {
-    message.error(res.message)
+  } catch (err: any) {
+    message.error(err)
+  } finally {
+    buttonLoading.value = false
   }
 }
 

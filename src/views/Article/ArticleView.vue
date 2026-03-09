@@ -55,6 +55,7 @@ import { useMessage } from 'naive-ui'
 const { t } = useI18n()
 import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
+import type { articelDataType } from '@/tsInterface'
 const message = useMessage()
 const isClassify = ref(false)
 const searchArticle = ref('')
@@ -71,13 +72,6 @@ const classify = reactive([
   },
 ])
 
-interface articelDataType {
-  status: string
-  category: string
-  title: string
-  intro: string
-  createdAt: string
-}
 // 获取所有文章数据
 const getAllBlogArticleData = async () => {
   const response = await getArticleCachedData('', getAllBlogArticleApi)

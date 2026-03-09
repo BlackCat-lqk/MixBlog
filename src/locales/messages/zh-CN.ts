@@ -51,7 +51,7 @@ export default {
     navigation1: '首页',
     navigation2: '文章',
     navigation3: '图库',
-    navigation4: '随记',
+    navigation4: '导航',
     navigation5: '关于',
     btnText: '后台管理',
     text: '去登录',
@@ -120,7 +120,7 @@ export default {
   },
   footer: {
     title: '技术支持',
-    content: 'Mix Blog 1.2.0 · Made by LQK',
+    content: 'Mix Blog 1.2.5 · Made by LQK',
   },
   about: {
     tagsList: '富强, 民主, 文明, 和谐, 自由, 友善, 平等, 公正, 法治, 爱国, 敬业, 诚信',

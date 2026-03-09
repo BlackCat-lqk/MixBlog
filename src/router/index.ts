@@ -3,7 +3,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { verifyUserApi } from '@/http/user'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -56,6 +56,16 @@ const router = createRouter({
       component: () => import('@/views/Chat/DeepSeekChat.vue'),
     },
     {
+      path: '/tools',
+      name: 'Tools',
+      component: () => import('@/views/ToolsPage/IndexView.vue'),
+    },
+    {
+      path: '/best-practice',
+      name: 'BestPractice',
+      component: () => import('@/views/BestPractice/IndexView.vue'),
+    },
+    {
       path: '/mixlab',
       name: 'MixLab',
       component: () => import('@/views/MixLab/MixLab.vue'),
@@ -64,11 +74,6 @@ const router = createRouter({
       path: '/hookslab',
       name: 'HooksLab',
       component: () => import('@/views/MixLab/HooksLab.vue'),
-    },
-    {
-      path: '/unauthorized',
-      name: 'Unauthorized',
-      component: () => import('@/views/UnAuthorized.vue'),
     },
     {
       path: '/bms/LogCenter',
@@ -148,8 +153,13 @@ const router = createRouter({
       component: () => import('@/views/BMS/SiteNav/SiteNav.vue'),
       meta: { requiresAdmin: true, requiresAuth: true, dynamic: true },
     },
-    // 通配符路由必须放在最后
     {
+      path: '/unauthorized',
+      name: 'Unauthorized',
+      component: () => import('@/views/UnAuthorized.vue'),
+    },
+    // 通配符路由必须放在最后
+    { // 404路由
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/views/NotFound.vue'),
@@ -182,7 +192,7 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: 'register' })
     }
   } catch (error) {
-    console.log('🚀 ~ error:', error)
+    console.log(error)
     userStore.removeUserInfo()
     return next({ name: 'register' })
   }

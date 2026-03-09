@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
-interface Dvice {
-  ip: string
-  userAgent: string
-}
+import type { Dvice } from '@/tsInterface/index'
+
 export const useDeviceStore = defineStore('deviceInfo', {
   state: () => ({
     ip: '',

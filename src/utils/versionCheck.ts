@@ -1,8 +1,10 @@
-// 版本检测工具
+/**
+ * 缓存数据更新检查器
+ */
 class VersionChecker {
   private currentVersion: string;
   constructor() {
-    this.currentVersion = import.meta.env.VITE_APP_VERSION || new Date().toISOString();
+    this.currentVersion = new Date().toISOString();
   }
 
   async checkUpdate(): Promise<boolean> {

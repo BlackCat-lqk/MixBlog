@@ -7,7 +7,10 @@
       <div class="sidebar-box">
         <naviga-menu></naviga-menu>
       </div>
-      <div class="main-router-box">
+      <div
+        class="main-router-box"
+        v-loading="{ show: buttonLoading, showText: true, text: '创建中...', width: 40 }"
+      >
         <n-form ref="formRef" :model="createForm" :rules="rules">
           <div class="header-option-box">
             <h3>新建摄影图库</h3>
@@ -21,12 +24,12 @@
               <div class="title-cover-box">
                 <div class="title-box">
                   <div class="title-input-box">
-                    <n-form-item path="title">
+                    <n-form-item path="title" label="标题">
                       <n-input placeholder="请输入标题" v-model:value="createForm.title" />
                     </n-form-item>
                   </div>
                   <div class="classify-tag-box">
-                    <n-form-item path="category">
+                    <n-form-item path="category" label="分类">
                       <n-select
                         style="width: 240px"
                         v-model:value="createForm.category"
@@ -48,7 +51,7 @@
                 </div>
               </div>
               <div class="introduction-box">
-                <n-form-item path="content">
+                <n-form-item path="content" label="内容简介">
                   <n-input
                     v-model:value="createForm.content"
                     :autosize="{
@@ -64,10 +67,6 @@
               </div>
               <div class="photos-box">
                 <n-form-item label="上传照片（最多上传10张图片）" path="tempFile">
-                  <!-- <n-upload :max="10" list-type="image-card" :custom-request="createCustomUpload"
-                    :finish="createUploadFinish" :error="createUploadError" :headers="{
-                      Authorization: `Bearer ${userInfoStore.data.token}`,
-                    }"></n-upload> -->
                   <n-upload
                     v-model:file-list="createForm.tempFile"
                     :max="10"
@@ -100,9 +99,6 @@ const userInfoStore = useUserInfoStore()
 const message = useMessage()
 const router = useRouter()
 const formRef = ref<FormInst | null>(null)
-// 存储已选择的文件列表
-// const selectedFiles = ref<UploadFileInfo[]>([]);
-
 const classifyOption = ref([])
 
 const rules = {
@@ -234,12 +230,14 @@ const uploadFile = async (id: string) => {
 }
 
 // 发布校验提交
+const buttonLoading = ref(false)
 const confirmPublish = (e: MouseEvent) => {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
       createForm.uid = userInfoStore.data.user._id
       createForm.email = userInfoStore.data.user.email
+      buttonLoading.value = true
       const response = await createPhotoLibraryApi(createForm) // 创建图库数据
       const res = response.data
       if (res.code === 200) {
@@ -259,16 +257,13 @@ const confirmPublish = (e: MouseEvent) => {
       } else {
         message.error(res.message)
       }
+      buttonLoading.value = false
     } else {
       console.log(errors)
       message.error('确少必填项')
     }
   })
 }
-
-// const createUploadError = () => {
-//   message.error('文件选择失败')
-// }
 onMounted(() => {
   getCategoryTags()
 })

@@ -379,20 +379,18 @@ onMounted(() => {
       font-size: 18px;
       line-height: 1.34;
       font-weight: 600;
-      color: #1e2025;
+      color: var(--text-color);
     }
   }
 
   .option-btn-box {
     padding: 10px;
-    background-color: #2e33380d;
     border-radius: 8px;
   }
 
   .table-box {
     padding: 10px;
     margin-top: 20px;
-    background-color: #2e33380d;
     border-radius: 8px;
     height: calc(100% - 130px);
   }

@@ -187,7 +187,7 @@ export default defineConfig({
             '@vue-office/pdf',
           ],
           // 富文本编辑器
-          editors: ['quill', '@vueup/vue-quill', '@tiptap/core', '@tiptap/vue-3']
+          editors: ['quill', '@vueup/vue-quill']
         },
       },
     },

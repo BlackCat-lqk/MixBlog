@@ -18,11 +18,11 @@
   </n-config-provider>
   <n-back-top :right="100" />
   <FeedBack
-      :positionBottom="100"
-      :positionRight="100"
-      title="帮助我们改进"
-      api-url="/api/feedback"
-    />
+    :positionBottom="100"
+    :positionRight="100"
+    title="帮助我们改进"
+    api-url="/api/feedback"
+  />
 </template>
 
 <script setup lang="ts">
@@ -45,5 +45,4 @@ const naiveLocale = computed(() => {
 })
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

@@ -7,7 +7,7 @@
       <div class="sidebar-box">
         <naviga-menu></naviga-menu>
       </div>
-      <div class="main-router-box">
+      <div class="main-router-box" v-loading="{ show: buttonLoading, showText: true, text: '创建中...', width: 40 }">
         <div class="category">
           <div class="category-item" @click="filterFile('all')">
             <img src="@/assets/images/file/file.svg" alt="文件" />
@@ -131,8 +131,10 @@ import {
   deleteBookDocApi,
   getPrivateBookDocApi,
 } from '@/http/uploadFile'
-import { useMessage } from 'naive-ui'
+import { useMessage, useLoadingBar } from 'naive-ui'
 import debounce from 'lodash/debounce'
+
+const loadingBar = useLoadingBar()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 const rules = {
@@ -265,6 +267,7 @@ const deleteBookDoc = async (data: bookDocType) => {
 }
 
 // 开始上传
+const buttonLoading = ref(false)
 const handleUploadFile = async () => {
   if (!fileForm.category) return
   // 调用文件上传接口
@@ -273,19 +276,26 @@ const handleUploadFile = async () => {
     formData.append('file', fileForm.tempFileCover?.file)
   }
   if (fileForm.tempFile && fileForm.tempFile.file) {
+    loadingBar.start()
+    buttonLoading.value = true
     formData.append('file', fileForm.tempFile?.file)
     formData.append('privateFile', fileForm.privateFile)
     formData.append('category', fileForm.category)
     formData.append('description', fileForm.description)
+    btnStatus.value = true
     const response = await uploadBookDocApi(formData)
     const res = response.data
     if (res.code === 200) {
       fileList[0].url = res.data.path
       message.success(res.message)
       getBookDocList()
+      loadingBar.finish()
+      btnStatus.value = false
     } else {
+      loadingBar.error()
       message.error(res.message)
     }
+    buttonLoading.value = false
   }
 }
 

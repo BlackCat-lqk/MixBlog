@@ -8,7 +8,7 @@
       role="dialog"
       aria-modal="true"
     >
-  <div class="edit-release-box">
+  <div class="edit-release-box" v-loading="{ show: buttonLoading, showText: true, text: '更新中...', width: 40 }">
     <n-form ref="formRef" inline :label-width="80" :model="editForm" :rules="rules">
       <div style="width: 100%">
         <div class="note-title-box">
@@ -116,8 +116,10 @@ const rules = {
   ],
 }
 // 确定修改
+const buttonLoading = ref(false)
 const confirmSave = async () => {
   try {
+    buttonLoading.value = true
     await formRef.value?.validate()
     const response = await updateNoteApi({
       _id: editForm._id,
@@ -135,6 +137,8 @@ const confirmSave = async () => {
     }
   }catch(err: any) {
     message.error(err)
+  }finally {
+    buttonLoading.value = false
   }
 }
 </script>

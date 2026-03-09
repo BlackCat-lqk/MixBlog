@@ -1,13 +1,5 @@
 import { defineStore } from 'pinia'
-// 定义 User 接口
-interface Slogan {
-  logoPicture: string
-  logoName: string
-  sloganTitle: string
-  sloganSub1: string
-  sloganSub2: string
-  cover: string
-}
+import type { Slogan } from '@/tsInterface/index'
 export const useSloganInfoStore = defineStore('sloganConfigInfo', {
   state: () => ({
     sloganConfig: {

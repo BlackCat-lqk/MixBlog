@@ -1,25 +1,6 @@
 import { defineStore } from 'pinia'
-// 定义 User 接口
-interface User {
-  isLogin: boolean
-  avatar: string
-  email: string
-  role: string
-  status: string
-  userName: string
-  _id: string
-  createdAt: string
-  updatedAt: string
-  sex: string
-  birthday: null
-  desc: string
-}
+import type { UserData } from '@/tsInterface/index'
 
-// 定义整个 data 的结构
-interface UserData {
-  token: string
-  user: User
-}
 export const useUserInfoStore = defineStore('userInfo', {
   state: () => ({
     data: {

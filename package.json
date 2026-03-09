@@ -19,13 +19,6 @@
   "dependencies": {
     "@docsearch/css": "^3.9.0",
     "@docsearch/js": "^3.9.0",
-    "@tiptap/core": "^2.12.0",
-    "@tiptap/extension-color": "^2.12.0",
-    "@tiptap/extension-image": "^2.12.0",
-    "@tiptap/extension-link": "^2.12.0",
-    "@tiptap/extension-text-style": "^2.12.0",
-    "@tiptap/starter-kit": "^2.12.0",
-    "@tiptap/vue-3": "^2.12.0",
     "@vue-office/docx": "^1.6.3",
     "@vue-office/excel": "^1.7.14",
     "@vue-office/pdf": "^2.0.10",
@@ -46,8 +39,7 @@
     "vue": "^3.5.13",
     "vue-demi": "^0.14.10",
     "vue-i18n": "^9.14.4",
-    "vue-router": "^4.5.0",
-    "vue3-marquee": "^4.2.2"
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
@@ -69,7 +61,7 @@
     "eslint-plugin-vue": "~10.0.0",
     "jiti": "^2.4.2",
     "jsdom": "^26.0.0",
-    "naive-ui": "^2.41.0",
+    "naive-ui": "^2.44.1",
     "npm-run-all2": "^7.0.2",
     "oxlint": "^0.16.12",
     "postcss-pxtorem": "^6.1.0",

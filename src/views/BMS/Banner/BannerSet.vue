@@ -42,7 +42,7 @@
           <div v-else class="content-box no-data-box">
             <n-empty description="还没有内容，去新建吧~!"></n-empty>
           </div>
-          <div v-if="!newCreate" class="new-create-box">
+          <div v-if="!newCreate" class="new-create-box" v-loading="{ show: buttonLoading, showText: true, text: '创建中...', width: 40 }">
             <n-form style="width: 100%" ref="formRef" :model="formBanner" :rules="rules">
               <n-form-item label="Banner标题">
                 <n-input v-model:value="formBanner.title" maxlength="10" show-count clearable />
@@ -167,10 +167,11 @@ import {
   updateBanner,
   uploadBannerCoverApi,
 } from '@/http/banner'
-import { useMessage } from 'naive-ui'
 import type { UploadFileInfo } from 'naive-ui'
 import { useUserInfoStore } from '@/stores/userInfo'
+import { useMessage, useLoadingBar } from 'naive-ui'
 
+const loadingBar = useLoadingBar()
 const message = useMessage()
 const userInfoStore = useUserInfoStore()
 
@@ -305,9 +306,12 @@ const initFrom = () => {
   formBanner.tempFile = null
 }
 // 新建提交函数
+const buttonLoading = ref(false)
 const submit = async () => {
   formBanner.uId = userInfoStore.data.user._id
   formBanner.email = userInfoStore.data.user.email
+  buttonLoading.value = true
+  loadingBar.start()
   const response = await createBanner(formBanner)
   const res = response.data
   if (res.code === 200) {
@@ -321,9 +325,12 @@ const submit = async () => {
     } else {
       message.error('更新失败')
     }
+    loadingBar.finish()
   } else {
+    loadingBar.error()
     message.error(res.message)
   }
+  buttonLoading.value = false
 }
 const getBannerList = async () => {
   const response = await getAllBanners()

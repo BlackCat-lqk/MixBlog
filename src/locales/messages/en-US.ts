@@ -51,7 +51,7 @@ export default {
     navigation1: 'Home',
     navigation2: 'Article',
     navigation3: 'Photo Gallery',
-    navigation4: 'Note',
+    navigation4: 'Navigation',
     navigation5: 'About',
     btnText: 'Admin',
     text: 'Login',
@@ -120,7 +120,7 @@ export default {
   },
   footer: {
     title: 'technical support',
-    content: 'Mix Blog 1.2.0 · Made by LQK',
+    content: 'Mix Blog 1.2.5 · Made by LQK',
   },
   about: {
     tagsList:
